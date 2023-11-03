@@ -1,19 +1,29 @@
 import 'package:flutter/material.dart';
-//
 import 'package:proyecto_flutter/utils/constants.dart';
 
-class RepTextFiled extends StatelessWidget {
+class RepTextFiled extends StatefulWidget {
   final TextEditingController? controller;
   final IconData icon;
   final Widget? suficon;
   final String text;
+  final bool obscureText;
+  final VoidCallback?
+      onToggleVisibility; // Agregamos esta función de control de visibilidad
+
   RepTextFiled({
     this.controller,
     required this.icon,
     required this.text,
-    required this.suficon,
+    this.suficon,
+    this.obscureText = false,
+    this.onToggleVisibility,
   });
 
+  @override
+  _RepTextFiledState createState() => _RepTextFiledState();
+}
+
+class _RepTextFiledState extends State<RepTextFiled> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -25,7 +35,7 @@ class RepTextFiled extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Icon(
-              icon,
+              widget.icon,
               color: iconColor,
               size: 30,
             ),
@@ -33,26 +43,44 @@ class RepTextFiled extends StatelessWidget {
             SizedBox(
               height: 50,
               width: gWidth / 1.3,
-              child: TextField(
-                controller: controller,
-                readOnly: false, // * Just for Debug
-                cursorColor: Colors.black,
-                style: TextStyle(color: Colors.black),
-                showCursor: true,
-                // cursorColor:Colors.red,
-                decoration: InputDecoration(
-                  suffixIcon: suficon,
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black),
-                  ),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey, width: 2),
-                  ),
-                  labelText: text,
-                  labelStyle: TextStyle(
+              child: GestureDetector(
+                onTap: () {
+                  if (widget.onToggleVisibility != null) {
+                    widget
+                        .onToggleVisibility!(); // Llamamos a la función de control de visibilidad
+                  }
+                },
+                child: TextField(
+                  controller: widget.controller,
+                  readOnly: false,
+                  cursorColor: Colors.black,
+                  style: TextStyle(color: Colors.black),
+                  showCursor: true,
+                  obscureText: widget.obscureText,
+                  decoration: InputDecoration(
+                    suffixIcon: widget.suficon != null
+                        ? GestureDetector(
+                            onTap: () {
+                              if (widget.onToggleVisibility != null) {
+                                widget.onToggleVisibility!();
+                              }
+                            },
+                            child: widget.suficon,
+                          )
+                        : null,
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey, width: 2),
+                    ),
+                    labelText: widget.text,
+                    labelStyle: TextStyle(
                       color: Colors.grey,
                       fontSize: 15,
-                      fontWeight: FontWeight.w400),
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
                 ),
               ),
             )

@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:proyecto_flutter/screens/signup_password.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
 import 'package:proyecto_flutter/widget/rep_textfiled.dart';
 
@@ -11,29 +12,28 @@ class SignUpScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-      child: Scaffold(
-      body: Container(
-        margin: EdgeInsets.all(15),
-        width: gWidth,
-        height: gHeight,
-        child: Column(
-          children: [
-            TopImage(),
-            SignUpText(),
-            SizedBox(height: 10),
-            EmailTextFiled(),
-            SizedBox(height: 10),
-            NameTextFiled(),
-            SizedBox(height: 25),
-            BottomText(),
-            SizedBox(height: 25),
-            ContinueButton()
-          ],
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        child: Scaffold(
+          body: Container(
+            margin: EdgeInsets.all(15),
+            width: gWidth,
+            height: gHeight,
+            child: Column(
+              children: [
+                TopImage(),
+                SignUpText(),
+                SizedBox(height: 10),
+                EmailTextFiled(),
+                SizedBox(height: 10),
+                NameTextFiled(),
+                SizedBox(height: 25),
+                BottomText(),
+                SizedBox(height: 25),
+                ContinueButton()
+              ],
+            ),
           ),
-      ),
-    )
-    );
+        ));
   }
 }
 
@@ -45,25 +45,27 @@ class ContinueButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FadeInDown(
-      delay: Duration(milliseconds: 600),
+      delay: Duration(milliseconds: 25),
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal:100),
+        margin: EdgeInsets.symmetric(horizontal: 100),
         width: gWidth,
-        height: gHeight/15,
+        height: gHeight / 15,
         child: ElevatedButton(
-          onPressed:(){
-            Get.offAll(SignUpScreen());
+          onPressed: () {
+            Get.offAll(SignUpPasswordScreen());
           },
-          child: Text("Continuar", style: TextStyle(fontSize: 25 ),),
-          style: ButtonStyle(
-            shape: MaterialStateProperty.all(
-              RoundedRectangleBorder(
-                borderRadius:BorderRadius.circular(15),
-                 ),
-                 ),
-                 backgroundColor: MaterialStateProperty.all(buttonColor)
-          ), 
+          child: Text(
+            "Continuar",
+            style: TextStyle(fontSize: 25),
           ),
+          style: ButtonStyle(
+              shape: MaterialStateProperty.all(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+              backgroundColor: MaterialStateProperty.all(buttonColor)),
+        ),
       ),
     );
   }
@@ -77,27 +79,27 @@ class BottomText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FadeInDown(
-      delay: Duration(milliseconds: 900),
+      delay: Duration(milliseconds: 50),
       child: Container(
-        width: gWidth,
-        height: gHeight/21,
-        child: Center(
-        child: RichText(
-          text: TextSpan(
-            text: "Al registrarte, estas aceptando los",
-            style: TextStyle(
-              color: text2Color,
+          width: gWidth,
+          height: gHeight / 21,
+          child: Center(
+            child: RichText(
+              text: TextSpan(
+                  text: "Al registrarte, estas aceptando los",
+                  style: TextStyle(
+                    color: text2Color,
+                  ),
+                  children: [
+                    TextSpan(
+                      text: " Terminos y condiciones",
+                      style: TextStyle(
+                        color: text1Color,
+                      ),
+                    )
+                  ]),
             ),
-            children: [
-            TextSpan(
-            text: " Terminos y condiciones",
-            style: TextStyle(
-              color: text1Color,
-            ),)
-            ]
-          ),
-        ),)
-      ),
+          )),
     );
   }
 }
@@ -109,9 +111,9 @@ class NameTextFiled extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FadeIn(
-      delay: Duration(milliseconds: 1200),
-      child: RepTextFiled(icon: LineIcons.user, suficon: null, text: "Nombre Completo"));
+    return FadeInDown(
+        delay: Duration(milliseconds: 75),
+        child: RepTextFiled(icon: LineIcons.user, text: "Nombre Completo"));
   }
 }
 
@@ -122,9 +124,9 @@ class EmailTextFiled extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FadeIn(
-      delay: Duration(milliseconds: 1500),
-      child: RepTextFiled(icon: LineIcons.at, suficon: null, text: "Email"));
+    return FadeInDown(
+        delay: Duration(milliseconds: 100),
+        child: RepTextFiled(icon: LineIcons.at, text: "Correo electrónico"));
   }
 }
 
@@ -135,21 +137,18 @@ class SignUpText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FadeInLeft(
-      delay: Duration(milliseconds: 1800),
+    return FadeInDown(
+      delay: Duration(milliseconds: 125),
       child: Container(
-        margin: EdgeInsets.only(top: 10,right: 270),
-        width: gWidth/4,
-        height: gHeight/18,
-        child : FittedBox(
-          child: Text(
-            "Regístrate",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-            )
-          ),
-        )
-      ),
+          margin: EdgeInsets.only(top: 10, right: 270),
+          width: gWidth / 4,
+          height: gHeight / 18,
+          child: FittedBox(
+            child: Text("Regístrate",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                )),
+          )),
     );
   }
 }
@@ -162,10 +161,11 @@ class TopImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FadeInDown(
-      delay: Duration(milliseconds: 2100),
-      child: Container(width: gWidth,
-      height: gHeight/2.85,
-      child: Image.asset('assets/images/logo.jpeg')),
+      delay: Duration(milliseconds: 150),
+      child: Container(
+          width: gWidth,
+          height: gHeight / 2.85,
+          child: Image.asset('assets/images/logo.jpeg')),
     );
   }
 }
