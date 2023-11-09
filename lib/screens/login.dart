@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:proyecto_flutter/screens/home.dart';
 import 'package:proyecto_flutter/screens/signup.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
 import 'package:proyecto_flutter/widget/rep_textfiled.dart';
@@ -150,7 +151,7 @@ class LoginButton extends StatelessWidget {
         height: gHeight / 15,
         child: ElevatedButton(
           onPressed: () {
-            Get.offAll(LoginScreen());
+            Get.offAll(HomePage());
           },
           child: Text(
             "Iniciar Sesión",
