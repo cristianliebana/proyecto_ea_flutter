@@ -10,7 +10,7 @@ class HomePage extends StatelessWidget {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[Text('Inicio')],
+          children: <Widget>[Text('Inicio'),],
         ),
       ),
     );

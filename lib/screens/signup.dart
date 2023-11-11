@@ -7,7 +7,8 @@ import 'package:proyecto_flutter/utils/constants.dart';
 import 'package:proyecto_flutter/widget/rep_textfiled.dart';
 
 class SignUpScreen extends StatelessWidget {
-  const SignUpScreen({Key? key}) : super(key: key);
+  SignUpScreen({Key? key}) : super(key: key);
+  final SignUpController signUpController = SignUpController();
 
   @override
   Widget build(BuildContext context) {
@@ -23,13 +24,15 @@ class SignUpScreen extends StatelessWidget {
                 TopImage(),
                 SignUpText(),
                 SizedBox(height: 10),
-                EmailTextFiled(),
+                EmailTextFiled(signUpController: signUpController),
                 SizedBox(height: 10),
-                NameTextFiled(),
+                NameTextFiled(signUpController: signUpController),
+                SizedBox(height: 10),
+                UsernameTextFiled(signUpController: signUpController),
                 SizedBox(height: 25),
                 BottomText(),
                 SizedBox(height: 25),
-                ContinueButton()
+                ContinueButton(signUpController: signUpController)
               ],
             ),
           ),
@@ -37,9 +40,31 @@ class SignUpScreen extends StatelessWidget {
   }
 }
 
+class SignUpController extends GetxController {
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController fullnameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+
+  void signup(BuildContext context) async {
+    String? username = usernameController.text;
+    String? fullname = fullnameController.text;
+    String? email = emailController.text;
+
+    Map<String, dynamic> userData = {
+      'username': username,
+      'fullname': fullname,
+      'email': email,
+    };
+    Get.offAll(SignUpPasswordScreen(userData: userData));
+    print(userData);
+  }
+}
+
 class ContinueButton extends StatelessWidget {
-  const ContinueButton({
-    super.key,
+  final SignUpController signUpController;
+
+  ContinueButton({
+    required this.signUpController,
   });
 
   @override
@@ -52,7 +77,7 @@ class ContinueButton extends StatelessWidget {
         height: gHeight / 15,
         child: ElevatedButton(
           onPressed: () {
-            Get.offAll(SignUpPasswordScreen());
+            signUpController.signup(context);
           },
           child: Text(
             "Continuar",
@@ -104,29 +129,59 @@ class BottomText extends StatelessWidget {
   }
 }
 
-class NameTextFiled extends StatelessWidget {
-  const NameTextFiled({
-    super.key,
+class UsernameTextFiled extends StatelessWidget {
+  final SignUpController signUpController;
+
+  UsernameTextFiled({
+    required this.signUpController,
   });
 
   @override
   Widget build(BuildContext context) {
     return FadeInDown(
         delay: Duration(milliseconds: 75),
-        child: RepTextFiled(icon: LineIcons.user, text: "Nombre Completo"));
+        child: RepTextFiled(
+            icon: LineIcons.userTag,
+            text: "Nombre de usuario",
+            controller: signUpController.usernameController));
+  }
+}
+
+class NameTextFiled extends StatelessWidget {
+  final SignUpController signUpController;
+
+  NameTextFiled({
+    required this.signUpController,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeInDown(
+        delay: Duration(milliseconds: 75),
+        child: RepTextFiled(
+          icon: LineIcons.user,
+          text: "Nombre Completo",
+          controller: signUpController.fullnameController,
+        ));
   }
 }
 
 class EmailTextFiled extends StatelessWidget {
-  const EmailTextFiled({
-    super.key,
+  final SignUpController signUpController;
+
+  EmailTextFiled({
+    required this.signUpController,
   });
 
   @override
   Widget build(BuildContext context) {
     return FadeInDown(
         delay: Duration(milliseconds: 100),
-        child: RepTextFiled(icon: LineIcons.at, text: "Correo electrónico"));
+        child: RepTextFiled(
+          icon: LineIcons.at,
+          text: "Correo electrónico",
+          controller: signUpController.emailController,
+        ));
   }
 }
 

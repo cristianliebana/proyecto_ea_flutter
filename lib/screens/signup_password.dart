@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_pw_validator/Resource/Strings.dart';
 import 'package:get/get.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:proyecto_flutter/api/services/user_service.dart';
+import 'package:proyecto_flutter/api/utils/http_api.dart';
 import 'package:proyecto_flutter/screens/login.dart';
+import 'package:proyecto_flutter/screens/signup.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
 import 'package:proyecto_flutter/widget/rep_textfiled.dart';
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
@@ -11,15 +14,26 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 
 class SignUpPasswordScreen extends StatefulWidget {
-  const SignUpPasswordScreen({Key? key}) : super(key: key);
+  final Map<String, dynamic> userData;
+
+  SignUpPasswordScreen({Key? key, required this.userData}) : super(key: key);
 
   @override
-  State<SignUpPasswordScreen> createState() => _SignUpScreenState();
+  State<SignUpPasswordScreen> createState() =>
+      _SignUpScreenState(userData: userData);
 }
 
 class _SignUpScreenState extends State<SignUpPasswordScreen> {
   final TextEditingController controller = TextEditingController();
   bool success = false;
+  final SignUpPasswordController signUpController; // Agrega esta línea
+
+  Map<String, dynamic> userData;
+
+  _SignUpScreenState({required this.userData})
+      : signUpController = SignUpPasswordController(
+            userData:
+                userData); // Asegúrate de inicializar signUpController con userData
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +52,7 @@ class _SignUpScreenState extends State<SignUpPasswordScreen> {
               PasswordText(),
               PasswordTextFiled(controller: controller, success: success),
               SizedBox(height: 10),
-              ConfirmPasswordTextFiled(),
+              ConfirmPasswordTextFiled(signUpController: signUpController),
               SizedBox(height: 10),
               FlutterPwValidator(
                 defaultColor: Colors.grey.shade300,
@@ -64,12 +78,40 @@ class _SignUpScreenState extends State<SignUpPasswordScreen> {
                 },
               ),
               SizedBox(height: 40),
-              SubmitButton(),
+              SubmitButton(signUpController: signUpController),
             ],
           ),
         ),
       ),
     );
+  }
+}
+
+class SignUpPasswordController extends GetxController {
+  final Map<String, dynamic> userData;
+  final TextEditingController passwordController = TextEditingController();
+   final String defaultRole = 'cliente';
+
+  SignUpPasswordController({required this.userData});
+
+  void signUp(BuildContext context) async {
+    String? username = userData['username'];
+    String? fullname = userData['fullname'];
+    String? email = userData['email'];
+    String? password = passwordController.text;
+    
+
+    // Crear un mapa con los datos para el registro
+    Map<String, dynamic> registrationData = {
+      'username': username,
+      'fullname': fullname,
+      'email': email,
+      'password': password,
+      'rol': defaultRole,
+    };
+    // Llamar al servicio para registrar al usuario
+    ApiResponse response = await UserService.registerUser(registrationData);
+    print(registrationData);
   }
 }
 
@@ -89,8 +131,10 @@ class SpanishStrings implements FlutterPwValidatorStrings {
 }
 
 class SubmitButton extends StatelessWidget {
-  const SubmitButton({
-    Key? key,
+  final SignUpPasswordController signUpController;
+
+  SubmitButton({
+    required this.signUpController,
   });
 
   @override
@@ -103,7 +147,7 @@ class SubmitButton extends StatelessWidget {
         height: gHeight / 15,
         child: ElevatedButton(
           onPressed: () {
-            Get.offAll(LoginScreen());
+            signUpController.signUp(context);
           },
           child: Text(
             "Regístrate",
@@ -124,21 +168,32 @@ class SubmitButton extends StatelessWidget {
 }
 
 class ConfirmPasswordTextFiled extends StatefulWidget {
-  ConfirmPasswordTextFiled({Key? key}) : super(key: key);
+  final SignUpPasswordController signUpController;
+
+  ConfirmPasswordTextFiled({
+    required this.signUpController,
+  });
 
   @override
   _ConfirmPasswordTextFiledState createState() =>
-      _ConfirmPasswordTextFiledState();
+      _ConfirmPasswordTextFiledState(signUpController: signUpController);
 }
 
 class _ConfirmPasswordTextFiledState extends State<ConfirmPasswordTextFiled> {
   bool obscureText = true;
+
+  final SignUpPasswordController signUpController;
+
+  _ConfirmPasswordTextFiledState({
+    required this.signUpController,
+  });
 
   @override
   Widget build(BuildContext context) {
     return FadeInDown(
       delay: Duration(milliseconds: 200),
       child: RepTextFiled(
+        controller: signUpController.passwordController,
         icon: LineIcons.alternateUnlock,
         text: "Confirma tu contraseña",
         suficon: Icon(obscureText ? LineIcons.eyeSlash : LineIcons.eye),
