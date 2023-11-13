@@ -2,13 +2,17 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:proyecto_flutter/api/services/token_service.dart';
+import 'package:proyecto_flutter/api/services/user_service.dart';
+import 'package:proyecto_flutter/api/utils/http_api.dart';
 import 'package:proyecto_flutter/screens/home.dart';
 import 'package:proyecto_flutter/screens/signup.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
 import 'package:proyecto_flutter/widget/rep_textfiled.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  LoginScreen({Key? key}) : super(key: key);
+  final LoginController loginController = LoginController();
 
   @override
   Widget build(BuildContext context) {
@@ -24,12 +28,12 @@ class LoginScreen extends StatelessWidget {
                 TopImage(),
                 //LoginText(),
                 SizedBox(height: 10),
-                EmailTextFiled(),
+                EmailTextFiled(loginController: loginController),
                 SizedBox(height: 20),
-                PasswordTextFiled(),
+                PasswordTextFiled(loginController: loginController),
                 ForgotText(),
                 SizedBox(height: 15),
-                LoginButton(),
+                LoginButton(loginController: loginController),
                 SizedBox(height: 20),
                 OrText(),
                 GoogleLoginButton(),
@@ -38,6 +42,36 @@ class LoginScreen extends StatelessWidget {
             ),
           ),
         ));
+  }
+}
+
+class LoginController extends GetxController {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  void login(BuildContext context) async {
+    String? email = emailController.text;
+    String? password = passwordController.text;
+
+    Map<String, dynamic> userData = {
+      'email': email,
+      'password': password,
+    };
+
+    ApiResponse response = await UserService.loginUser(userData);
+    print(userData);
+    if (response.statusCode == 200) {
+      String? token = response.data['token'];
+      print(token);
+      if (token != null) {
+        await TokenService.saveToken(token);
+        Get.offAll(() => HomePage());
+      } else {
+        print('No se recibió un token en la respuesta');
+      }
+    } else {
+      print('Error en la respuesta: ${response.statusCode}');
+    }
   }
 }
 
@@ -137,8 +171,10 @@ class OrText extends StatelessWidget {
 }
 
 class LoginButton extends StatelessWidget {
-  const LoginButton({
-    super.key,
+  final LoginController loginController;
+
+  LoginButton({
+    required this.loginController,
   });
 
   @override
@@ -151,7 +187,7 @@ class LoginButton extends StatelessWidget {
         height: gHeight / 15,
         child: ElevatedButton(
           onPressed: () {
-            Get.offAll(HomePage());
+            loginController.login(context);
           },
           child: Text(
             "Iniciar Sesión",
@@ -194,20 +230,31 @@ class ForgotText extends StatelessWidget {
 }
 
 class PasswordTextFiled extends StatefulWidget {
-  PasswordTextFiled({Key? key}) : super(key: key);
+  final LoginController loginController;
+
+  PasswordTextFiled({
+    required this.loginController,
+  });
 
   @override
-  _PasswordTextFiledState createState() => _PasswordTextFiledState();
+  _PasswordTextFiledState createState() =>
+      _PasswordTextFiledState(loginController: loginController);
 }
 
 class _PasswordTextFiledState extends State<PasswordTextFiled> {
-  bool obscureText = true; // Controla la visibilidad de la contraseña
+  bool obscureText = true;
 
+  final LoginController loginController;
+
+  _PasswordTextFiledState({
+    required this.loginController,
+  });
   @override
   Widget build(BuildContext context) {
     return FadeInDown(
       delay: Duration(milliseconds: 200),
       child: RepTextFiled(
+        controller: loginController.passwordController,
         icon: LineIcons.alternateUnlock,
         text: "Contraseña",
         suficon: Icon(obscureText
@@ -226,15 +273,20 @@ class _PasswordTextFiledState extends State<PasswordTextFiled> {
 }
 
 class EmailTextFiled extends StatelessWidget {
-  const EmailTextFiled({
-    super.key,
+  final LoginController loginController;
+
+  EmailTextFiled({
+    required this.loginController,
   });
 
   @override
   Widget build(BuildContext context) {
     return FadeInDown(
         delay: Duration(milliseconds: 225),
-        child: RepTextFiled(icon: LineIcons.at, text: "Correo electrónico"));
+        child: RepTextFiled(
+            icon: LineIcons.at,
+            text: "Correo electrónico",
+            controller: loginController.emailController));
   }
 }
 

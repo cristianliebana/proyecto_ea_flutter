@@ -90,7 +90,7 @@ class _SignUpScreenState extends State<SignUpPasswordScreen> {
 class SignUpPasswordController extends GetxController {
   final Map<String, dynamic> userData;
   final TextEditingController passwordController = TextEditingController();
-   final String defaultRole = 'cliente';
+  final String defaultRole = 'cliente';
 
   SignUpPasswordController({required this.userData});
 
@@ -99,9 +99,7 @@ class SignUpPasswordController extends GetxController {
     String? fullname = userData['fullname'];
     String? email = userData['email'];
     String? password = passwordController.text;
-    
 
-    // Crear un mapa con los datos para el registro
     Map<String, dynamic> registrationData = {
       'username': username,
       'fullname': fullname,
@@ -109,7 +107,7 @@ class SignUpPasswordController extends GetxController {
       'password': password,
       'rol': defaultRole,
     };
-    // Llamar al servicio para registrar al usuario
+
     ApiResponse response = await UserService.registerUser(registrationData);
     print(registrationData);
   }

@@ -113,8 +113,55 @@ class Api {
 
       return res;
     } catch (e) {
-      // ignore: avoid_print
       print(e);
+      return res;
+    }
+  }
+
+  Future<ApiResponse> get(String path,
+      {Map<String, dynamic>? queryParameters}) async {
+    ApiResponse res = ApiResponse(data: {}, statusCode: -1);
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('token');
+      if (token != null) {
+        optHeader['Authorization'] = 'Bearer $token';
+      } else {
+        ModelResponse brp = await AuthorizeRequest();
+        if (brp.success) {
+          optHeader['Authorization'] = 'Bearer ${brp.message}';
+        } else {
+          optHeader['Authorization'] = 'Bearer $token';
+        }
+      }
+      final response = await client.get(
+        "${Endpoints.ipBackend}$path".toUri(),
+        params: queryParameters,
+        headers: optHeader,
+      );
+
+      if (response.statusCode == 401) {
+        ModelResponse brp = await AuthorizeRequest();
+        if (brp.success) {
+          optHeader['Authorization'] = 'Bearer ${brp.message}';
+          final response2 = await client.get(
+            "${Endpoints.ipBackend}$path".toUri(),
+            params: queryParameters,
+            headers: optHeader,
+          );
+          res.statusCode = response2.statusCode;
+          res.data = jsonDecode(response2.body) as Map<String, dynamic>? ?? {};
+        } else {
+          optHeader['Authorization'] = 'Bearer $token';
+        }
+      } else {
+        res.statusCode = response.statusCode;
+        res.data = jsonDecode(response.body) as Map<String, dynamic>? ?? {};
+      }
+      return res;
+    } catch (e) {
+      // ignore: avoid_print
+      print('Error get: $e');
       return res;
     }
   }
@@ -127,7 +174,9 @@ class Api {
       var url = Uri.parse('${Endpoints.ipBackend}/users/signin');
       http.Response responseVal = await http.post(
         url,
-        body: {'login': email, 'password': password},
+        body: {
+          'user': {'email': email, 'password': password}
+        },
       );
 
       if (responseVal.statusCode == 201 || responseVal.statusCode == 200) {
