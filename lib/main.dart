@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:proyecto_flutter/screens/login.dart';
-import 'package:proyecto_flutter/screens/signup.dart';
-import 'package:proyecto_flutter/screens/signup_password.dart';
 
 void main() {
   runApp(const MyApp());

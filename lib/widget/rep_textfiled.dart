@@ -3,6 +3,7 @@ import 'package:proyecto_flutter/utils/constants.dart';
 
 class RepTextFiled extends StatefulWidget {
   final TextEditingController? controller;
+  final TextEditingController? controller2;
   final IconData icon;
   final Widget? suficon;
   final String text;
@@ -12,6 +13,7 @@ class RepTextFiled extends StatefulWidget {
 
   RepTextFiled({
     this.controller,
+    this.controller2,
     required this.icon,
     required this.text,
     this.suficon,
@@ -52,6 +54,13 @@ class _RepTextFiledState extends State<RepTextFiled> {
                 },
                 child: TextField(
                   controller: widget.controller,
+                  onChanged: (text) {
+                    // Actualiza el segundo controlador si es necesario
+                    if (widget.controller2 != null) {
+                      widget.controller2!.text = text;
+                    }
+                    // Puedes realizar otras lógicas aquí si es necesario
+                  },
                   readOnly: false,
                   cursorColor: Colors.black,
                   style: TextStyle(color: Colors.black),

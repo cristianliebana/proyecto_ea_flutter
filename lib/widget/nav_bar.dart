@@ -11,16 +11,16 @@ class CustomBottomNavigationBarController extends GetxController {
   void updateIndex(int index) {
     switch (index) {
       case 0:
-        Get.offAll(HomePage(), transition: Transition.noTransition);
+        Get.to(HomePage(), transition: Transition.noTransition);
         break;
       case 1:
-        Get.offAll(ShoppingBasketPage(), transition: Transition.noTransition);
+        Get.to(ShoppingBasketPage(), transition: Transition.noTransition);
         break;
       case 2:
-        Get.offAll(ChatPage(), transition: Transition.noTransition);
+        Get.to(ChatPage(), transition: Transition.noTransition);
         break;
       case 3:
-        Get.offAll(ProfilePage(), transition: Transition.noTransition);
+        Get.to(ProfilePage(), transition: Transition.noTransition);
         break;
       default:
         break;

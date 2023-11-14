@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pw_validator/Resource/Strings.dart';
@@ -6,13 +7,12 @@ import 'package:line_icons/line_icons.dart';
 import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
 import 'package:proyecto_flutter/screens/login.dart';
-import 'package:proyecto_flutter/screens/signup.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
 import 'package:proyecto_flutter/widget/rep_textfiled.dart';
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 
+// Color(0xFFFFFCEA)
 class SignUpPasswordScreen extends StatefulWidget {
   final Map<String, dynamic> userData;
 
@@ -26,14 +26,12 @@ class SignUpPasswordScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpPasswordScreen> {
   final TextEditingController controller = TextEditingController();
   bool success = false;
-  final SignUpPasswordController signUpController; // Agrega esta línea
+  final SignUpPasswordController signUpController;
 
   Map<String, dynamic> userData;
 
   _SignUpScreenState({required this.userData})
-      : signUpController = SignUpPasswordController(
-            userData:
-                userData); // Asegúrate de inicializar signUpController con userData
+      : signUpController = SignUpPasswordController(userData: userData);
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +48,10 @@ class _SignUpScreenState extends State<SignUpPasswordScreen> {
               Animation(success: success),
               SizedBox(height: 50),
               PasswordText(),
-              PasswordTextFiled(controller: controller, success: success),
+              PasswordTextFiled(
+                  controller: controller,
+                  success: success,
+                  signUpController: signUpController),
               SizedBox(height: 10),
               ConfirmPasswordTextFiled(signUpController: signUpController),
               SizedBox(height: 10),
@@ -78,7 +79,10 @@ class _SignUpScreenState extends State<SignUpPasswordScreen> {
                 },
               ),
               SizedBox(height: 40),
-              SubmitButton(signUpController: signUpController),
+              SubmitButton(
+                signUpController: signUpController,
+                success: success,
+              ),
             ],
           ),
         ),
@@ -90,6 +94,7 @@ class _SignUpScreenState extends State<SignUpPasswordScreen> {
 class SignUpPasswordController extends GetxController {
   final Map<String, dynamic> userData;
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController password1Controller = TextEditingController();
   final String defaultRole = 'cliente';
 
   SignUpPasswordController({required this.userData});
@@ -99,6 +104,7 @@ class SignUpPasswordController extends GetxController {
     String? fullname = userData['fullname'];
     String? email = userData['email'];
     String? password = passwordController.text;
+    String? password1 = password1Controller.text;
 
     Map<String, dynamic> registrationData = {
       'username': username,
@@ -107,9 +113,70 @@ class SignUpPasswordController extends GetxController {
       'password': password,
       'rol': defaultRole,
     };
+    print(password);
+    print(password1);
 
-    ApiResponse response = await UserService.registerUser(registrationData);
-    print(registrationData);
+    if (password != password1) {
+      Get.snackbar('Error', 'Las contraseñas no coinciden',
+          snackPosition: SnackPosition.BOTTOM);
+      return;
+    } else {
+      try {
+        ApiResponse response = await UserService.registerUser(registrationData);
+        print(registrationData);
+
+        Get.defaultDialog(
+          title: "Cuenta creada",
+          backgroundColor: Color(0xFFFFFCEA),
+          content: ClipRect(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 50.0, sigmaY: 50.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0),
+                  color: Color(0xFFFFFCEA),
+                ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Color(0xFFFFFCEA),
+                  ),
+                  child: Column(
+                    children: [
+                      Lottie.asset(
+                        "assets/json/check3.json",
+                        width: 100,
+                        height: 100,
+                        repeat: false,
+                      ),
+                      SizedBox(height: 20),
+                      Text("¡Bienvenido a Km0Market!"),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          radius: 10.0,
+          confirm: ElevatedButton(
+            onPressed: () {
+              Get.offAll(LoginScreen());
+            },
+            child: Text("Aceptar"),
+            style: ButtonStyle(
+              shape: MaterialStateProperty.all(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+              backgroundColor: MaterialStateProperty.all(buttonColor),
+            ),
+          ),
+        );
+      } catch (error) {
+        Get.snackbar('Error', 'Ocurrió un error al registrar el usuario',
+            snackPosition: SnackPosition.BOTTOM);
+      }
+    }
   }
 }
 
@@ -130,10 +197,9 @@ class SpanishStrings implements FlutterPwValidatorStrings {
 
 class SubmitButton extends StatelessWidget {
   final SignUpPasswordController signUpController;
+  final bool success;
 
-  SubmitButton({
-    required this.signUpController,
-  });
+  SubmitButton({required this.signUpController, required this.success});
 
   @override
   Widget build(BuildContext context) {
@@ -145,7 +211,12 @@ class SubmitButton extends StatelessWidget {
         height: gHeight / 15,
         child: ElevatedButton(
           onPressed: () {
-            signUpController.signUp(context);
+            if (success == false) {
+              Get.snackbar('Error', 'No cumples con los requisitos',
+                  snackPosition: SnackPosition.BOTTOM);
+            } else {
+              signUpController.signUp(context);
+            }
           },
           child: Text(
             "Regístrate",
@@ -211,17 +282,23 @@ class PasswordTextFiled extends StatefulWidget {
     Key? key,
     required this.controller,
     required this.success,
+    required this.signUpController,
   }) : super(key: key);
 
   final TextEditingController controller;
   final bool success;
+  final SignUpPasswordController signUpController;
 
   @override
-  _PasswordTextFiledState createState() => _PasswordTextFiledState();
+  _PasswordTextFiledState createState() =>
+      _PasswordTextFiledState(signUpController: signUpController);
 }
 
 class _PasswordTextFiledState extends State<PasswordTextFiled> {
   bool obscureText = true;
+  final SignUpPasswordController signUpController;
+
+  _PasswordTextFiledState({required this.signUpController});
 
   @override
   Widget build(BuildContext context) {
@@ -229,6 +306,7 @@ class _PasswordTextFiledState extends State<PasswordTextFiled> {
       delay: Duration(milliseconds: 150),
       child: Container(
         child: RepTextFiled(
+          controller2: signUpController.password1Controller,
           controller: widget.controller,
           icon: LineIcons.alternateUnlock,
           text: "Contraseña",

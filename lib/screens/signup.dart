@@ -55,8 +55,13 @@ class SignUpController extends GetxController {
       'fullname': fullname,
       'email': email,
     };
-    Get.offAll(SignUpPasswordScreen(userData: userData));
-    print(userData);
+    if (username == "" || fullname == "" || email == "") {
+      Get.snackbar('Error', 'Tienes que rellenar todos los campos',
+          snackPosition: SnackPosition.BOTTOM);
+    } else {
+      Get.offAll(SignUpPasswordScreen(userData: userData));
+      print(userData);
+    }
   }
 }
 

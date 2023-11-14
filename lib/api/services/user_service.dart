@@ -1,5 +1,4 @@
 import 'package:proyecto_flutter/api/utils/http_api.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class UserService {
   static Future<ApiResponse> registerUser(Map<String, dynamic> user) async {
