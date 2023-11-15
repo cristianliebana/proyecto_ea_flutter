@@ -25,6 +25,7 @@ class TokenService {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.remove('token');
+      Get.to(LoginScreen());
     } catch (error) {
       print('Error al remover el token: $error');
     }
@@ -34,7 +35,7 @@ class TokenService {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
     if (token == null) {
-      Get.offAll(LoginScreen());
+      Get.to(LoginScreen());
       return false;
     }
 
