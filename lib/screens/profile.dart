@@ -30,10 +30,11 @@ class _ProfilePageState extends State<ProfilePage> {
       bottomNavigationBar: CustomBottomNavigationBar(currentIndex: 3),
       body: SingleChildScrollView(
         child: Container(
-            padding: const EdgeInsets.all(15),
+            width: gWidth,
+            height: gHeight,
             child: Column(
               children: [
-                SizedBox(height: 75),
+                SizedBox(height: 20),
                 ProfileImage(),
                 const SizedBox(height: 10),
                 UsernameText(),
@@ -171,15 +172,15 @@ class ProfileMenuWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
-              width: 60, // Ajusta el tamaño del contenedor del ícono
-              height: 60, // Ajusta el tamaño del contenedor del ícono
+              width: 40, // Ajusta el tamaño del contenedor del ícono
+              height: 40, // Ajusta el tamaño del contenedor del ícono
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(200),
                 color: Color(0xFF486D28).withOpacity(0.9),
               ),
               child: Icon(icon,
                   color: Color(0xFFFFFCEA),
-                  size: 30), // Ajusta el tamaño del ícono
+                  size: 25), // Ajusta el tamaño del ícono
             ),
             SizedBox(width: 20), // Ajusta el espacio entre el ícono y el título
             Expanded(
@@ -193,8 +194,8 @@ class ProfileMenuWidget extends StatelessWidget {
             ),
             if (endIcon)
               Container(
-                width: 30,
-                height: 30,
+                width: 25,
+                height: 25,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(100),
                   color: Color(0xFF486D28).withOpacity(0.9),

@@ -6,7 +6,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: CustomBottomNavigationBar(currentIndex: 2),
+      bottomNavigationBar: CustomBottomNavigationBar(currentIndex: 0),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
