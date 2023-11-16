@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:proyecto_flutter/api/services/token_service.dart';
+import 'package:proyecto_flutter/api/services/user_service.dart';
+import 'package:proyecto_flutter/api/utils/http_api.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
 import 'package:proyecto_flutter/widget/nav_bar.dart';
 
@@ -10,10 +12,12 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  Map<String, dynamic> userData = {};
   @override
   void initState() {
     super.initState();
     checkAuthAndNavigate();
+    obtenerDatosUsuario();
   }
 
   Future<void> checkAuthAndNavigate() async {
@@ -22,6 +26,13 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void _onRemoveTokenPressed() {
     TokenService.removeToken();
+  }
+
+  Future<void> obtenerDatosUsuario() async {
+    ApiResponse response = await UserService.getUserById();
+    setState(() {
+      userData = response.data;
+    });
   }
 
   @override
@@ -34,12 +45,14 @@ class _ProfilePageState extends State<ProfilePage> {
             height: gHeight,
             child: Column(
               children: [
-                SizedBox(height: 20),
+                SizedBox(height: 50),
                 ProfileImage(),
                 const SizedBox(height: 10),
-                UsernameText(),
+                UsernameText(
+                  userData: userData,
+                ),
                 const SizedBox(height: 10),
-                EmailText(),
+                EmailText(userData: userData),
                 const SizedBox(height: 20),
                 EditProfileButton(),
                 const SizedBox(height: 30),
@@ -79,24 +92,40 @@ class _ProfilePageState extends State<ProfilePage> {
 class EmailText extends StatelessWidget {
   const EmailText({
     super.key,
+    required this.userData,
   });
+
+  final Map<String, dynamic> userData;
 
   @override
   Widget build(BuildContext context) {
-    return Text("Correo",
-        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w200));
+    // Usa el mapa directamente
+    String email = userData['email'] ?? "N/A";
+
+    return Text(
+      "$email",
+      style: TextStyle(fontSize: 20, fontWeight: FontWeight.w200),
+    );
   }
 }
 
 class UsernameText extends StatelessWidget {
   const UsernameText({
     super.key,
+    required this.userData,
   });
+
+  final Map<String, dynamic> userData;
 
   @override
   Widget build(BuildContext context) {
-    return Text("Nombre de Usuario",
-        style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold));
+    String username = userData['username'] ?? "N/A";
+    print(username);
+
+    return Text(
+      "$username",
+      style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+    );
   }
 }
 
@@ -112,7 +141,7 @@ class ProfileImage extends StatelessWidget {
       height: 175,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(100),
-        child: const Image(image: AssetImage('assets/images/shrek.jpeg')),
+        child: const Image(image: AssetImage('assets/images/profile.png')),
       ),
     );
   }
@@ -130,7 +159,7 @@ class EditProfileButton extends StatelessWidget {
       width: gWidth,
       height: gHeight / 15,
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () async {},
         child: Text(
           "Editar Perfil",
           style: TextStyle(fontSize: 25),
@@ -172,17 +201,15 @@ class ProfileMenuWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
-              width: 40, // Ajusta el tamaño del contenedor del ícono
-              height: 40, // Ajusta el tamaño del contenedor del ícono
+              width: 40,
+              height: 40,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(200),
                 color: Color(0xFF486D28).withOpacity(0.9),
               ),
-              child: Icon(icon,
-                  color: Color(0xFFFFFCEA),
-                  size: 25), // Ajusta el tamaño del ícono
+              child: Icon(icon, color: Color(0xFFFFFCEA), size: 25),
             ),
-            SizedBox(width: 20), // Ajusta el espacio entre el ícono y el título
+            SizedBox(width: 20),
             Expanded(
               child: Text(
                 title,
