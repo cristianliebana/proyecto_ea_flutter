@@ -2,6 +2,8 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:proyecto_flutter/api/services/user_service.dart';
+import 'package:proyecto_flutter/api/utils/http_api.dart';
 import 'package:proyecto_flutter/screens/signup_password.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
 import 'package:proyecto_flutter/widget/rep_textfiled.dart';
@@ -55,12 +57,30 @@ class SignUpController extends GetxController {
       'fullname': fullname,
       'email': email,
     };
+
     if (username == "" || fullname == "" || email == "") {
       Get.snackbar('Error', 'Tienes que rellenar todos los campos',
           snackPosition: SnackPosition.BOTTOM);
     } else {
-      Get.offAll(SignUpPasswordScreen(userData: userData));
-      print(userData);
+      ApiResponse response = await UserService.usernameExists(username);
+      bool usernameExists = response.data['usernameExists'];
+
+      ApiResponse response2 = await UserService.emailExists(email);
+      bool emailExists = response2.data['emailExists'];
+
+      if (usernameExists && emailExists) {
+        Get.snackbar('Error', 'El nombre de usuario y el email no existen',
+            snackPosition: SnackPosition.BOTTOM);
+      } else if (usernameExists) {
+        Get.snackbar('Error', 'El nombre de usuario ya existe',
+            snackPosition: SnackPosition.BOTTOM);
+      } else if (emailExists) {
+        Get.snackbar('Error', 'El email ya existe',
+            snackPosition: SnackPosition.BOTTOM);
+      } else {
+        Get.offAll(SignUpPasswordScreen(userData: userData));
+        print(userData);
+      }
     }
   }
 }

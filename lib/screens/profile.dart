@@ -3,6 +3,8 @@ import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:proyecto_flutter/api/services/token_service.dart';
 import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
+import 'package:get/get.dart';
+import 'package:proyecto_flutter/screens/update_user.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
 import 'package:proyecto_flutter/widget/nav_bar.dart';
 
@@ -159,7 +161,9 @@ class EditProfileButton extends StatelessWidget {
       width: gWidth,
       height: gHeight / 15,
       child: ElevatedButton(
-        onPressed: () async {},
+        onPressed: () async {
+          Get.to(UpdateScreen());
+        },
         child: Text(
           "Editar Perfil",
           style: TextStyle(fontSize: 25),

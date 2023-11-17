@@ -192,4 +192,31 @@ class Api {
       return ModelResponse(message: err, success: false);
     }
   }
+
+  Future<ApiResponse> putWithoutToken(String path,
+      {Map<String, dynamic> data = const {}}) async {
+    ApiResponse res = ApiResponse(data: {}, statusCode: -1);
+    try {
+      final response = await client.put(
+        "${Endpoints.ipBackend}$path".toUri(),
+        body: jsonEncode(data),
+        headers: optHeader,
+      );
+      res.statusCode = response.statusCode;
+      if (response.statusCode == 200 ||
+          response.statusCode == 201 ||
+          response.statusCode == 202) {
+        res.data = jsonDecode(response.body) as Map<String, dynamic>? ?? {};
+        return res;
+      } else {
+        return Future.error(
+          "Error while fetching.",
+          StackTrace.fromString(response.body),
+        );
+      }
+    } catch (e) {
+      print(e);
+      return res;
+    }
+  }
 }

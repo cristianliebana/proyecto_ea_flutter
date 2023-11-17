@@ -70,7 +70,8 @@ class LoginController extends GetxController {
         print('No se recibió un token en la respuesta');
       }
     } else {
-      print('Error en la respuesta: ${response.statusCode}');
+      Get.snackbar('Error', 'Correo o contraseña incorrectos',
+          snackPosition: SnackPosition.BOTTOM);
     }
   }
 }
