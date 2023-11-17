@@ -1,7 +1,10 @@
+import 'dart:ui';
+
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:lottie/lottie.dart';
 import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
 import 'package:proyecto_flutter/screens/profile.dart';
@@ -81,8 +84,54 @@ class UpdateController extends GetxController {
       'password': password,
     };
     ApiResponse response = await UserService.updateUser(userData);
-    Get.to(ProfilePage());
     //print(userData);
+    Get.defaultDialog(
+      title: "¡Felicidades!",
+      backgroundColor: Color(0xFFFFFCEA),
+      content: ClipRect(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 50.0, sigmaY: 50.0),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10.0),
+              color: Color(0xFFFFFCEA),
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Color(0xFFFFFCEA),
+              ),
+              child: Column(
+                children: [
+                  Lottie.asset(
+                    "assets/json/check3.json",
+                    width: 100,
+                    height: 100,
+                    repeat: false,
+                  ),
+                  SizedBox(height: 20),
+                  Text("¡Has actualizado tu perfil!"),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+      radius: 10.0,
+      confirm: ElevatedButton(
+        onPressed: () {
+          Get.offAll(ProfilePage());
+        },
+        child: Text("Aceptar"),
+        style: ButtonStyle(
+          shape: MaterialStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+          ),
+          backgroundColor: MaterialStateProperty.all(buttonColor),
+        ),
+      ),
+    );
   }
 }
 

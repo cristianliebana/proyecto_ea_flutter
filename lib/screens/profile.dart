@@ -22,19 +22,19 @@ class _ProfilePageState extends State<ProfilePage> {
     obtenerDatosUsuario();
   }
 
+  Future<void> obtenerDatosUsuario() async {
+    ApiResponse response = await UserService.getUserById();
+    setState(() {
+      userData = response.data;
+    });
+  }
+
   Future<void> checkAuthAndNavigate() async {
     await TokenService.loggedIn();
   }
 
   void _onRemoveTokenPressed() {
     TokenService.removeToken();
-  }
-
-  Future<void> obtenerDatosUsuario() async {
-    ApiResponse response = await UserService.getUserById();
-    setState(() {
-      userData = response.data;
-    });
   }
 
   @override
@@ -50,11 +50,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 SizedBox(height: 50),
                 ProfileImage(),
                 const SizedBox(height: 10),
-                UsernameText(
-                  userData: userData,
-                ),
+                if (userData.isNotEmpty) UsernameText(userData: userData),
                 const SizedBox(height: 10),
-                EmailText(userData: userData),
+                if (userData.isNotEmpty) EmailText(userData: userData),
+                if (userData.isEmpty) CircularProgressIndicator(),
                 const SizedBox(height: 20),
                 EditProfileButton(),
                 const SizedBox(height: 30),
@@ -93,7 +92,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
 class EmailText extends StatelessWidget {
   const EmailText({
-    super.key,
+    Key? key,
     required this.userData,
   });
 
@@ -101,11 +100,10 @@ class EmailText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Usa el mapa directamente
     String email = userData['email'] ?? "N/A";
 
     return Text(
-      "$email",
+      email != "N/A" ? "$email" : "",
       style: TextStyle(fontSize: 20, fontWeight: FontWeight.w200),
     );
   }
@@ -113,7 +111,7 @@ class EmailText extends StatelessWidget {
 
 class UsernameText extends StatelessWidget {
   const UsernameText({
-    super.key,
+    Key? key,
     required this.userData,
   });
 
@@ -122,10 +120,9 @@ class UsernameText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String username = userData['username'] ?? "N/A";
-    print(username);
 
     return Text(
-      "$username",
+      username != "N/A" ? "$username" : "",
       style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
     );
   }
