@@ -49,7 +49,7 @@ dependencies:
   http_interceptor: ^2.0.0-beta.7
   shared_preferences: ^2.2.2
   jwt_decoder: ^2.0.1
-  
+  carousel_slider: ^4.2.1
   
 
 dev_dependencies:
