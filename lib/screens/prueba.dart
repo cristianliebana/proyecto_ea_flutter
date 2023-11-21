@@ -4,19 +4,18 @@ import 'package:proyecto_flutter/api/services/product_service.dart';
 import 'package:proyecto_flutter/api/services/token_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
 import 'package:proyecto_flutter/screens/home.dart';
-import 'package:proyecto_flutter/utils/constants.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
-class ProductDetailScreen extends StatefulWidget {
+class ProductDetailScreen2 extends StatefulWidget {
   final String productId;
 
-  ProductDetailScreen({required this.productId});
+  ProductDetailScreen2({required this.productId});
 
   @override
   _ProductDetailScreenState createState() => _ProductDetailScreenState();
 }
 
-class _ProductDetailScreenState extends State<ProductDetailScreen> {
+class _ProductDetailScreenState extends State<ProductDetailScreen2> {
   Map<String, dynamic> productData = {};
   final List<String> imagePaths = [
     'assets/images/tomate.jpeg',
@@ -51,70 +50,33 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      backgroundColor: Color(0xFFFFFCEA),
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        centerTitle: true,
-        leading: _buildAppBarIconButton(
-          icon: Icons.arrow_back,
-          onPressed: () {
-            Get.to(HomePage());
-          },
-        ),
-        actions: [
-          _buildAppBarIconButton(
-            icon: Icons.favorite_border,
-            onPressed: () {},
-          ),
-        ],
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      appBar: _buildAppBar(), // Use the common _buildAppBar method
+      body: Stack(
         children: [
-          ImagesCarousel(imagePaths: imagePaths),
-          const SizedBox(height: 20),
-          if (productData.isNotEmpty)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 16.0),
-                    child: NameText(productData: productData),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 16.0),
-                  child: PriceText(productData: productData),
-                ),
-              ],
-            ),
-          const SizedBox(height: 5),
-          if (productData.isNotEmpty)
-            Card(
-              color: Color(0xFF486D28),
-              child: Column(
-                children: [
-                  DescText(),
-                  SizedBox(height: 5),
-                  Card(
-                    margin: EdgeInsets.symmetric(horizontal: 16.0),
-                    color: Color(0xFF486D28).withOpacity(0.7),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: DescriptionText(productData: productData),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          if (productData.isEmpty) CircularProgressIndicator(),
+          ImagesCarousel(imagePaths: imagePaths, buildAppBar: _buildAppBar),
+          InformationWidget(productData: productData),
         ],
       ),
+    );
+  }
+
+  AppBar _buildAppBar() {
+    return AppBar(
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      centerTitle: true,
+      leading: _buildAppBarIconButton(
+        icon: Icons.arrow_back,
+        onPressed: () {
+          Get.to(HomePage());
+        },
+      ),
+      actions: [
+        _buildAppBarIconButton(
+          icon: Icons.favorite_border,
+          onPressed: () {},
+        ),
+      ],
     );
   }
 
@@ -137,26 +99,63 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   }
 }
 
-class DescText extends StatelessWidget {
-  const DescText({
+class InformationWidget extends StatelessWidget {
+  const InformationWidget({
     Key? key,
+    required this.productData,
   });
+
+  final Map<String, dynamic> productData;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Container(
-          margin: EdgeInsets.only(top: 10, left: 20),
-          width: gWidth,
-          height: gHeight / 25,
-          child: SizedBox(
-            child: Text("Descripción:",
-                style: TextStyle(
-                  color: Color(0xFFFFFCEA),
-                  fontWeight: FontWeight.bold,
-                  fontSize: 25,
-                )),
-          )),
+    return Positioned(
+      top: 0, // Ajusta esta posición según tus necesidades
+      left: 0,
+      right: 0,
+      bottom: 0,
+      child: DraggableScrollableSheet(
+        initialChildSize: 0.70, // Ajusta este valor según tus necesidades
+        maxChildSize: 1.0,
+        minChildSize: 0.65,
+        builder: (context, scrollController) {
+          return Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            clipBehavior: Clip.hardEdge,
+            decoration: const BoxDecoration(
+              color: Color(0xFFFFFCEA),
+              borderRadius: BorderRadius.only(
+                topLeft: const Radius.circular(20),
+                topRight: const Radius.circular(20),
+              ),
+            ),
+            child: SingleChildScrollView(
+              controller: scrollController,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10, bottom: 25),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          height: 5,
+                          width: 35,
+                          color: Colors.black12,
+                        ),
+                      ],
+                    ),
+                  ),
+                  NameText(productData: productData),
+                  PriceText(productData: productData),
+                  DescriptionText(productData: productData),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }
@@ -196,7 +195,7 @@ class DescriptionText extends StatelessWidget {
     return Text(
       description != "N/A" ? "$description" : "",
       style: TextStyle(
-        color: Color(0xFFFFFCEA),
+        color: Color(0xFF486D28),
         fontSize: 20,
         fontWeight: FontWeight.w200,
       ),
@@ -229,9 +228,11 @@ class ImagesCarousel extends StatefulWidget {
   const ImagesCarousel({
     Key? key,
     required this.imagePaths,
+    required this.buildAppBar,
   }) : super(key: key);
 
   final List<String> imagePaths;
+  final Function() buildAppBar;
 
   @override
   _ImagesCarouselState createState() => _ImagesCarouselState();
@@ -245,13 +246,13 @@ class _ImagesCarouselState extends State<ImagesCarousel> {
     return Column(
       children: [
         Container(
-          height: gHeight / 2.82,
+          height: MediaQuery.of(context).size.height / 2.82,
           child: Stack(
             alignment: Alignment.bottomCenter,
             children: [
               CarouselSlider(
                 options: CarouselOptions(
-                  height: gHeight / 2.82,
+                  height: MediaQuery.of(context).size.height / 2.82,
                   enableInfiniteScroll: true,
                   viewportFraction: 1.0,
                   onPageChanged: (index, reason) {
@@ -262,33 +263,13 @@ class _ImagesCarouselState extends State<ImagesCarousel> {
                 ),
                 items: widget.imagePaths.map((path) {
                   return Container(
-                    width: gWidth,
+                    width: MediaQuery.of(context).size.width,
                     child: Image(
                       image: AssetImage(path),
                       fit: BoxFit.cover,
                     ),
                   );
                 }).toList(),
-              ),
-              Container(
-                margin: const EdgeInsets.only(bottom: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: widget.imagePaths.map((path) {
-                    int index = widget.imagePaths.indexOf(path);
-                    return Container(
-                      width: 8.0,
-                      height: 8.0,
-                      margin: EdgeInsets.symmetric(horizontal: 4.0),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: _currentIndex == index
-                            ? Color(0xFF486D28)
-                            : Colors.grey,
-                      ),
-                    );
-                  }).toList(),
-                ),
               ),
             ],
           ),

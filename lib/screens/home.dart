@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:proyecto_flutter/api/models/product_model.dart';
 import 'package:proyecto_flutter/api/services/product_service.dart';
 import 'package:proyecto_flutter/screens/product_detail.dart';
+import 'package:proyecto_flutter/screens/prueba.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
 import 'package:proyecto_flutter/widget/nav_bar.dart';
 
@@ -165,7 +166,9 @@ class ProductsVerticalItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.to(ProductDetailScreen());
+        Get.to(
+          ProductDetailScreen2(productId: product.id),
+        );
       },
       child: Container(
         margin: EdgeInsets.only(
