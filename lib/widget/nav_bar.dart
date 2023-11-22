@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:proyecto_flutter/screens/chat.dart';
+import 'package:proyecto_flutter/screens/create_product.dart';
 import 'package:proyecto_flutter/screens/home.dart';
 import 'package:proyecto_flutter/screens/profile.dart';
 import 'package:proyecto_flutter/screens/shopping_basket.dart';
@@ -17,9 +18,12 @@ class CustomBottomNavigationBarController extends GetxController {
         Get.to(ShoppingBasketPage(), transition: Transition.noTransition);
         break;
       case 2:
-        Get.to(ChatPage(), transition: Transition.noTransition);
+        Get.to(CreateProduct(), transition: Transition.noTransition);
         break;
       case 3:
+        Get.to(ChatPage(), transition: Transition.noTransition);
+        break;
+      case 4:
         Get.to(ProfilePage(), transition: Transition.noTransition);
         break;
       default:
@@ -66,6 +70,10 @@ class CustomBottomNavigationBar extends StatelessWidget {
                 GButton(
                   icon: LineIcons.shoppingBasket,
                   text: "Cesta",
+                ),
+                GButton(
+                  icon: LineIcons.plusCircle,
+                  text: "Publicar",
                 ),
                 GButton(
                   icon: LineIcons.comment,

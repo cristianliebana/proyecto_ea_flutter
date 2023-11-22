@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:proyecto_flutter/api/models/product_model.dart';
 import 'package:proyecto_flutter/api/services/product_service.dart';
 import 'package:proyecto_flutter/screens/product_detail.dart';
-import 'package:proyecto_flutter/screens/prueba.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
 import 'package:proyecto_flutter/widget/nav_bar.dart';
 
@@ -167,7 +166,7 @@ class ProductsVerticalItem extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Get.to(
-          ProductDetailScreen2(productId: product.id),
+          ProductDetailScreen(productId: product.id),
         );
       },
       child: Container(
@@ -245,7 +244,8 @@ class ProductsHorizontal extends StatelessWidget {
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: () {
-                    // Handle tap
+                    Get.to(
+                        ProductDetailScreen(productId: productList[index].id));
                   },
                   child: Container(
                     margin: EdgeInsets.all(gHeight * 0.01),
