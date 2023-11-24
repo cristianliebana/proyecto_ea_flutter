@@ -4,7 +4,7 @@ import 'package:proyecto_flutter/api/services/product_service.dart';
 import 'package:proyecto_flutter/api/services/token_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
 import 'package:proyecto_flutter/screens/chat.dart';
-import 'package:proyecto_flutter/screens/chat.dart';
+//import 'package:proyecto_flutter/screens/chat.dart';
 import 'package:proyecto_flutter/screens/home.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:proyecto_flutter/utils/constants.dart';

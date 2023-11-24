@@ -1,5 +1,5 @@
 import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:proyecto_flutter/api/models/user_model.dart';
+//import 'package:proyecto_flutter/api/models/user_model.dart';
 import 'package:proyecto_flutter/api/services/token_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
 

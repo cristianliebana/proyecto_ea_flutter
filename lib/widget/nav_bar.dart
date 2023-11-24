@@ -5,7 +5,7 @@ import 'package:proyecto_flutter/screens/chat.dart';
 import 'package:proyecto_flutter/screens/create_product.dart';
 import 'package:proyecto_flutter/screens/home.dart';
 import 'package:proyecto_flutter/screens/profile.dart';
-import 'package:proyecto_flutter/screens/shopping_basket.dart';
+import 'package:proyecto_flutter/screens/map.dart';
 import 'package:get/get.dart';
 
 class CustomBottomNavigationBarController extends GetxController {
@@ -15,7 +15,7 @@ class CustomBottomNavigationBarController extends GetxController {
         Get.to(HomePage(), transition: Transition.noTransition);
         break;
       case 1:
-        Get.to(ShoppingBasketPage(), transition: Transition.noTransition);
+        Get.to(const MapPageView(), transition: Transition.noTransition);
         break;
       case 2:
         Get.to(CreateProduct(), transition: Transition.noTransition);
@@ -68,8 +68,8 @@ class CustomBottomNavigationBar extends StatelessWidget {
                   text: "Inicio",
                 ),
                 GButton(
-                  icon: LineIcons.shoppingBasket,
-                  text: "Cesta",
+                  icon: LineIcons.map,
+                  text: "Mapa",
                 ),
                 GButton(
                   icon: LineIcons.plusCircle,
