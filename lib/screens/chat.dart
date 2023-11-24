@@ -53,6 +53,7 @@ class ChatPage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(right: 15),
                   child: Row(
+                    
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
@@ -84,36 +85,39 @@ class ChatPage extends StatelessWidget {
                       letterSpacing: 1),
                 ),
                 SizedBox(height: 20),
-                SizedBox(
-                  height: 100,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    shrinkWrap: true,
-                    itemCount: images.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 25),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CircleAvatar(
-                              backgroundImage: AssetImage(images[index]),
-                              minRadius: 30,
-                            ),
-                            SizedBox(height: 8),
-                            Text(
-                              names[index],
-                              style: TextStyle(
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w500,
-                                  letterSpacing: 1),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ),
+
+SizedBox(
+  height: 100,
+  child: ListView.builder(
+    scrollDirection: Axis.horizontal,
+    shrinkWrap: true,
+    itemCount: images.length,
+    itemBuilder: (context, index) {
+      return Padding(
+        padding: const EdgeInsets.only(right: 25),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            CircleAvatar(
+              backgroundImage: AssetImage(images[index]),
+              minRadius: 30,
+            ),
+            SizedBox(height: 8),
+            Text(
+              names[index],
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w500,
+                letterSpacing: 1,
+              ),
+            ),
+          ],
+        ),
+      );
+    },
+  ),
+),
                 SizedBox(height: 10),
                 Divider(),
                 SizedBox(height: 20),
@@ -147,6 +151,8 @@ class ChatPage extends StatelessWidget {
                     );
                   },
                 )
+
+
               ],
             ),
           ),

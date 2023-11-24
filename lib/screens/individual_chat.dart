@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
+import 'package:proyecto_flutter/screens/chat.dart';
 import 'package:proyecto_flutter/screens/chat_message_item.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
@@ -93,11 +95,16 @@ class _IndividualChatState extends State<IndividualChat> {
             Container(
               padding: EdgeInsets.all(8),
               height: 85,
-              color: Colors.white,
+              color: Color(0xFF486D28),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  BackButton(),
+                  BackButton(
+                    color:Color(0xFFFFFCEA),
+                    onPressed: () {
+                      Get.to(ChatPage());
+                    },
+                  ),
                   SizedBox(width: 5),
                   CircleAvatar(
                     backgroundImage:
@@ -114,25 +121,34 @@ class _IndividualChatState extends State<IndividualChat> {
                         style: TextStyle(
                           fontSize: 19,
                           fontWeight: FontWeight.bold,
+                          color: Color(0xFFFFFCEA),
                         ),
                       ),
                       Text(
                         "Active 5 hours ago",
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
-                          color: Colors.grey.shade500,
+                          color: Color(0xFFFFFCEA).withOpacity(0.7),
                         ),
                       ),
                     ],
                   ),
                   Spacer(),
-                  IconButton(onPressed: () {}, icon: Icon(Icons.more_vert)),
+                  IconButton(
+  onPressed: () {
+ 
+  },
+  icon: Icon(
+    Icons.more_vert,
+    color: Color(0xFFFFFCEA), 
+  ),
+),
                 ],
               ),
             ),
             Expanded(
               child: Container(
-                color: Colors.grey.shade200,
+                color: Color(0xFFFFFCEA),
                 child: ListView(
                   padding: EdgeInsets.all(15),
                   scrollDirection: Axis.vertical,
@@ -166,13 +182,15 @@ class _IndividualChatState extends State<IndividualChat> {
           ],
         ),
       ),
-      bottomNavigationBar: Container(
-        height: 70,
-        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(13),
-        ),
+  bottomNavigationBar: Container(
+    height: 70,
+    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+    margin: EdgeInsets.all(10),
+    decoration: BoxDecoration(
+      color: Color(0xFFFFFCEA),
+      borderRadius: BorderRadius.circular(13),
+      border: Border.all(color: Color(0xFF486D28),width: 3.0), // Color del borde
+    ),
         child: Container(
           child: Row(
             children: [
@@ -185,7 +203,7 @@ class _IndividualChatState extends State<IndividualChat> {
                     hintStyle: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
-                      color: Colors.blue[900],
+                      color: Color(0xFF486D28),
                     ),
                   ),
                   maxLines: 10,
@@ -202,12 +220,12 @@ class _IndividualChatState extends State<IndividualChat> {
                   width: 50,
                   height: 50,
                   decoration: BoxDecoration(
-                    color: Colors.blue[900],
+                    color: Color(0xFF486D28),
                     borderRadius: BorderRadius.circular(13),
                   ),
                   alignment: Alignment.center,
                   child:
-                      Icon(Icons.send_rounded, color: Colors.white, size: 25),
+                      Icon(Icons.send_rounded, color: Color(0xFFFFFCEA), size: 25),
                 ),
               ),
             ],
