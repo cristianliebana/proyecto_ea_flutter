@@ -3,16 +3,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-//import 'package:get/get.dart';
 import 'package:proyecto_flutter/widget/nav_bar.dart';
 
+
 class MapPageView extends StatelessWidget {
-  const MapPageView({Key? key}) : super(key: key);
+  final LatLng? currentPosition;
+
+  const MapPageView({Key? key, this.currentPosition}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xFFFFFCEA),
       bottomNavigationBar: CustomBottomNavigationBar(currentIndex: 1),
       body: Column(
         mainAxisSize: MainAxisSize.min,
@@ -21,18 +23,34 @@ class MapPageView extends StatelessWidget {
           const SizedBox(height: 20),
           Expanded(
             flex: 9,
-            child: FlutterMap(
-              options: MapOptions(
-                // Set a default center (e.g., center of a city)
-                center: LatLng(37.7749, -122.4194),
-                zoom: 10,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 5,
+                    blurRadius: 7,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
               ),
-              children: [
-                TileLayer(
-                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                  userAgentPackageName: 'com.example.app',
+              margin: const EdgeInsets.all(10),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: FlutterMap(
+                  options: MapOptions(
+                    center: currentPosition ?? LatLng(41.2731, 1.9865),
+                    zoom: 15,
+                  ),
+                  children: [
+                    TileLayer(
+                      urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                      userAgentPackageName: 'com.example.app',
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ],
@@ -40,3 +58,4 @@ class MapPageView extends StatelessWidget {
     );
   }
 }
+

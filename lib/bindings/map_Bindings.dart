@@ -3,32 +3,30 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:proyecto_flutter/screens/map.dart';
-//import 'package:shared_preferences/shared_preferences.dart';
 
 class MapPageBinding extends Bindings {
+  bool _requestedNavigation = false; 
+
   @override
   Future<void> dependencies() async {
+    if (_requestedNavigation) {
+      final Position? currentPosition = await _getCurrentPosition();
 
-    //final sharedPreferences = await SharedPreferences.getInstance();
-    //final userId = sharedPreferences.getString('userId');
-
-    final bool hasPermission = await _handleLocationPermission();
-    if (!hasPermission) {
-      // ignore: avoid_print
-      print("Location permission denied.");
-      return;
+      if (currentPosition != null) {
+        Get.to(() => MapPageView(
+            currentPosition:
+                LatLng(currentPosition.latitude, currentPosition.longitude)));
+      } else {
+        Get.to(() => const MapPageView(currentPosition: LatLng(41.2731, 1.9865)));
+      }
     }
+  }
 
-    final Position? currentPosition = await _getCurrentPosition();
-
-    if (currentPosition != null) {
-      final MapPageController mapFieldsController = Get.find<MapPageController>();
-      mapFieldsController.currentPosition.value = currentPosition;
-    } else {
-      // ignore: avoid_print
-      print("Current position is null.");
-    }
+  void requestNavigation() {
+    _requestedNavigation = true;
+    dependencies(); 
   }
 
   Future<bool> _handleLocationPermission() async {
@@ -38,23 +36,26 @@ class MapPageBinding extends Bindings {
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(
-          content: Text('Location services are disabled. Please enable the services')));
+          content: Text(
+              'Location services are disabled. Please enable the services')));
       return false;
     }
+
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        ScaffoldMessenger.of(Get.context!).showSnackBar(
-            const SnackBar(content: Text('Location permissions are denied')));
-        return false;
-      }
-    }
-    if (permission == LocationPermission.deniedForever) {
       ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(
-          content: Text('Location permissions are permanently denied, we cannot request permissions.')));
+          content: Text(
+              'Location permissions are denied. You can still view the map.')));
       return false;
     }
+
+    if (permission == LocationPermission.deniedForever) {
+      ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(
+          content: Text(
+              'Location permissions are permanently denied, we cannot request permissions.')));
+      return false;
+    }
+
     return true;
   }
 

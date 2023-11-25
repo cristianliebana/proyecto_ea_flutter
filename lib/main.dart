@@ -2,6 +2,7 @@ import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:proyecto_flutter/bindings/map_Bindings.dart';
 import 'package:proyecto_flutter/screens/login.dart';
 
 void main() {
@@ -15,11 +16,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'PROYECTO EA',
+      title: 'KM0 MARKET',
       theme: ThemeData(
         scaffoldBackgroundColor: Color(0xFFFFFCEA),
       ),
       home: const SplashScreen(),
+      initialBinding: MapPageBinding(),
     );
   }
 }
