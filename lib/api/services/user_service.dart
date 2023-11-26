@@ -53,6 +53,13 @@ class UserService {
     }
   }
 
+  static Future<ApiResponse> getCreadorById(String creadorId) async {
+    ApiResponse response = ApiResponse(data: {}, statusCode: 404);
+    response = await Api().getWithoutToken('/users/readuser/$creadorId');
+    print('API Response: $response');
+    return response;
+  }
+
   static Future<ApiResponse> usernameExists(String username) async {
     ApiResponse response = ApiResponse(data: {}, statusCode: 404);
     try {

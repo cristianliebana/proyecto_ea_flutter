@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:proyecto_flutter/api/services/product_service.dart';
 import 'package:proyecto_flutter/api/services/token_service.dart';
+import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
 import 'package:proyecto_flutter/screens/chat.dart';
 import 'package:proyecto_flutter/screens/chat.dart';
@@ -20,6 +22,7 @@ class ProductDetailScreen extends StatefulWidget {
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   Map<String, dynamic> productData = {};
+  Map<String, dynamic> creadorData = {};
   final List<String> imagePaths = [
     'assets/images/tomate.jpeg',
     'assets/images/tomate2.jpg',
@@ -39,6 +42,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     setState(() {
       productData = response.data;
     });
+    await obtenerDatosCreadorProducto(productData['user']);
+  }
+
+  Future<void> obtenerDatosCreadorProducto(String creadorId) async {
+    ApiResponse response = await UserService.getCreadorById(creadorId);
+    setState(() {
+      creadorData = response.data;
+    });
   }
 
   Future<void> checkAuthAndNavigate() async {
@@ -57,7 +68,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       body: Stack(
         children: [
           ImagesCarousel(imagePaths: imagePaths, buildAppBar: _buildAppBar),
-          InformationWidget(productData: productData),
+          InformationWidget(
+            productData: productData,
+            creadorData: creadorData,
+          ),
         ],
       ),
     );
@@ -103,12 +117,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 }
 
 class InformationWidget extends StatelessWidget {
-  const InformationWidget({
-    Key? key,
-    required this.productData,
-  });
+  const InformationWidget(
+      {Key? key, required this.productData, required this.creadorData});
 
   final Map<String, dynamic> productData;
+  final Map<String, dynamic> creadorData;
 
   @override
   Widget build(BuildContext context) {
@@ -153,13 +166,44 @@ class InformationWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         CircleAvatar(
-                          radius: 25,
+                          radius: 35,
                           backgroundImage:
                               AssetImage("assets/images/shrek.jpeg"),
                         ),
                         SizedBox(width: 10),
-                        UserText(productData: productData),
-                        Spacer(), // Añade un espacio flexible para separar los widgets
+                        SizedBox(height: 30),
+                        Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              UserText(creadorData: creadorData),
+                              Transform.scale(
+                                alignment: Alignment.centerLeft,
+                                scale:
+                                    0.7, // Ajusta el valor según tus necesidades
+                                child: RatingBar(
+                                  ignoreGestures: true,
+                                  initialRating: creadorData['rating'] ?? 3.5,
+                                  direction: Axis.horizontal,
+                                  allowHalfRating: true,
+                                  itemCount: 5,
+                                  ratingWidget: RatingWidget(
+                                    full: Image.asset(
+                                        'assets/ratingimages/zanahoriaentera.png'),
+                                    half: Image.asset(
+                                        'assets/ratingimages/mediazanahoria.png'),
+                                    empty: Image.asset(
+                                        'assets/ratingimages/zanahoriavacia.png'),
+                                  ),
+                                  itemPadding:
+                                      EdgeInsets.symmetric(horizontal: 4.0),
+                                  onRatingUpdate: (rating) {
+                                    print(rating);
+                                  },
+                                ),
+                              ),
+                            ]),
+                        Spacer(),
                         PriceText(productData: productData),
                       ],
                     ),
@@ -194,9 +238,9 @@ class ChatButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 100),
-      width: gWidth,
-      height: gHeight / 15,
+      margin: EdgeInsets.symmetric(horizontal: 170),
+      width: gWidth / 4,
+      height: gHeight / 16,
       child: ElevatedButton(
         onPressed: () async {
           Get.to(ChatPage());
@@ -262,17 +306,17 @@ class PriceText extends StatelessWidget {
 class UserText extends StatelessWidget {
   const UserText({
     Key? key,
-    required this.productData,
+    required this.creadorData,
   });
 
-  final Map<String, dynamic> productData;
+  final Map<String, dynamic> creadorData;
 
   @override
   Widget build(BuildContext context) {
-    String user = productData['user'] ?? "N/A";
+    String username = creadorData['username'] ?? "N/A";
 
     return Text(
-      user != "N/A" ? "$user" : "",
+      username != "N/A" ? "$username" : "",
       style: TextStyle(fontSize: 25),
     );
   }
