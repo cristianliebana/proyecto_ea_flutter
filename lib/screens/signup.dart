@@ -13,6 +13,7 @@ import 'package:proyecto_flutter/utils/constants.dart';
 import 'package:proyecto_flutter/widget/rep_textfiled.dart';
 import 'package:http/http.dart' as http;
 import 'dart:html' as html;
+import 'package:universal_html/html.dart' as html;
 
 class SignUpScreen extends StatefulWidget {
   SignUpScreen({Key? key}) : super(key: key);
@@ -29,6 +30,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Future<void> _pickImage(ImageSource source) async {
     final ImagePicker picker = ImagePicker();
     final XFile? pickedFile = await picker.pickImage(source: source);
+    print(pickedFile);
     setState(() {
       if (pickedFile != null) _imageFile = File(pickedFile.path);
     });
@@ -44,30 +46,59 @@ class _SignUpScreenState extends State<SignUpScreen> {
     final request = http.MultipartRequest('POST', url)
       ..fields['upload_preset'] = 'xcsa2ndz';
 
-    if (kIsWeb) {
-      // En Flutter web, manejamos el envío del archivo de una manera diferente
-      final bytes = await _imageFile!.readAsBytes();
-      request.files.add(
-          http.MultipartFile.fromBytes('file', bytes, filename: 'file.jpg'));
-    } else {
-      // En dispositivos móviles, utilizamos el método fromPath como antes
-      request.files
-          .add(await http.MultipartFile.fromPath('file', _imageFile!.path));
-    }
-
     try {
-      final response = await request.send();
-      if (response.statusCode == 200) {
-        final responseData = await response.stream.toBytes();
-        final responseString = String.fromCharCodes(responseData);
-        final jsonMap = jsonDecode(responseString);
-        setState(() {
-          final url = jsonMap['url'];
-          _imageUrl = url;
+      if (kIsWeb) {
+        final html.FileUploadInputElement input = html.FileUploadInputElement()
+          ..accept = 'image/*';
+        input.click();
+
+        input.onChange.listen((event) async {
+          final file = input.files!.first;
+          final reader = html.FileReader();
+          reader.readAsArrayBuffer(file);
+
+          await reader.onLoadEnd.first;
+          final List<int> bytes =
+              Uint8List.fromList(reader.result as List<int>);
+
+          request.files.add(http.MultipartFile.fromBytes(
+            'file',
+            bytes,
+            filename: file.name,
+          ));
+
+          final response = await request.send();
+          if (response.statusCode == 200) {
+            final responseData = await response.stream.toBytes();
+            final responseString = String.fromCharCodes(responseData);
+            final jsonMap = jsonDecode(responseString);
+            setState(() {
+              final url = jsonMap['url'];
+              _imageUrl = url;
+            });
+          } else {
+            // Manejar errores de red o de la API
+            print('Error en la carga de la imagen: ${response.reasonPhrase}');
+          }
         });
       } else {
-        // Manejar errores de red o de la API
-        print('Error en la carga de la imagen: ${response.reasonPhrase}');
+        request.files.add(
+          await http.MultipartFile.fromPath('file', _imageFile!.path),
+        );
+
+        final response = await request.send();
+        if (response.statusCode == 200) {
+          final responseData = await response.stream.toBytes();
+          final responseString = String.fromCharCodes(responseData);
+          final jsonMap = jsonDecode(responseString);
+          setState(() {
+            final url = jsonMap['url'];
+            _imageUrl = url;
+          });
+        } else {
+          // Manejar errores de red o de la API
+          print('Error en la carga de la imagen: ${response.reasonPhrase}');
+        }
       }
     } catch (error) {
       // Manejar errores generales
@@ -97,21 +128,30 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     NameTextFiled(signUpController: signUpController),
                     SizedBox(height: 10),
                     UsernameTextFiled(signUpController: signUpController),
+                    SizedBox(height: 25),
+                    BottomText(),
+                    SizedBox(height: 25),
+                    ContinueButton(signUpController: signUpController),
                     ElevatedButton(
                       onPressed: () => _pickImage(ImageSource.camera),
                       child: const Text('Abre la cámara'),
-                    ),
-                    SizedBox(height: 10),
-                    ElevatedButton(
-                      onPressed: _uploadImage,
-                      child: const Text('Subelo a cloudinary'),
                     ),
                     ElevatedButton(
                       onPressed: () => _pickImage(ImageSource.gallery),
                       child: const Text('Selecciona una foto de la galería'),
                     ),
                     if (_imageFile != null) ...[
-                      Image.network(_imageFile!.path),
+                      Container(
+                        height: 50, // Ajusta la altura según tus necesidades
+                        width: 50, // Ajusta el ancho según tus necesidades
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8.0),
+                          image: DecorationImage(
+                            image: FileImage(_imageFile!),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
                       ElevatedButton(
                         onPressed: _uploadImage,
                         child: const Text('Subelo a cloudinary'),
@@ -125,10 +165,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           padding:
                               EdgeInsets.only(left: 20, top: 60, bottom: 100)),
                     ],
-                    SizedBox(height: 25),
-                    BottomText(),
-                    SizedBox(height: 25),
-                    ContinueButton(signUpController: signUpController)
                   ],
                 ),
               ),
