@@ -98,6 +98,7 @@ Future<void> loadUserFavorites(String? userId) async {
   }
 }
 
+
 class SearchBar extends StatelessWidget {
   const SearchBar({Key? key}) : super(key: key);
 

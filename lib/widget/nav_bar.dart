@@ -38,6 +38,7 @@ class CustomBottomNavigationBarController extends GetxController {
   }
 }
 
+
 class CustomBottomNavigationBar extends StatelessWidget {
   final CustomBottomNavigationBarController controller =
       Get.put(CustomBottomNavigationBarController());
