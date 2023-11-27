@@ -1,21 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:proyecto_flutter/api/services/token_service.dart';
 import 'package:proyecto_flutter/screens/chat.dart';
 import 'package:proyecto_flutter/screens/create_product.dart';
+import 'package:proyecto_flutter/screens/favorites.dart';
 import 'package:proyecto_flutter/screens/home.dart';
 import 'package:proyecto_flutter/screens/profile.dart';
 import 'package:proyecto_flutter/screens/shopping_basket.dart';
 import 'package:get/get.dart';
 
 class CustomBottomNavigationBarController extends GetxController {
+  
+  String userId = ''; 
+
   void updateIndex(int index) {
     switch (index) {
       case 0:
         Get.to(HomePage(), transition: Transition.noTransition);
         break;
       case 1:
-        Get.to(ShoppingBasketPage(), transition: Transition.noTransition);
+        Get.to(FavoritesScreen(), transition: Transition.noTransition);
         break;
       case 2:
         Get.to(CreateProduct(), transition: Transition.noTransition);
@@ -69,7 +75,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
                 ),
                 GButton(
                   icon: LineIcons.shoppingBasket,
-                  text: "Cesta",
+                  text: "Favoritos",
                 ),
                 GButton(
                   icon: LineIcons.plusCircle,
