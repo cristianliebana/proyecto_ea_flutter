@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:proyecto_flutter/widget/nav_bar.dart';
+//import 'package:proyecto_flutter/widget/nav_bar.dart';
 // Importa el archivo nav_bar.dart
 
 class CreateProductDetail extends StatelessWidget {

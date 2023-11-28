@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+//import 'package:get/get.dart';
 import 'package:proyecto_flutter/screens/individual_chat.dart';
 import 'package:proyecto_flutter/widget/nav_bar.dart';
 
