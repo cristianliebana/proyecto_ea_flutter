@@ -6,7 +6,8 @@ import 'package:proyecto_flutter/widget/nav_bar.dart';
 class MapPageView extends StatelessWidget {
   final Future<LatLng> currentPositionFuture;
 
-  const MapPageView({Key? key, required this.currentPositionFuture}) : super(key: key);
+  const MapPageView({Key? key, required this.currentPositionFuture})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +40,8 @@ class MapPageView extends StatelessWidget {
           height: 80.0,
           point: currentPosition,
           builder: (ctx) => Container(
-            child: Icon(Icons.location_pin, color: Color(0xFF486D28), size: 40.0),
+            child:
+                Icon(Icons.location_pin, color: Color(0xFF486D28), size: 40.0),
           ),
         ),
       );
@@ -48,8 +50,8 @@ class MapPageView extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const SizedBox(height: 50),
-        const SizedBox(height: 20),
+        const SizedBox(height: 1),
+        const SizedBox(height: 1),
         Expanded(
           flex: 9,
           child: Container(
@@ -64,9 +66,9 @@ class MapPageView extends StatelessWidget {
                 ),
               ],
             ),
-            margin: const EdgeInsets.all(10),
+            margin: const EdgeInsets.all(5),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(10),
               child: FlutterMap(
                 options: MapOptions(
                   center: currentPosition ?? LatLng(41.2731, 1.9865),
@@ -74,7 +76,8 @@ class MapPageView extends StatelessWidget {
                 ),
                 children: [
                   TileLayer(
-                    urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                    urlTemplate:
+                        'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                     userAgentPackageName: 'com.example.app',
                   ),
                   MarkerLayer(markers: markers),

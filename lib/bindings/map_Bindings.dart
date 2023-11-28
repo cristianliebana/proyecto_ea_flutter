@@ -58,7 +58,7 @@ class MapPageBinding extends Bindings {
 
   if (permission == LocationPermission.deniedForever) {
     ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(
-      content: Text('Location permissions are permanently denied, we cannot request permissions.')));
+      content: Text('Location permissions denied.')));
     return false;
   }
 
