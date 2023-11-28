@@ -96,6 +96,7 @@ class SignUpPasswordController extends GetxController {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController password1Controller = TextEditingController();
   final String defaultRole = 'cliente';
+  final int defaultRating = 0;
 
   SignUpPasswordController({required this.userData});
 
@@ -112,6 +113,7 @@ class SignUpPasswordController extends GetxController {
       'email': email,
       'password': password,
       'rol': defaultRole,
+      'rating': defaultRating,
     };
     print(password);
     print(password1);
