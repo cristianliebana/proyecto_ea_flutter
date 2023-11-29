@@ -192,7 +192,7 @@ class LoginButton extends StatelessWidget {
           },
           child: Text(
             "Iniciar Sesión",
-            style: TextStyle(fontSize: 25),
+            style: TextStyle(fontSize: 25,  color: Colors.white),
           ),
           style: ButtonStyle(
               shape: MaterialStateProperty.all(
