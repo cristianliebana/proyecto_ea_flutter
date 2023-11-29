@@ -166,7 +166,7 @@ class ProductsVerticalItem extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Get.to(
-          ProductDetailScreen(productId: product.id),
+          ProductDetailScreen(productId: product.id ?? ''),
         );
       },
       child: Container(
@@ -184,7 +184,7 @@ class ProductsVerticalItem extends StatelessWidget {
             Container(
               margin: EdgeInsets.only(top: 10),
               child: Text(
-                product.name,
+                product.name ?? '',
                 style: TextStyle(
                   color: Colors.white,
                 ),
@@ -245,7 +245,7 @@ class ProductsHorizontal extends StatelessWidget {
                 return GestureDetector(
                   onTap: () {
                     Get.to(
-                        ProductDetailScreen(productId: productList[index].id));
+                        ProductDetailScreen(productId: productList[index].id ?? ''));
                   },
                   child: Container(
                     margin: EdgeInsets.all(gHeight * 0.01),
@@ -265,7 +265,7 @@ class ProductsHorizontal extends StatelessWidget {
                             Container(
                               margin: EdgeInsets.only(top: 10),
                               child: Text(
-                                productList[index].name,
+                                productList[index].name ?? '',
                                 style: TextStyle(
                                   color: Colors.white,
                                 ),

@@ -6,6 +6,7 @@ import 'package:proyecto_flutter/bindings/map_Bindings.dart';
 import 'package:proyecto_flutter/screens/login.dart';
 
 void main() {
+  Get.put(UserController());
   runApp(const MyApp());
 }
 

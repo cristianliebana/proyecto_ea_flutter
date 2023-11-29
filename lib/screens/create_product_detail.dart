@@ -1,111 +1,209 @@
 import 'package:flutter/material.dart';
-import 'package:proyecto_flutter/api/models/product_model.dart';
+import 'package:get/get.dart';
+import 'package:line_icons/line_icons.dart';
+import 'package:animate_do/animate_do.dart';
+import 'package:proyecto_flutter/api/services/product_service.dart';
+import 'package:proyecto_flutter/api/utils/http_api.dart';
+import 'package:proyecto_flutter/screens/home.dart';
+import 'package:proyecto_flutter/screens/login.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
+import 'package:proyecto_flutter/widget/rep_textfiled.dart';
 
-class CreateProductDetail extends StatefulWidget {
+class CreateProductDetail extends StatelessWidget {
   final String productName;
+  CreateProductDetail({Key? key, required this.productName}) : super(key: key);
 
-  CreateProductDetail({required this.productName});
+  //final CreateProductController createProductController;
 
-  @override
-  _CreateProductDetailState createState() => _CreateProductDetailState();
-}
-
-class _CreateProductDetailState extends State<CreateProductDetail> {
-  TextEditingController descriptionController = TextEditingController();
-  TextEditingController priceController = TextEditingController();
-  TextEditingController unitsController = TextEditingController();
-
-  TextStyle labelTextStyle = TextStyle(
-    fontSize: 16,
-    fontWeight: FontWeight.bold,
-  );
-
-  TextStyle buttonTextStyle = TextStyle(
-    fontSize: 18,
-    fontWeight: FontWeight.bold,
-    color: Colors.white,
-  );
+  final CreateProductController createProductController =
+      CreateProductController();
 
   @override
   Widget build(BuildContext context) {
-    print('productName in CreateProductDetail: ${widget.productName}');
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Create a Product',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
+    createProductController.nameController.text = productName; // Set the product name
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        body: Container(
+          margin: EdgeInsets.all(15),
+          width: gWidth,
+          height: gHeight,
+          child: Column(
+            children: [
+              SizedBox(height: 10),
+              NameTextField(createProductController: createProductController),
+              SizedBox(height: 10),
+              DescriptionTextField(createProductController: createProductController),
+              SizedBox(height: 10),
+              PriceTextField(createProductController: createProductController),
+              SizedBox(height: 10),
+              UnitsTextField(createProductController: createProductController),
+              SizedBox(height: 10),
+              SaveButton(createProductController: createProductController),
+            ],
           ),
-        ),
-        backgroundColor: Color(0xFF486D28),
-        iconTheme: IconThemeData(color: Colors.white),
-      ),
-      body: Container(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 16),
-            Text(
-              'Product Name: ${widget.productName.isNotEmpty ? widget.productName : 'N/A'}',
-              style: labelTextStyle,
-            ),
-            SizedBox(height: 16),
-            TextFormField(
-              controller: descriptionController,
-              decoration: InputDecoration(
-                labelText: 'Description',
-                labelStyle: labelTextStyle,
-              ),
-            ),
-            SizedBox(height: 16),
-            TextFormField(
-              controller: priceController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: 'Price',
-                labelStyle: labelTextStyle,
-              ),
-            ),
-            SizedBox(height: 16),
-            TextFormField(
-              controller: unitsController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: 'Units',
-                labelStyle: labelTextStyle,
-              ),
-            ),
-            SizedBox(height: 30),
-            ElevatedButton(
-              onPressed: () {
-                Product newProduct = Product(
-                  id: '',
-                  name: widget.productName,
-                  description: descriptionController.text,
-                  price: double.tryParse(priceController.text) ?? 0,
-                  units: int.tryParse(unitsController.text) ?? 0,
-                );
-                print('New Product Details: $newProduct');
-              },
-              child: Text('Save Product', style: buttonTextStyle),
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(buttonColor),
-                shape: MaterialStateProperty.all(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(150),
-                  ),
-                ),
-              ),
-            ),
-          ],
         ),
       ),
     );
   }
 }
 
+class CreateProductController extends GetxController {
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController unitsController = TextEditingController();
+  final TextEditingController priceController = TextEditingController();
 
+  void addProduct(BuildContext context) async {
+    String name = nameController.text;
+    String description = descriptionController.text;
+    int? units = int.tryParse(unitsController.text);
+    double? price = double.tryParse(priceController.text);
+    String userName = Get.find<UserController>().userName.value;
+
+    if (name.isEmpty || units == null || price == null) {
+      Get.snackbar(
+        "Error",
+        "Invalid input. Please check the product details.",
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      return;
+    }
+
+    Map<String, dynamic> productData = {
+      'name': name,
+      'description': description,
+      'price': price,
+      'units': units,
+      'user': userName,
+    };
+
+    try {
+      ApiResponse response = await ProductService.addProduct(productData);
+      Get.offAll(() => HomePage());
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        "Failed to add product. Please try again.",
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
+  }
+}
+
+class NameTextField extends StatefulWidget {
+  final CreateProductController createProductController;
+
+  NameTextField({required this.createProductController});
+
+  @override
+  _NameTextFieldState createState() =>
+      _NameTextFieldState(createProductController: createProductController);
+}
+
+class _NameTextFieldState extends State<NameTextField> {
+  final CreateProductController createProductController;
+
+  _NameTextFieldState({required this.createProductController});
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeInDown(
+      delay: Duration(milliseconds: 200),
+      child: RepTextFiled(
+        controller: createProductController.nameController,
+        icon: LineIcons.carrot,
+        text: "Producto",
+      ),
+    );
+  }
+}
+
+class DescriptionTextField extends StatelessWidget {
+  final CreateProductController createProductController;
+
+  DescriptionTextField({required this.createProductController});
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeInDown(
+      delay: Duration(milliseconds: 225),
+      child: RepTextFiled(
+        icon: LineIcons.archive,
+        text: "Descripción",
+        controller: createProductController.descriptionController,
+      ),
+    );
+  }
+}
+
+class PriceTextField extends StatelessWidget {
+  final CreateProductController createProductController;
+
+  PriceTextField({required this.createProductController});
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeInDown(
+      delay: Duration(milliseconds: 225),
+      child: RepTextFiled(
+        icon: LineIcons.moneyBill,
+        text: "Precio",
+        controller: createProductController.priceController,
+      ),
+    );
+  }
+}
+
+class UnitsTextField extends StatelessWidget {
+  final CreateProductController createProductController;
+
+  UnitsTextField({required this.createProductController});
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeInDown(
+      delay: Duration(milliseconds: 225),
+      child: RepTextFiled(
+        icon: LineIcons.sortNumericDown,
+        text: "Unidades",
+        controller: createProductController.unitsController,
+      ),
+    );
+  }
+}
+
+class SaveButton extends StatelessWidget {
+  final CreateProductController createProductController;
+
+  SaveButton({required this.createProductController});
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeInDown(
+      delay: Duration(milliseconds: 150),
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 100),
+        width: gWidth,
+        height: gHeight / 15,
+        child: ElevatedButton(
+          onPressed: () {
+            createProductController.addProduct(context);
+          },
+          child: Text(
+            "Añadir Producto",
+            style: TextStyle(fontSize: 25),
+          ),
+          style: ButtonStyle(
+            shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(100),
+              ),
+            ),
+            backgroundColor: MaterialStateProperty.all(buttonColor),
+          ),
+        ),
+      ),
+    );
+  }
+}

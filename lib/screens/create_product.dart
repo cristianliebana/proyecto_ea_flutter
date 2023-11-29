@@ -63,7 +63,6 @@ class FormButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: () async {
           String productName = Get.find<TitleTextFiledController>().productName;
-          print(productName);
           Navigator.push(
             context,
             MaterialPageRoute(
