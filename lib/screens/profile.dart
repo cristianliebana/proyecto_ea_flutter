@@ -5,6 +5,7 @@ import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
 import 'package:get/get.dart';
 import 'package:proyecto_flutter/screens/update_user.dart';
+import 'package:proyecto_flutter/screens/user_products.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
 import 'package:proyecto_flutter/widget/nav_bar.dart';
 
@@ -67,9 +68,11 @@ class _ProfilePageState extends State<ProfilePage> {
                     icon: LineAwesomeIcons.heart,
                     onPress: () {}),
                 ProfileMenuWidget(
-                    title: "Placeholder",
+                    title: "Mis Productos",
                     icon: LineAwesomeIcons.user_check,
-                    onPress: () {}),
+                    onPress: () { Navigator.push( context,
+                        MaterialPageRoute(builder: (context) => UserProductsScreen()),
+                );}),
                 const Divider(),
                 ProfileMenuWidget(
                     title: "Información",

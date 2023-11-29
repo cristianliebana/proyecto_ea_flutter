@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:proyecto_flutter/api/models/product_model.dart';
-import 'package:proyecto_flutter/api/services/favorite_service.dart';
 import 'package:proyecto_flutter/api/services/product_service.dart';
+import 'package:proyecto_flutter/api/services/token_service.dart';
 import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
+import 'package:proyecto_flutter/screens/chat.dart';
+import 'package:proyecto_flutter/screens/chat.dart';
+import 'package:proyecto_flutter/screens/home.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:proyecto_flutter/screens/product_detail.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
 import 'package:proyecto_flutter/widget/nav_bar.dart';
 
-
-class FavoritesScreen extends StatefulWidget {
+class UserProductsScreen extends StatefulWidget {
  
  @override
- _FavoritesScreenState createState() => _FavoritesScreenState();
+ _UserProductsScreenState createState() => _UserProductsScreenState();
 }
 
-class _FavoritesScreenState extends State<FavoritesScreen> {
+class _UserProductsScreenState extends State<UserProductsScreen> {
  List<Product> products = [];
  Map<String, dynamic> userData = {};
  late ScrollController _scrollController;
@@ -33,17 +37,18 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     ApiResponse response = await UserService.getUserById();
     setState(() {
       userData = response.data;
-      loadUserFavorites(userData['_id']);
+      print(userData);
+      print(userData['_id']);
+      loadUserProducts(userData['_id']);
     });
+ }
       
-  }
 
-Future<void> loadUserFavorites(String? userId) async {
+Future<void> loadUserProducts(String? userId) async {
   if (userId != null) {
-    final FavoriteService favoriteService = FavoriteService();
-    final List<Product> favorites = await favoriteService.getFavorites(userId);
+    final List<Product> userproducts = await ProductService.getUserProducts(userId);
     setState(() {
-      products = favorites;
+      products = userproducts;
       print(products);
     });
   } else {
@@ -132,7 +137,7 @@ class SearchBar extends StatelessWidget {
                   fontWeight: FontWeight.w400,
                   color: Color(0xFFFFFCEA),
                 ),
-                hintText: "Busca en tus productos favoritos",
+                hintText: "Busca en tus productos",
                 border: OutlineInputBorder(
                   borderSide: BorderSide.none,
                   borderRadius: BorderRadius.circular(100),

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:proyecto_flutter/api/services/product_service.dart';
 import 'package:proyecto_flutter/api/services/token_service.dart';
 import 'package:proyecto_flutter/api/services/user_service.dart';
+import 'package:proyecto_flutter/api/services/favorite_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
 import 'package:proyecto_flutter/screens/chat.dart';
 import 'package:proyecto_flutter/screens/chat.dart';
@@ -23,7 +24,10 @@ class ProductDetailScreen extends StatefulWidget {
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   Map<String, dynamic> productData = {};
   Map<String, dynamic> creadorData = {};
-  final List<String> imagePaths = [
+  Map<String, dynamic> userData = {};
+  Map<String, dynamic> favoriteData = {};
+  late String userId; 
+    final List<String> imagePaths = [
     'assets/images/tomate.jpeg',
     'assets/images/tomate2.jpg',
     'assets/images/tomate3.jpg',
@@ -41,6 +45,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         await ProductService.getProductById(widget.productId);
     setState(() {
       productData = response.data;
+      userId = productData['user'];
     });
     await obtenerDatosCreadorProducto(productData['user']);
   }
@@ -51,6 +56,18 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       creadorData = response.data;
     });
   }
+
+  Future<void> crearFavorito(String userId, String productId) async {
+    print(userId);
+    print(productId);
+    ApiResponse response = await FavoriteService.createFavorite(userId, productId);
+    
+    setState(() {
+      favoriteData = response.data;
+    });
+  }
+
+
 
   Future<void> checkAuthAndNavigate() async {
     await TokenService.loggedIn();
@@ -91,7 +108,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       actions: [
         _buildAppBarIconButton(
           icon: Icons.favorite_border,
-          onPressed: () {},
+          onPressed: () {
+            crearFavorito(userId, widget.productId);
+          Get.snackbar('Éxito', 'Producto agregado a favoritos');
+          },
         ),
       ],
     );

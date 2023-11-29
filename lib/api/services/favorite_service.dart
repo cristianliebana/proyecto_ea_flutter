@@ -24,12 +24,12 @@ response = await Api().get('/favorites/readuserfavorites/$userId');
  }
 }
 
- static Future<ApiResponse> createFavorite(Map<String, dynamic> favorite) async {
+ static Future<ApiResponse> createFavorite(String userId, String productId) async {
     ApiResponse response = ApiResponse(data: {}, statusCode: 404);
     try {
       response = await Api().postWithoutToken(
         '/favorites/createfavorite',
-        data: favorite,
+        data: {'user': userId, 'product': productId},
       );
       return response;
     } catch (error) {
