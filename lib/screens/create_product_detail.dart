@@ -3,24 +3,42 @@ import 'package:get/get.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:proyecto_flutter/api/services/product_service.dart';
+import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
 import 'package:proyecto_flutter/screens/home.dart';
 import 'package:proyecto_flutter/screens/login.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
 import 'package:proyecto_flutter/widget/rep_textfiled.dart';
 
-class CreateProductDetail extends StatelessWidget {
+class CreateProductDetail extends StatefulWidget {
   final String productName;
-  CreateProductDetail({Key? key, required this.productName}) : super(key: key);
+  const CreateProductDetail({Key? key, required this.productName, req}) : super(key: key);
 
-  //final CreateProductController createProductController;
+  @override
+  _CreateProductDetailState createState() => _CreateProductDetailState();
+}
+class _CreateProductDetailState extends State<CreateProductDetail> {
+  Map<String, dynamic> userData = {};
+   late CreateProductController createProductController;
 
-  final CreateProductController createProductController =
-      CreateProductController();
+  @override
+  void initState() {
+    super.initState();
+    obtenerDatosUsuario();
+  }
+
+  Future<void> obtenerDatosUsuario() async {
+    ApiResponse response = await UserService.getUserById();
+    Map<String, dynamic> userData = response.data;
+    print("User Data: $userData");
+
+    createProductController = CreateProductController(userData: userData);
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
-    createProductController.nameController.text = productName; // Set the product name
+  createProductController.nameController.text = widget.productName; // S// Set the product name
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
@@ -53,13 +71,15 @@ class CreateProductController extends GetxController {
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController unitsController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
+  Map<String, dynamic> userData;
+  CreateProductController({required this.userData});
 
   void addProduct(BuildContext context) async {
-    String name = nameController.text;
-    String description = descriptionController.text;
+    String ?name = nameController.text;
+    String ?description = descriptionController.text;
     int? units = int.tryParse(unitsController.text);
     double? price = double.tryParse(priceController.text);
-    String userName = Get.find<UserController>().userName.value;
+   String? userId = userData['_id'] ?? '';
 
     if (name.isEmpty || units == null || price == null) {
       Get.snackbar(
@@ -75,10 +95,11 @@ class CreateProductController extends GetxController {
       'description': description,
       'price': price,
       'units': units,
-      'user': userName,
+      'user': userId,
     };
 
     try {
+      print(productData);
       ApiResponse response = await ProductService.addProduct(productData);
       Get.offAll(() => HomePage());
     } catch (e) {

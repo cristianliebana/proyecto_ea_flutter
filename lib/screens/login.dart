@@ -61,7 +61,6 @@ class LoginController extends GetxController {
     ApiResponse response = await UserService.loginUser(userData);
     print(userData);
     if (response.statusCode == 200) {
-      Get.find<UserController>().setUser(email);
       String? token = response.data['token'];
       print(token);
       if (token != null) {
@@ -76,15 +75,6 @@ class LoginController extends GetxController {
     }
   }
 }
-
-class UserController extends GetxController {
-  var userName = ''.obs;
-
-  void setUser(String email) {
-    userName.value = email;
-  }
-}
-
 
 class RegisterText extends StatelessWidget {
   const RegisterText({
