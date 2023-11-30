@@ -8,8 +8,8 @@ class RepTextFiled extends StatefulWidget {
   final Widget? suficon;
   final String text;
   final bool obscureText;
-  final VoidCallback?
-      onToggleVisibility; // Agregamos esta función de control de visibilidad
+  final VoidCallback? onToggleVisibility;
+  final ValueSetter<String>? onChanged;
 
   RepTextFiled({
     this.controller,
@@ -19,6 +19,7 @@ class RepTextFiled extends StatefulWidget {
     this.suficon,
     this.obscureText = false,
     this.onToggleVisibility,
+    this.onChanged,
   });
 
   @override
@@ -48,18 +49,18 @@ class _RepTextFiledState extends State<RepTextFiled> {
               child: GestureDetector(
                 onTap: () {
                   if (widget.onToggleVisibility != null) {
-                    widget
-                        .onToggleVisibility!(); // Llamamos a la función de control de visibilidad
+                    widget.onToggleVisibility!();
                   }
                 },
                 child: TextField(
                   controller: widget.controller,
                   onChanged: (text) {
-                    // Actualiza el segundo controlador si es necesario
+                    if (widget.onChanged != null) {
+                      widget.onChanged!(text);
+                    }
                     if (widget.controller2 != null) {
                       widget.controller2!.text = text;
                     }
-                    // Puedes realizar otras lógicas aquí si es necesario
                   },
                   readOnly: false,
                   cursorColor: Colors.black,

@@ -7,7 +7,6 @@ import 'package:proyecto_flutter/api/services/token_service.dart';
 import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
 import 'package:proyecto_flutter/screens/chat.dart';
-import 'package:proyecto_flutter/screens/chat.dart';
 import 'package:proyecto_flutter/screens/home.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
@@ -419,7 +418,7 @@ class ImagesCarousel extends StatefulWidget {
 }
 
 class _ImagesCarouselState extends State<ImagesCarousel> {
-  int _currentIndex = 0;
+  int _currentIndex=0;
 
   @override
   Widget build(BuildContext context) {

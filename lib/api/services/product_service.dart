@@ -1,6 +1,6 @@
-import 'package:jwt_decoder/jwt_decoder.dart';
+//import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:proyecto_flutter/api/models/product_model.dart';
-import 'package:proyecto_flutter/api/services/token_service.dart';
+//import 'package:proyecto_flutter/api/services/token_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
 
 class ProductService {
@@ -26,6 +26,15 @@ class ProductService {
     ApiResponse response = ApiResponse(data: {}, statusCode: 404);
     response = await Api().getWithoutToken('/products/readproduct/$productId');
     print('API Response: $response');
+    return response;
+  }
+
+  static Future<ApiResponse> addProduct(Map<String, dynamic> product) async {
+    ApiResponse response = ApiResponse(data: {}, statusCode: 404);
+    response = await Api().postWithoutToken(
+      '/products/createproduct',
+      data: product,
+    );
     return response;
   }
 }

@@ -4,6 +4,7 @@ import 'package:proyecto_flutter/api/models/room_model.dart';
 import 'package:proyecto_flutter/api/services/room_service.dart';
 import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
+//import 'package:get/get.dart';
 import 'package:proyecto_flutter/screens/individual_chat.dart';
 import 'package:proyecto_flutter/widget/nav_bar.dart';
 
