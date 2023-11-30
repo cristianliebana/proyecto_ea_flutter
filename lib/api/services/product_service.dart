@@ -22,6 +22,23 @@ class ProductService {
     }
   }
 
+  static Future<List<Product>> getUserProducts(String userId) async {
+    ApiResponse response = ApiResponse(data: {}, statusCode: 404);
+    response = await Api().get('/products/readuserproducts/$userId');
+
+    if (response.statusCode == 200) {
+      List<Product> productList = [];
+      List<dynamic> productsData = response.data['docs'];
+      for (var productData in productsData) {
+        Product product = Product.fromJson(productData);
+        productList.add(product);
+      }
+      return productList;
+    } else {
+      print('Error en la solicitud: ${response.statusCode}');
+      return [];
+    }
+  }
   static Future<ApiResponse> getProductById(String productId) async {
     ApiResponse response = ApiResponse(data: {}, statusCode: 404);
     response = await Api().getWithoutToken('/products/readproduct/$productId');
