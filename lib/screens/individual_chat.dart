@@ -9,12 +9,15 @@ import 'package:socket_io_client/socket_io_client.dart' as io;
 class ChatMessage {
   final bool isMeChatting;
   final String messageBody;
+  
 
   ChatMessage({required this.isMeChatting, required this.messageBody});
 }
 
 class IndividualChat extends StatefulWidget {
-  const IndividualChat({Key? key}) : super(key: key);
+  final String roomId;
+  final String userId2;
+  const IndividualChat({Key? key, required this.roomId, required this. userId2,req}) : super(key: key);
 
   @override
   _IndividualChatState createState() => _IndividualChatState();
@@ -22,15 +25,22 @@ class IndividualChat extends StatefulWidget {
 
 class _IndividualChatState extends State<IndividualChat> {
   Map<String, dynamic> userData = {};
+   Map<String, dynamic> userData2 = {};
   late io.Socket socket;
   TextEditingController messageController = TextEditingController();
   List<ChatMessage> messages = [];
+  bool isDisconnected = false;
 
   @override
   void initState() {
     super.initState();
+    iniciarChat();
+  }
+
+  Future<void> iniciarChat() async {
+    await obtenerDatosUsuario();
+    obtenerDatosUsuario2(widget.userId2);
     connectToSocket();
-    obtenerDatosUsuario();
   }
 
   Future<void> obtenerDatosUsuario() async {
@@ -41,6 +51,13 @@ class _IndividualChatState extends State<IndividualChat> {
     });
   }
 
+    Future<void> obtenerDatosUsuario2(String userId2) async {
+    ApiResponse response = await UserService.getCreadorById(userId2);
+    setState(() {
+      userData2 = response.data;
+    });
+  }
+
   void connectToSocket() {
     socket = io.io('http://localhost:9090', <String, dynamic>{
       'transports': ['websocket'],
@@ -48,6 +65,7 @@ class _IndividualChatState extends State<IndividualChat> {
 
     socket.on('connect', (_) {
       print('Conectado al servidor Socket.IO');
+      socket.emit('join room', {'userId': userData['_id'], 'roomId': widget.roomId});
     });
 
     socket.on('chat message', (data) {
@@ -60,8 +78,12 @@ class _IndividualChatState extends State<IndividualChat> {
       });
     });
 
-    socket.on(
-        'disconnect', (_) => print('Desconectado del servidor Socket.IO'));
+    socket.on('disconnect', (_) {
+      if (!isDisconnected) {
+        print('Desconectado del servidor Socket.IO');
+        isDisconnected = true;
+      }
+    });
   }
 
   void sendMessage() {
@@ -70,20 +92,14 @@ class _IndividualChatState extends State<IndividualChat> {
       Map<String, dynamic> messageData = {
         'message': message,
         'userId': userData['_id'],
+        'roomId': widget.roomId,
       };
 
       socket.emit('chat message', messageData);
 
-      // Mover la adición del mensaje a la lista dentro del callback del evento 'chat message'
-      // para evitar duplicaciones.
-      // setState(() {
-      //   messages.add(ChatMessage(isMeChatting: true, messageBody: message));
-      // });
-
       messageController.clear();
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,12 +115,12 @@ class _IndividualChatState extends State<IndividualChat> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  BackButton(
-                    color:Color(0xFFFFFCEA),
-                    onPressed: () {
-                      Get.to(ChatPage());
-                    },
-                  ),
+BackButton(
+  color: Color(0xFFFFFCEA),
+  onPressed: () {
+    Get.to(ChatPage());
+  },
+),
                   SizedBox(width: 5),
                   CircleAvatar(
                     backgroundImage:
@@ -117,20 +133,20 @@ class _IndividualChatState extends State<IndividualChat> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Jones Noa",
+                        userData2['username'] ?? 'Username not available',
                         style: TextStyle(
                           fontSize: 19,
                           fontWeight: FontWeight.bold,
                           color: Color(0xFFFFFCEA),
                         ),
                       ),
-                      Text(
-                        "Active 5 hours ago",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xFFFFFCEA).withOpacity(0.7),
-                        ),
-                      ),
+  Text(
+  widget.roomId,
+  style: TextStyle(
+    fontWeight: FontWeight.w500,
+    color: Color(0xFFFFFCEA).withOpacity(0.7),
+  ),
+),
                     ],
                   ),
                   Spacer(),
@@ -189,7 +205,7 @@ class _IndividualChatState extends State<IndividualChat> {
     decoration: BoxDecoration(
       color: Color(0xFFFFFCEA),
       borderRadius: BorderRadius.circular(13),
-      border: Border.all(color: Color(0xFF486D28),width: 3.0), // Color del borde
+      border: Border.all(color: Color(0xFF486D28),width: 3.0), 
     ),
         child: Container(
           child: Row(
