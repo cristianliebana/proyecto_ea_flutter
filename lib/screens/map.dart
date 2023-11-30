@@ -50,8 +50,8 @@ class MapPageView extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const SizedBox(height: 50),
-        const SizedBox(height: 20),
+        const SizedBox(height: 1),
+        const SizedBox(height: 1),
         Expanded(
           flex: 9,
           child: Container(
@@ -66,9 +66,9 @@ class MapPageView extends StatelessWidget {
                 ),
               ],
             ),
-            margin: const EdgeInsets.all(10),
+            margin: const EdgeInsets.all(5),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(10),
               child: FlutterMap(
                 options: MapOptions(
                   center: currentPosition ?? LatLng(41.2731, 1.9865),

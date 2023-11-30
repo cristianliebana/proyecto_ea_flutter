@@ -1,16 +1,16 @@
 class Product {
-  final String id;
-  final String name;
-  final String description;
-  final double price;
-  final int units;
+  String? id;
+  String? name;
+  String? description;
+  double? price;
+  int? units;
 
   Product({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.price,
-    required this.units,
+    this.id,
+    this.name,
+    this.description,
+    this.price,
+    this.units,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
@@ -22,4 +22,15 @@ class Product {
       units: json['units'] ?? 0,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'description': description,
+      'price': price,
+      'units': units,
+    };
+  }
 }
+

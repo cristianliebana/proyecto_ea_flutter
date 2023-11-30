@@ -28,4 +28,13 @@ class ProductService {
     print('API Response: $response');
     return response;
   }
+
+  static Future<ApiResponse> addProduct(Map<String, dynamic> product) async {
+    ApiResponse response = ApiResponse(data: {}, statusCode: 404);
+    response = await Api().postWithoutToken(
+      '/products/createproduct',
+      data: product,
+    );
+    return response;
+  }
 }
