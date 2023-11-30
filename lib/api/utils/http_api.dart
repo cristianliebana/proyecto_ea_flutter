@@ -19,6 +19,7 @@ class ApiResponse {
   int statusCode;
   Map<String, dynamic> data;
   ApiResponse({required this.data, this.statusCode = -1});
+
 }
 
 class Api {

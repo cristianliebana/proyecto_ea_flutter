@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:proyecto_flutter/api/services/product_service.dart';
+import 'package:proyecto_flutter/api/services/room_service.dart';
 import 'package:proyecto_flutter/api/services/token_service.dart';
 import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/services/favorite_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
-import 'package:proyecto_flutter/screens/chat.dart';
 import 'package:proyecto_flutter/screens/chat.dart';
 import 'package:proyecto_flutter/screens/home.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -38,6 +38,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     super.initState();
     checkAuthAndNavigate();
     obtenerDatosProducto();
+    obtenerDatosUsuario();
   }
 
   Future<void> obtenerDatosProducto() async {
@@ -54,6 +55,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     ApiResponse response = await UserService.getCreadorById(creadorId);
     setState(() {
       creadorData = response.data;
+    });
+  }
+  Future<void> obtenerDatosUsuario() async {
+    ApiResponse response = await UserService.getUserById();
+    setState(() {
+      userData = response.data;
     });
   }
 
@@ -81,13 +88,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: _buildAppBar(), // Use the common _buildAppBar method
+      appBar: _buildAppBar(), 
       body: Stack(
         children: [
           ImagesCarousel(imagePaths: imagePaths, buildAppBar: _buildAppBar),
           InformationWidget(
             productData: productData,
             creadorData: creadorData,
+            userData: userData,
           ),
         ],
       ),
@@ -138,9 +146,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
 class InformationWidget extends StatelessWidget {
   const InformationWidget(
-      {Key? key, required this.productData, required this.creadorData});
+      {Key? key, required this.productData, required this.creadorData, required this.userData});
 
   final Map<String, dynamic> productData;
+  final Map<String, dynamic> userData;
   final Map<String, dynamic> creadorData;
 
   @override
@@ -200,7 +209,7 @@ class InformationWidget extends StatelessWidget {
                               Transform.scale(
                                 alignment: Alignment.centerLeft,
                                 scale:
-                                    0.7, // Ajusta el valor según tus necesidades
+                                    0.7, 
                                 child: RatingBar(
                                   ignoreGestures: true,
                                   initialRating: creadorData['rating'] ?? 3.5,
@@ -243,7 +252,7 @@ class InformationWidget extends StatelessWidget {
           bottom: 20,
           left: 0,
           right: 0,
-          child: ChatButton(),
+          child: ChatButton(userData: userData,creadorData: creadorData),
         ),
       ],
     );
@@ -251,9 +260,14 @@ class InformationWidget extends StatelessWidget {
 }
 
 class ChatButton extends StatelessWidget {
+  final Map<String, dynamic> userData;
+  final Map<String, dynamic> creadorData;
+
   const ChatButton({
-    super.key,
-  });
+    Key? key,
+    required this.userData,
+    required this.creadorData,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -263,19 +277,41 @@ class ChatButton extends StatelessWidget {
       height: gHeight / 16,
       child: ElevatedButton(
         onPressed: () async {
-          Get.to(ChatPage());
+          String userId1 = userData['_id'] ?? '';
+          String userId2 = creadorData['_id'] ?? '';
+
+          ApiResponse response = await RoomService.checkIfRoomExists(userId1, userId2);
+
+          if (response.statusCode == 200) {
+            bool roomExists = response.data['exist'];
+
+            if (roomExists) {
+              Get.to(ChatPage());
+            } else {
+              ApiResponse createResponse = await RoomService.createRoom(userId1, userId2);
+
+              if (createResponse.statusCode == 201) {
+                Get.to(ChatPage());
+              } else {
+                print("Error al crear la sala: ${createResponse.data}");
+              }
+            }
+          } else {
+            print("Error al verificar la sala: ${response.data}");
+          }
         },
         child: Text(
           "Contacta",
           style: TextStyle(fontSize: 25),
         ),
         style: ButtonStyle(
-            shape: MaterialStateProperty.all(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(100),
-              ),
+          shape: MaterialStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(100),
             ),
-            backgroundColor: MaterialStateProperty.all(buttonColor)),
+          ),
+          backgroundColor: MaterialStateProperty.all(buttonColor),
+        ),
       ),
     );
   }
@@ -401,7 +437,7 @@ class ImagesCarousel extends StatefulWidget {
 }
 
 class _ImagesCarouselState extends State<ImagesCarousel> {
-  int _currentIndex = 0;
+  int _currentIndex=0;
 
   @override
   Widget build(BuildContext context) {

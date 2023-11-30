@@ -9,7 +9,7 @@ import 'package:proyecto_flutter/screens/create_product.dart';
 import 'package:proyecto_flutter/screens/favorites.dart';
 import 'package:proyecto_flutter/screens/home.dart';
 import 'package:proyecto_flutter/screens/profile.dart';
-import 'package:proyecto_flutter/screens/shopping_basket.dart';
+import 'package:proyecto_flutter/bindings/map_Bindings.dart';
 import 'package:get/get.dart';
 
 class CustomBottomNavigationBarController extends GetxController {
@@ -22,7 +22,7 @@ class CustomBottomNavigationBarController extends GetxController {
         Get.to(HomePage(), transition: Transition.noTransition);
         break;
       case 1:
-        Get.to(ShoppingBasketPage(), transition: Transition.noTransition);
+        MapPageBinding().requestNavigation();
         break;
       case 2:
         Get.to(CreateProduct(), transition: Transition.noTransition);
@@ -104,7 +104,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
               onTabChange: controller.updateIndex,
             ),
           ),
-        ]));
+        );
       },
     );
   }
