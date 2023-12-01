@@ -1,15 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:proyecto_flutter/api/models/product_model.dart';
 import 'package:proyecto_flutter/api/services/product_service.dart';
-import 'package:proyecto_flutter/api/services/token_service.dart';
 import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
-import 'package:proyecto_flutter/screens/chat.dart';
-import 'package:proyecto_flutter/screens/chat.dart';
-import 'package:proyecto_flutter/screens/home.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:proyecto_flutter/screens/product_detail.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
 import 'package:proyecto_flutter/widget/nav_bar.dart';
@@ -55,10 +49,6 @@ Future<void> loadUserProducts(String? userId) async {
     print('UserId is null.');
   }
 }
-
-
-
-
   
 /*  void _scrollListener() {
     if (_scrollController.position.pixels ==
@@ -164,7 +154,7 @@ class ProductsVerticalItem extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Get.to(
-          ProductDetailScreen(productId: product.id),
+          ProductDetailScreen(productId: product.id?? ''),
         );
       },
       child: Container(
@@ -182,7 +172,7 @@ class ProductsVerticalItem extends StatelessWidget {
             Container(
               margin: EdgeInsets.only(top: 10),
               child: Text(
-                product.name,
+                product.name?? '',
                 style: TextStyle(
                   color: Colors.white,
                 ),

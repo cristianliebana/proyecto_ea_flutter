@@ -41,7 +41,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: CustomBottomNavigationBar(currentIndex: 4),
+      bottomNavigationBar: CustomBottomNavigationBar(currentIndex: 5),
       body: SingleChildScrollView(
         child: Container(
             width: gWidth,

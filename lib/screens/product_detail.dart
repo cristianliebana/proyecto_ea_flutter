@@ -25,9 +25,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   Map<String, dynamic> productData = {};
   Map<String, dynamic> creadorData = {};
   Map<String, dynamic> userData = {};
+  bool _isFavoriteExists = false;
   Map<String, dynamic> favoriteData = {};
-  late String userId; 
-    final List<String> imagePaths = [
+  late String userId;
+  late String favoriteId;
+
+  final List<String> imagePaths = [
     'assets/images/tomate.jpeg',
     'assets/images/tomate2.jpg',
     'assets/images/tomate3.jpg',
@@ -49,6 +52,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       userId = productData['user'];
     });
     await obtenerDatosCreadorProducto(productData['user']);
+    await checkFavoriteExistence();
   }
 
   Future<void> obtenerDatosCreadorProducto(String creadorId) async {
@@ -57,6 +61,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       creadorData = response.data;
     });
   }
+
   Future<void> obtenerDatosUsuario() async {
     ApiResponse response = await UserService.getUserById();
     setState(() {
@@ -65,16 +70,57 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   }
 
   Future<void> crearFavorito(String userId, String productId) async {
-    print(userId);
-    print(productId);
-    ApiResponse response = await FavoriteService.createFavorite(userId, productId);
-    
+    ApiResponse response =
+        await FavoriteService.createFavorite(userData['_id'], productId);
+
     setState(() {
       favoriteData = response.data;
     });
   }
 
+  Future<void> borrarFavorito(String userId, String productId) async {
+    ApiResponse response = await FavoriteService.deleteFavorite(favoriteId);
+  }
 
+  Future<void> _handleFavoriteButton() async {
+    if (userData['_id'] == creadorData['_id']) {
+      Get.snackbar('Error', 'No puedes darle a favorito a un producto tuyo');
+    } else {
+      try {
+        if (_isFavoriteExists) {
+          await borrarFavorito(userId, widget.productId);
+          Get.snackbar('Éxito', 'Producto eliminado de favoritos');
+        } else {
+          await crearFavorito(userId, widget.productId);
+          Get.snackbar('Éxito', 'Producto agregado a favoritos');
+        }
+
+        setState(() {
+          _isFavoriteExists = !_isFavoriteExists;
+        });
+      } catch (error) {
+        print('Error: $error');
+      }
+    }
+  }
+
+  Future<void> checkFavoriteExistence() async {
+    try {
+      Map<String, dynamic> response =
+          await FavoriteService.checkIfUserHasFavorite(
+              userData['_id'], widget.productId);
+      bool exists = response['exists'] ?? false;
+      favoriteId = response['favoriteId'] ?? '';
+
+      setState(() {
+        _isFavoriteExists = exists;
+      });
+    } catch (error) {
+      setState(() {
+        _isFavoriteExists = false;
+      });
+    }
+  }
 
   Future<void> checkAuthAndNavigate() async {
     await TokenService.loggedIn();
@@ -84,11 +130,19 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     TokenService.removeToken();
   }
 
+  IconButton _buildAppBarIconButton(
+      {required IconData icon, required VoidCallback onPressed}) {
+    return IconButton(
+      icon: Icon(icon),
+      onPressed: onPressed,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: _buildAppBar(), 
+      appBar: _buildAppBar(),
       body: Stack(
         children: [
           ImagesCarousel(imagePaths: imagePaths, buildAppBar: _buildAppBar),
@@ -107,26 +161,50 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       elevation: 0,
       backgroundColor: Colors.transparent,
       centerTitle: true,
-      leading: _buildAppBarIconButton(
-        icon: Icons.arrow_back,
-        onPressed: () {
-          Get.to(HomePage());
-        },
-      ),
+      leading: _buildAppBarBackButton(),
       actions: [
-        _buildAppBarIconButton(
-          icon: Icons.favorite_border,
-          onPressed: () {
-            crearFavorito(userId, widget.productId);
-          Get.snackbar('Éxito', 'Producto agregado a favoritos');
-          },
-        ),
+        _buildAppBarFavoriteButton(),
       ],
     );
   }
 
-  Widget _buildAppBarIconButton(
-      {required IconData icon, required Function() onPressed}) {
+  Widget _buildAppBarFavoriteButton() {
+    return _isFavoriteExists
+        ? Container(
+            margin: EdgeInsets.all(8.0),
+            decoration: BoxDecoration(
+              color: Color(0xFF486D28),
+              shape: BoxShape.circle,
+            ),
+            child: IconButton(
+              icon: Icon(
+                Icons.favorite,
+                color: Color(0xFFFFFCEA),
+              ),
+              onPressed: () async {
+                await _handleFavoriteButton();
+              },
+            ),
+          )
+        : Container(
+            margin: EdgeInsets.all(8.0),
+            decoration: BoxDecoration(
+              color: Color(0xFF486D28),
+              shape: BoxShape.circle,
+            ),
+            child: IconButton(
+              icon: Icon(
+                Icons.favorite_border,
+                color: Color(0xFFFFFCEA),
+              ),
+              onPressed: () async {
+                await _handleFavoriteButton();
+              },
+            ),
+          );
+  }
+
+  Widget _buildAppBarBackButton() {
     return Container(
       margin: EdgeInsets.all(8.0),
       decoration: BoxDecoration(
@@ -134,11 +212,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         shape: BoxShape.circle,
       ),
       child: IconButton(
-        onPressed: onPressed,
         icon: Icon(
-          icon,
+          Icons.arrow_back,
           color: Color(0xFFFFFCEA),
         ),
+        onPressed: () {
+          Get.to(HomePage());
+        },
       ),
     );
   }
@@ -146,7 +226,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
 class InformationWidget extends StatelessWidget {
   const InformationWidget(
-      {Key? key, required this.productData, required this.creadorData, required this.userData});
+      {Key? key,
+      required this.productData,
+      required this.creadorData,
+      required this.userData});
 
   final Map<String, dynamic> productData;
   final Map<String, dynamic> userData;
@@ -208,8 +291,7 @@ class InformationWidget extends StatelessWidget {
                               UserText(creadorData: creadorData),
                               Transform.scale(
                                 alignment: Alignment.centerLeft,
-                                scale:
-                                    0.7, 
+                                scale: 0.7,
                                 child: RatingBar(
                                   ignoreGestures: true,
                                   initialRating: creadorData['rating'] ?? 3.5,
@@ -226,9 +308,7 @@ class InformationWidget extends StatelessWidget {
                                   ),
                                   itemPadding:
                                       EdgeInsets.symmetric(horizontal: 4.0),
-                                  onRatingUpdate: (rating) {
-                                    print(rating);
-                                  },
+                                  onRatingUpdate: (rating) {},
                                 ),
                               ),
                             ]),
@@ -252,7 +332,7 @@ class InformationWidget extends StatelessWidget {
           bottom: 20,
           left: 0,
           right: 0,
-          child: ChatButton(userData: userData,creadorData: creadorData),
+          child: ChatButton(userData: userData, creadorData: creadorData),
         ),
       ],
     );
@@ -280,7 +360,8 @@ class ChatButton extends StatelessWidget {
           String userId1 = userData['_id'] ?? '';
           String userId2 = creadorData['_id'] ?? '';
 
-          ApiResponse response = await RoomService.checkIfRoomExists(userId1, userId2);
+          ApiResponse response =
+              await RoomService.checkIfRoomExists(userId1, userId2);
 
           if (response.statusCode == 200) {
             bool roomExists = response.data['exist'];
@@ -288,7 +369,8 @@ class ChatButton extends StatelessWidget {
             if (roomExists) {
               Get.to(ChatPage());
             } else {
-              ApiResponse createResponse = await RoomService.createRoom(userId1, userId2);
+              ApiResponse createResponse =
+                  await RoomService.createRoom(userId1, userId2);
 
               if (createResponse.statusCode == 201) {
                 Get.to(ChatPage());
@@ -437,7 +519,7 @@ class ImagesCarousel extends StatefulWidget {
 }
 
 class _ImagesCarouselState extends State<ImagesCarousel> {
-  int _currentIndex=0;
+  int _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {

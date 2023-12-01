@@ -103,8 +103,8 @@ class CustomBottomNavigationBar extends StatelessWidget {
               selectedIndex: currentIndex,
               onTabChange: controller.updateIndex,
             ),
-          ),
-        );
+          ),]
+        ));
       },
     );
   }

@@ -52,16 +52,6 @@ Future<void> loadUserFavorites(String? userId) async {
 }
 
 
-
-
-  
-/*  void _scrollListener() {
-    if (_scrollController.position.pixels ==
-        _scrollController.position.maxScrollExtent) {
-      _loadMoreProducts();
-    }
-  }*/
-
 @override
   void dispose() {
     _scrollController.dispose();
@@ -71,7 +61,7 @@ Future<void> loadUserFavorites(String? userId) async {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: CustomBottomNavigationBar(currentIndex: 0),
+      bottomNavigationBar: CustomBottomNavigationBar(currentIndex: 4),
       appBar: AppBar(
         title: Text('Productos favoritos'),
         backgroundColor: Color(0xFF486D28),
@@ -96,7 +86,6 @@ Future<void> loadUserFavorites(String? userId) async {
   }
 }
 
-
 class SearchBar extends StatelessWidget {
   const SearchBar({Key? key}) : super(key: key);
 
@@ -106,7 +95,7 @@ class SearchBar extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
         children: [
-          SizedBox(height: 20), // Ajusta el valor según sea necesario
+          SizedBox(height: 20),
           Padding(
             padding: const EdgeInsets.only(),
             child: TextField(
@@ -147,7 +136,6 @@ class SearchBar extends StatelessWidget {
 }
 
 
-
 class ProductsVerticalItem extends StatelessWidget {
   final Product product;
 
@@ -159,7 +147,7 @@ class ProductsVerticalItem extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Get.to(
-          ProductDetailScreen(productId: product.id),
+          ProductDetailScreen(productId: product.id ?? ''),
         );
       },
       child: Container(
@@ -177,7 +165,7 @@ class ProductsVerticalItem extends StatelessWidget {
             Container(
               margin: EdgeInsets.only(top: 10),
               child: Text(
-                product.name,
+                product.name ?? '',
                 style: TextStyle(
                   color: Colors.white,
                 ),

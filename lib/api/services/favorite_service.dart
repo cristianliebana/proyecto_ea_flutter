@@ -58,6 +58,36 @@ response = await Api().get('/favorites/readuserfavorites/$userId');
       return response;
     }
   }
+    static Future<ApiResponse> deleteFavorite(String favoriteId) async {
+    ApiResponse response = ApiResponse(data: {}, statusCode: 404);
+    try {
+      response = await Api().delete(
+        '/favorites/deletefavorite/$favoriteId',
+      );
+      return response;
+    } catch (error) {
+      return response;
+    }
+  }
+  
+static Future<Map<String, dynamic>> checkIfUserHasFavorite(String userId, String productId) async {
+  ApiResponse response = ApiResponse(data: {}, statusCode: 404);
+  try {
+    response = await Api().get(
+      '/favorites/favoriteexist/$userId/$productId',
+    );
+
+    if (response.statusCode == 200) {
+      bool exists = response.data['exists'] ?? false;
+      String favoriteId = response.data['favoriteId'] ?? '';
+      return {'exists': exists, 'favoriteId': favoriteId};
+    } else {
+      return {'exists': false, 'favoriteId': ''};
+    }
+  } catch (error) {
+    return {'exists': false, 'favoriteId': ''};
+  }
+}
 }
 
 
