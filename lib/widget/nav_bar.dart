@@ -13,8 +13,7 @@ import 'package:proyecto_flutter/bindings/map_Bindings.dart';
 import 'package:get/get.dart';
 
 class CustomBottomNavigationBarController extends GetxController {
-  
-  String userId = ''; 
+  String userId = '';
 
   void updateIndex(int index) {
     switch (index) {
@@ -41,7 +40,6 @@ class CustomBottomNavigationBarController extends GetxController {
     }
   }
 }
-
 
 class CustomBottomNavigationBar extends StatelessWidget {
   final CustomBottomNavigationBarController controller =
@@ -79,7 +77,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
                   text: "Inicio",
                 ),
                 GButton(
-                  icon: LineIcons.shoppingBasket,
+                  icon: LineIcons.map,
                   text: "Mapa",
                 ),
                 GButton(
@@ -98,13 +96,12 @@ class CustomBottomNavigationBar extends StatelessWidget {
                   icon: LineIcons.user,
                   text: "Perfil",
                 ),
-               
               ],
               selectedIndex: currentIndex,
               onTabChange: controller.updateIndex,
             ),
-          ),]
-        ));
+          ),
+        ]));
       },
     );
   }

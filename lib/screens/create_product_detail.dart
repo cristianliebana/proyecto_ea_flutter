@@ -1,67 +1,124 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:lottie/lottie.dart';
 import 'package:proyecto_flutter/api/services/product_service.dart';
 import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
+import 'package:proyecto_flutter/screens/create_product.dart';
 import 'package:proyecto_flutter/screens/home.dart';
 import 'package:proyecto_flutter/screens/login.dart';
+import 'package:proyecto_flutter/screens/user_products.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
 import 'package:proyecto_flutter/widget/rep_textfiled.dart';
 
 class CreateProductDetail extends StatefulWidget {
   final String productName;
-  const CreateProductDetail({Key? key, required this.productName, req}) : super(key: key);
+  const CreateProductDetail({Key? key, required this.productName, req})
+      : super(key: key);
 
   @override
   _CreateProductDetailState createState() => _CreateProductDetailState();
 }
+
 class _CreateProductDetailState extends State<CreateProductDetail> {
-  Map<String, dynamic> userData = {};
-   late CreateProductController createProductController;
+  late Future<CreateProductController?> _controllerFuture;
 
   @override
   void initState() {
     super.initState();
-    obtenerDatosUsuario();
+    _controllerFuture = obtenerDatosUsuario();
   }
 
-  Future<void> obtenerDatosUsuario() async {
+  Future<CreateProductController?> obtenerDatosUsuario() async {
     ApiResponse response = await UserService.getUserById();
     Map<String, dynamic> userData = response.data;
     print("User Data: $userData");
 
-    createProductController = CreateProductController(userData: userData);
-    setState(() {});
+    return CreateProductController(userData: userData);
+  }
+
+  AppBar _buildAppBar() {
+    return AppBar(
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      centerTitle: true,
+      leading: _buildAppBarBackButton(),
+    );
+  }
+
+  Widget _buildAppBarBackButton() {
+    return Container(
+      margin: EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+        color: Color(0xFF486D28),
+        shape: BoxShape.circle,
+      ),
+      child: IconButton(
+        icon: Icon(
+          Icons.arrow_back,
+          color: Color(0xFFFFFCEA),
+        ),
+        onPressed: () {
+          Get.to(CreateProduct());
+        },
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-  createProductController.nameController.text = widget.productName; // S// Set the product name
-    return GestureDetector(
-      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-      child: Scaffold(
-        body: Container(
-          margin: EdgeInsets.all(15),
-          width: gWidth,
-          height: gHeight,
-          child: Column(
-            children: [
-              SizedBox(height: 10),
-              NameTextField(createProductController: createProductController),
-              SizedBox(height: 10),
-              DescriptionTextField(createProductController: createProductController),
-              SizedBox(height: 10),
-              PriceTextField(createProductController: createProductController),
-              SizedBox(height: 10),
-              UnitsTextField(createProductController: createProductController),
-              SizedBox(height: 10),
-              SaveButton(createProductController: createProductController),
-            ],
+    return FutureBuilder<CreateProductController?>(
+      future: _controllerFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else if (!snapshot.hasData || snapshot.data == null) {
+          return Text('Data is null');
+        }
+
+        CreateProductController createProductController = snapshot.data!;
+
+        createProductController.nameController.text = widget.productName;
+
+        return GestureDetector(
+          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+          child: Scaffold(
+            appBar: _buildAppBar(),
+            body: Container(
+              margin: EdgeInsets.all(15),
+              width: gWidth,
+              height: gHeight,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AnimationFarmer(),
+                  TitleText(),
+                  DescriptionText(),
+                  NameTextField(
+                      createProductController: createProductController),
+                  SizedBox(height: 10),
+                  DescriptionTextField(
+                      createProductController: createProductController),
+                  SizedBox(height: 10),
+                  PriceTextField(
+                      createProductController: createProductController),
+                  SizedBox(height: 10),
+                  UnitsTextField(
+                      createProductController: createProductController),
+                  SizedBox(height: 20),
+                  SaveButton(createProductController: createProductController),
+                ],
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
@@ -75,16 +132,16 @@ class CreateProductController extends GetxController {
   CreateProductController({required this.userData});
 
   void addProduct(BuildContext context) async {
-    String ?name = nameController.text;
-    String ?description = descriptionController.text;
+    String? name = nameController.text;
+    String? description = descriptionController.text;
     int? units = int.tryParse(unitsController.text);
     double? price = double.tryParse(priceController.text);
-   String? userId = userData['_id'] ?? '';
+    String? userId = userData['_id'] ?? '';
 
     if (name.isEmpty || units == null || price == null) {
       Get.snackbar(
         "Error",
-        "Invalid input. Please check the product details.",
+        "Debes de rellenar todos los campos",
         snackPosition: SnackPosition.BOTTOM,
       );
       return;
@@ -101,14 +158,124 @@ class CreateProductController extends GetxController {
     try {
       print(productData);
       ApiResponse response = await ProductService.addProduct(productData);
-      Get.offAll(() => HomePage());
+      Get.defaultDialog(
+        title: "¡Felicidades!",
+        backgroundColor: Color(0xFFFFFCEA),
+        content: ClipRect(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 50.0, sigmaY: 50.0),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.0),
+                color: Color(0xFFFFFCEA),
+              ),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Color(0xFFFFFCEA),
+                ),
+                child: Column(
+                  children: [
+                    Lottie.asset(
+                      "assets/json/check3.json",
+                      width: 100,
+                      height: 100,
+                      repeat: false,
+                    ),
+                    SizedBox(height: 20),
+                    Text("¡Acabas de publicar tu producto!"),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+        radius: 10.0,
+        confirm: ElevatedButton(
+          onPressed: () {
+            Get.offAll(UserProductsScreen());
+          },
+          child: Text("Aceptar"),
+          style: ButtonStyle(
+            shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+            ),
+            backgroundColor: MaterialStateProperty.all(buttonColor),
+          ),
+        ),
+      );
     } catch (e) {
       Get.snackbar(
         "Error",
-        "Failed to add product. Please try again.",
+        "Algo falló al intentar publicar el producto",
         snackPosition: SnackPosition.BOTTOM,
       );
     }
+  }
+}
+
+class AnimationFarmer extends StatelessWidget {
+  const AnimationFarmer({
+    Key? key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      height: 200,
+      child: Lottie.asset(
+        "assets/json/AnimationFarmer1.json",
+      ),
+    );
+  }
+}
+
+class TitleText extends StatelessWidget {
+  const TitleText({
+    Key? key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Container(
+        margin: EdgeInsets.only(left: 20.0),
+        child: Text(
+          "¡Cuentanos mas!",
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 35,
+            fontWeight: FontWeight.bold,
+          ),
+          textAlign: TextAlign.left,
+        ),
+      ),
+    );
+  }
+}
+
+class DescriptionText extends StatelessWidget {
+  const DescriptionText({
+    Key? key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Container(
+        margin: EdgeInsets.only(top: 10, left: 20.0, right: 20.0, bottom: 5),
+        child: Text(
+          "Queremos que nos cuentes todo para dar a conocer tu producto",
+          style: TextStyle(
+            color: Color.fromARGB(255, 99, 99, 99),
+            fontSize: 20,
+          ),
+          textAlign: TextAlign.justify,
+        ),
+      ),
+    );
   }
 }
 

@@ -7,6 +7,7 @@ import 'package:line_icons/line_icons.dart';
 import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
 import 'package:proyecto_flutter/screens/login.dart';
+import 'package:proyecto_flutter/screens/signup.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
 import 'package:proyecto_flutter/widget/rep_textfiled.dart';
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
@@ -33,20 +34,48 @@ class _SignUpScreenState extends State<SignUpPasswordScreen> {
   _SignUpScreenState({required this.userData})
       : signUpController = SignUpPasswordController(userData: userData);
 
+  AppBar _buildAppBar() {
+    return AppBar(
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      centerTitle: true,
+      leading: _buildAppBarBackButton(),
+    );
+  }
+
+  Widget _buildAppBarBackButton() {
+    return Container(
+      margin: EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+        color: Color(0xFF486D28),
+        shape: BoxShape.circle,
+      ),
+      child: IconButton(
+        icon: Icon(
+          Icons.arrow_back,
+          color: Color(0xFFFFFCEA),
+        ),
+        onPressed: () {
+          Get.to(SignUpScreen());
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
+        appBar: _buildAppBar(),
         body: Container(
           margin: EdgeInsets.all(15),
           width: gWidth,
           height: gHeight,
           child: Column(
             children: [
-              SizedBox(height: 50),
               Animation(success: success),
-              SizedBox(height: 50),
+              SizedBox(height: 40),
               PasswordText(),
               PasswordTextFiled(
                   controller: controller,
@@ -54,7 +83,7 @@ class _SignUpScreenState extends State<SignUpPasswordScreen> {
                   signUpController: signUpController),
               SizedBox(height: 10),
               ConfirmPasswordTextFiled(signUpController: signUpController),
-              SizedBox(height: 10),
+              SizedBox(height: 15),
               FlutterPwValidator(
                 defaultColor: Colors.grey.shade300,
                 controller: controller,

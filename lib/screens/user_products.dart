@@ -9,25 +9,24 @@ import 'package:proyecto_flutter/utils/constants.dart';
 import 'package:proyecto_flutter/widget/nav_bar.dart';
 
 class UserProductsScreen extends StatefulWidget {
- 
- @override
- _UserProductsScreenState createState() => _UserProductsScreenState();
+  @override
+  _UserProductsScreenState createState() => _UserProductsScreenState();
 }
 
 class _UserProductsScreenState extends State<UserProductsScreen> {
- List<Product> products = [];
- Map<String, dynamic> userData = {};
- late ScrollController _scrollController;
- bool _loading = false;
+  List<Product> products = [];
+  Map<String, dynamic> userData = {};
+  late ScrollController _scrollController;
+  bool _loading = false;
 
- @override
- void initState() {
+  @override
+  void initState() {
     super.initState();
     _scrollController = ScrollController();
     obtenerDatosUsuario();
- }
+  }
 
- Future<void> obtenerDatosUsuario() async {
+  Future<void> obtenerDatosUsuario() async {
     ApiResponse response = await UserService.getUserById();
     setState(() {
       userData = response.data;
@@ -35,21 +34,21 @@ class _UserProductsScreenState extends State<UserProductsScreen> {
       print(userData['_id']);
       loadUserProducts(userData['_id']);
     });
- }
-      
-
-Future<void> loadUserProducts(String? userId) async {
-  if (userId != null) {
-    final List<Product> userproducts = await ProductService.getUserProducts(userId);
-    setState(() {
-      products = userproducts;
-      print(products);
-    });
-  } else {
-    print('UserId is null.');
   }
-}
-  
+
+  Future<void> loadUserProducts(String? userId) async {
+    if (userId != null) {
+      final List<Product> userproducts =
+          await ProductService.getUserProducts(userId);
+      setState(() {
+        products = userproducts;
+        print(products);
+      });
+    } else {
+      print('UserId is null.');
+    }
+  }
+
 /*  void _scrollListener() {
     if (_scrollController.position.pixels ==
         _scrollController.position.maxScrollExtent) {
@@ -57,23 +56,23 @@ Future<void> loadUserProducts(String? userId) async {
     }
   }*/
 
-@override
+  @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: CustomBottomNavigationBar(currentIndex: 0),
       appBar: AppBar(
-        title: Text('Productos favoritos'),
-        backgroundColor: Color(0xFF486D28),
-        centerTitle: true),
+          title: Text('Mis productos publicados'),
+          backgroundColor: Color(0xFF486D28),
+          centerTitle: true),
       body: CustomScrollView(
         controller: _scrollController,
-                slivers: [
+        slivers: [
           SliverToBoxAdapter(
             child: SearchBar(),
           ),
@@ -90,7 +89,6 @@ Future<void> loadUserProducts(String? userId) async {
     );
   }
 }
-
 
 class SearchBar extends StatelessWidget {
   const SearchBar({Key? key}) : super(key: key);
@@ -141,8 +139,6 @@ class SearchBar extends StatelessWidget {
   }
 }
 
-
-
 class ProductsVerticalItem extends StatelessWidget {
   final Product product;
 
@@ -154,7 +150,7 @@ class ProductsVerticalItem extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Get.to(
-          ProductDetailScreen(productId: product.id?? ''),
+          ProductDetailScreen(productId: product.id ?? ''),
         );
       },
       child: Container(
@@ -172,7 +168,7 @@ class ProductsVerticalItem extends StatelessWidget {
             Container(
               margin: EdgeInsets.only(top: 10),
               child: Text(
-                product.name?? '',
+                product.name ?? '',
                 style: TextStyle(
                   color: Colors.white,
                 ),

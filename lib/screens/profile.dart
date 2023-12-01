@@ -64,15 +64,15 @@ class _ProfilePageState extends State<ProfilePage> {
                     icon: LineAwesomeIcons.cog,
                     onPress: () {}),
                 ProfileMenuWidget(
-                    title: "Favoritos",
-                    icon: LineAwesomeIcons.heart,
+                    title: "PlaceHolder",
+                    icon: LineAwesomeIcons.question,
                     onPress: () {}),
                 ProfileMenuWidget(
                     title: "Mis Productos",
                     icon: LineAwesomeIcons.user_check,
-                    onPress: () { Navigator.push( context,
-                        MaterialPageRoute(builder: (context) => UserProductsScreen()),
-                );}),
+                    onPress: () {
+                      Get.to(UserProductsScreen());
+                    }),
                 const Divider(),
                 ProfileMenuWidget(
                     title: "Información",
