@@ -166,7 +166,7 @@ class ProductsVerticalItem extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Get.to(
-          ProductDetailScreen(productId: product.id),
+          ProductDetailScreen(productId: product.id ?? ''),
         );
       },
       child: Container(
@@ -180,11 +180,26 @@ class ProductsVerticalItem extends StatelessWidget {
         ),
         child: Row(
           children: [
+            Container(
+              margin: EdgeInsets.all(10),
+              width: gWidth / 4,
+              height: gHeight / 4,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                image: DecorationImage(
+                  image: product.productImage != null
+                      ? NetworkImage(product.productImage!)
+                      : AssetImage('assets/images/profile.png')
+                          as ImageProvider, // Usa la URL de la imagen
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
             SizedBox(width: 20),
             Container(
               margin: EdgeInsets.only(top: 10),
               child: Text(
-                product.name,
+                product.name ?? '',
                 style: TextStyle(
                   color: Colors.white,
                 ),
@@ -244,8 +259,8 @@ class ProductsHorizontal extends StatelessWidget {
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: () {
-                    Get.to(
-                        ProductDetailScreen(productId: productList[index].id));
+                    Get.to(ProductDetailScreen(
+                        productId: productList[index].id ?? ''));
                   },
                   child: Container(
                     margin: EdgeInsets.all(gHeight * 0.01),
@@ -265,7 +280,7 @@ class ProductsHorizontal extends StatelessWidget {
                             Container(
                               margin: EdgeInsets.only(top: 10),
                               child: Text(
-                                productList[index].name,
+                                productList[index].name ?? '',
                                 style: TextStyle(
                                   color: Colors.white,
                                 ),
@@ -298,7 +313,7 @@ class TopText extends StatelessWidget {
           margin: EdgeInsets.only(top: 10, left: 20),
           width: gWidth,
           height: gHeight / 25,
-          child: SizedBox(
+          child: const SizedBox(
             child: Text("Productos en oferta",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,

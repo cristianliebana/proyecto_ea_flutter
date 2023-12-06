@@ -23,11 +23,11 @@ class ProductDetailScreen extends StatefulWidget {
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   Map<String, dynamic> productData = {};
   Map<String, dynamic> creadorData = {};
-  final List<String> imagePaths = [
-    'assets/images/tomate.jpeg',
-    'assets/images/tomate2.jpg',
-    'assets/images/tomate3.jpg',
-  ];
+  // final List<String> imagePaths = [
+  //   'assets/images/tomate.jpeg',
+  //   'assets/images/tomate2.jpg',
+  //   'assets/images/tomate3.jpg',
+  // ];
 
   @override
   void initState() {
@@ -67,7 +67,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       appBar: _buildAppBar(), // Use the common _buildAppBar method
       body: Stack(
         children: [
-          ImagesCarousel(imagePaths: imagePaths, buildAppBar: _buildAppBar),
+          ImagesCarousel(productData: productData, buildAppBar: _buildAppBar),
           InformationWidget(
             productData: productData,
             creadorData: creadorData,
@@ -167,8 +167,9 @@ class InformationWidget extends StatelessWidget {
                       children: [
                         CircleAvatar(
                           radius: 35,
-                          backgroundImage:
-                              AssetImage("assets/images/shrek.jpeg"),
+                          backgroundImage: creadorData['profileImage'] != null
+                              ? NetworkImage(creadorData['profileImage']!)
+                              : Image.asset('assets/images/profile.png').image,
                         ),
                         SizedBox(width: 10),
                         SizedBox(height: 30),
@@ -369,11 +370,11 @@ class NameText extends StatelessWidget {
 class ImagesCarousel extends StatefulWidget {
   const ImagesCarousel({
     Key? key,
-    required this.imagePaths,
+    required this.productData,
     required this.buildAppBar,
   }) : super(key: key);
 
-  final List<String> imagePaths;
+  final Map<String, dynamic> productData;
   final Function() buildAppBar;
 
   @override
@@ -385,6 +386,10 @@ class _ImagesCarouselState extends State<ImagesCarousel> {
 
   @override
   Widget build(BuildContext context) {
+    List<String?> imageUrls = [
+      widget.productData['productImage'],
+    ];
+
     return Column(
       children: [
         Container(
@@ -403,15 +408,18 @@ class _ImagesCarouselState extends State<ImagesCarousel> {
                     });
                   },
                 ),
-                items: widget.imagePaths.map((path) {
-                  return Container(
-                    width: MediaQuery.of(context).size.width,
-                    child: Image(
-                      image: AssetImage(path),
-                      fit: BoxFit.cover,
-                    ),
-                  );
-                }).toList(),
+                items: imageUrls
+                    .map(
+                      (imageUrl) => Container(
+                        width: MediaQuery.of(context).size.width,
+                        child: Image.network(
+                          widget.productData['productImage'] ??
+                              'assets/images/profile.png',
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    )
+                    .toList(),
               ),
             ],
           ),
