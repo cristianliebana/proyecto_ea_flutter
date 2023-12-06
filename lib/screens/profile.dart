@@ -9,6 +9,7 @@ import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
 import 'package:get/get.dart';
 import 'package:proyecto_flutter/screens/update_user.dart';
+import 'package:proyecto_flutter/screens/user_products.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
 import 'package:proyecto_flutter/widget/nav_bar.dart';
 
@@ -46,7 +47,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: CustomBottomNavigationBar(currentIndex: 4),
+      bottomNavigationBar: CustomBottomNavigationBar(currentIndex: 5),
       body: SingleChildScrollView(
         child: Container(
             width: gWidth,
@@ -71,13 +72,15 @@ class _ProfilePageState extends State<ProfilePage> {
                     icon: LineAwesomeIcons.cog,
                     onPress: () {}),
                 ProfileMenuWidget(
-                    title: "Favoritos",
-                    icon: LineAwesomeIcons.heart,
+                    title: "PlaceHolder",
+                    icon: LineAwesomeIcons.question,
                     onPress: () {}),
                 ProfileMenuWidget(
-                    title: "Placeholder",
+                    title: "Mis Productos",
                     icon: LineAwesomeIcons.user_check,
-                    onPress: () {}),
+                    onPress: () {
+                      Get.to(UserProductsScreen());
+                    }),
                 const Divider(),
                 ProfileMenuWidget(
                     title: "Información",

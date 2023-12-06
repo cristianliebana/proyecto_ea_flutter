@@ -38,11 +38,40 @@ class _UpdateScreenState extends State<UpdateScreen> {
     });
   }
 
+  AppBar _buildAppBar() {
+    return AppBar(
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      centerTitle: true,
+      leading: _buildAppBarBackButton(),
+    );
+  }
+
+  Widget _buildAppBarBackButton() {
+    return Container(
+      margin: EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+        color: Color(0xFF486D28),
+        shape: BoxShape.circle,
+      ),
+      child: IconButton(
+        icon: Icon(
+          Icons.arrow_back,
+          color: Color(0xFFFFFCEA),
+        ),
+        onPressed: () {
+          Get.to(ProfilePage());
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: Scaffold(
+          appBar: _buildAppBar(),
           body: Container(
             margin: EdgeInsets.all(15),
             width: gWidth,

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
+import 'package:proyecto_flutter/screens/login.dart';
 import 'package:proyecto_flutter/screens/signup_password.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
 import 'package:proyecto_flutter/widget/rep_textfiled.dart';
@@ -12,20 +13,46 @@ class SignUpScreen extends StatelessWidget {
   SignUpScreen({Key? key}) : super(key: key);
   final SignUpController signUpController = SignUpController();
 
+  AppBar _buildAppBar() {
+    return AppBar(
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      centerTitle: true,
+      leading: _buildAppBarBackButton(),
+    );
+  }
+
+  Widget _buildAppBarBackButton() {
+    return Container(
+      margin: EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+        color: Color(0xFF486D28),
+        shape: BoxShape.circle,
+      ),
+      child: IconButton(
+        icon: Icon(
+          Icons.arrow_back,
+          color: Color(0xFFFFFCEA),
+        ),
+        onPressed: () {
+          Get.to(LoginScreen());
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: Scaffold(
+          appBar: _buildAppBar(),
           body: Container(
-            margin: EdgeInsets.all(15),
-            width: gWidth,
-            height: gHeight,
+            margin: EdgeInsets.only(left: 15, right: 15, top: 0),
             child: Column(
               children: [
                 TopImage(),
                 SignUpText(),
-                SizedBox(height: 10),
                 EmailTextFiled(signUpController: signUpController),
                 SizedBox(height: 10),
                 NameTextFiled(signUpController: signUpController),
@@ -220,7 +247,7 @@ class SignUpText extends StatelessWidget {
     return FadeInDown(
       delay: Duration(milliseconds: 125),
       child: Container(
-          margin: EdgeInsets.only(top: 10, right: 270),
+          margin: EdgeInsets.only(right: 270),
           width: gWidth / 4,
           height: gHeight / 18,
           child: FittedBox(

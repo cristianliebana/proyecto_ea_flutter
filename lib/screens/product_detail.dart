@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:proyecto_flutter/api/services/product_service.dart';
+import 'package:proyecto_flutter/api/services/room_service.dart';
 import 'package:proyecto_flutter/api/services/token_service.dart';
 import 'package:proyecto_flutter/api/services/user_service.dart';
+import 'package:proyecto_flutter/api/services/favorite_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
-import 'package:proyecto_flutter/screens/chat.dart';
 import 'package:proyecto_flutter/screens/chat.dart';
 import 'package:proyecto_flutter/screens/home.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -28,12 +29,18 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   //   'assets/images/tomate2.jpg',
   //   'assets/images/tomate3.jpg',
   // ];
+  Map<String, dynamic> userData = {};
+  bool _isFavoriteExists = false;
+  Map<String, dynamic> favoriteData = {};
+  late String userId;
+  late String favoriteId;
 
   @override
   void initState() {
     super.initState();
     checkAuthAndNavigate();
     obtenerDatosProducto();
+    obtenerDatosUsuario();
   }
 
   Future<void> obtenerDatosProducto() async {
@@ -41,8 +48,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         await ProductService.getProductById(widget.productId);
     setState(() {
       productData = response.data;
+      userId = productData['user'];
     });
     await obtenerDatosCreadorProducto(productData['user']);
+    await checkFavoriteExistence();
   }
 
   Future<void> obtenerDatosCreadorProducto(String creadorId) async {
@@ -50,6 +59,66 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     setState(() {
       creadorData = response.data;
     });
+  }
+
+  Future<void> obtenerDatosUsuario() async {
+    ApiResponse response = await UserService.getUserById();
+    setState(() {
+      userData = response.data;
+    });
+  }
+
+  Future<void> crearFavorito(String userId, String productId) async {
+    ApiResponse response =
+        await FavoriteService.createFavorite(userData['_id'], productId);
+
+    setState(() {
+      favoriteData = response.data;
+    });
+  }
+
+  Future<void> borrarFavorito(String userId, String productId) async {
+    ApiResponse response = await FavoriteService.deleteFavorite(favoriteId);
+  }
+
+  Future<void> _handleFavoriteButton() async {
+    if (userData['_id'] == creadorData['_id']) {
+      Get.snackbar('Error', 'No puedes darle a favorito a un producto tuyo');
+    } else {
+      try {
+        if (_isFavoriteExists) {
+          await borrarFavorito(userId, widget.productId);
+          Get.snackbar('Éxito', 'Producto eliminado de favoritos');
+        } else {
+          await crearFavorito(userId, widget.productId);
+          Get.snackbar('Éxito', 'Producto agregado a favoritos');
+        }
+
+        setState(() {
+          _isFavoriteExists = !_isFavoriteExists;
+        });
+      } catch (error) {
+        print('Error: $error');
+      }
+    }
+  }
+
+  Future<void> checkFavoriteExistence() async {
+    try {
+      Map<String, dynamic> response =
+          await FavoriteService.checkIfUserHasFavorite(
+              userData['_id'], widget.productId);
+      bool exists = response['exists'] ?? false;
+      favoriteId = response['favoriteId'] ?? '';
+
+      setState(() {
+        _isFavoriteExists = exists;
+      });
+    } catch (error) {
+      setState(() {
+        _isFavoriteExists = false;
+      });
+    }
   }
 
   Future<void> checkAuthAndNavigate() async {
@@ -60,17 +129,26 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     TokenService.removeToken();
   }
 
+  IconButton _buildAppBarIconButton(
+      {required IconData icon, required VoidCallback onPressed}) {
+    return IconButton(
+      icon: Icon(icon),
+      onPressed: onPressed,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: _buildAppBar(), // Use the common _buildAppBar method
+      appBar: _buildAppBar(),
       body: Stack(
         children: [
           ImagesCarousel(productData: productData, buildAppBar: _buildAppBar),
           InformationWidget(
             productData: productData,
             creadorData: creadorData,
+            userData: userData,
           ),
         ],
       ),
@@ -82,23 +160,50 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       elevation: 0,
       backgroundColor: Colors.transparent,
       centerTitle: true,
-      leading: _buildAppBarIconButton(
-        icon: Icons.arrow_back,
-        onPressed: () {
-          Get.to(HomePage());
-        },
-      ),
+      leading: _buildAppBarBackButton(),
       actions: [
-        _buildAppBarIconButton(
-          icon: Icons.favorite_border,
-          onPressed: () {},
-        ),
+        _buildAppBarFavoriteButton(),
       ],
     );
   }
 
-  Widget _buildAppBarIconButton(
-      {required IconData icon, required Function() onPressed}) {
+  Widget _buildAppBarFavoriteButton() {
+    return _isFavoriteExists
+        ? Container(
+            margin: EdgeInsets.all(8.0),
+            decoration: BoxDecoration(
+              color: Color(0xFF486D28),
+              shape: BoxShape.circle,
+            ),
+            child: IconButton(
+              icon: Icon(
+                Icons.favorite,
+                color: Color(0xFFFFFCEA),
+              ),
+              onPressed: () async {
+                await _handleFavoriteButton();
+              },
+            ),
+          )
+        : Container(
+            margin: EdgeInsets.all(8.0),
+            decoration: BoxDecoration(
+              color: Color(0xFF486D28),
+              shape: BoxShape.circle,
+            ),
+            child: IconButton(
+              icon: Icon(
+                Icons.favorite_border,
+                color: Color(0xFFFFFCEA),
+              ),
+              onPressed: () async {
+                await _handleFavoriteButton();
+              },
+            ),
+          );
+  }
+
+  Widget _buildAppBarBackButton() {
     return Container(
       margin: EdgeInsets.all(8.0),
       decoration: BoxDecoration(
@@ -106,11 +211,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         shape: BoxShape.circle,
       ),
       child: IconButton(
-        onPressed: onPressed,
         icon: Icon(
-          icon,
+          Icons.arrow_back,
           color: Color(0xFFFFFCEA),
         ),
+        onPressed: () {
+          Get.to(HomePage());
+        },
       ),
     );
   }
@@ -118,9 +225,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
 class InformationWidget extends StatelessWidget {
   const InformationWidget(
-      {Key? key, required this.productData, required this.creadorData});
+      {Key? key,
+      required this.productData,
+      required this.creadorData,
+      required this.userData});
 
   final Map<String, dynamic> productData;
+  final Map<String, dynamic> userData;
   final Map<String, dynamic> creadorData;
 
   @override
@@ -180,8 +291,7 @@ class InformationWidget extends StatelessWidget {
                               UserText(creadorData: creadorData),
                               Transform.scale(
                                 alignment: Alignment.centerLeft,
-                                scale:
-                                    0.7, // Ajusta el valor según tus necesidades
+                                scale: 0.7,
                                 child: RatingBar(
                                   ignoreGestures: true,
                                   initialRating: creadorData['rating'] ?? 3.5,
@@ -198,9 +308,7 @@ class InformationWidget extends StatelessWidget {
                                   ),
                                   itemPadding:
                                       EdgeInsets.symmetric(horizontal: 4.0),
-                                  onRatingUpdate: (rating) {
-                                    print(rating);
-                                  },
+                                  onRatingUpdate: (rating) {},
                                 ),
                               ),
                             ]),
@@ -224,7 +332,7 @@ class InformationWidget extends StatelessWidget {
           bottom: 20,
           left: 0,
           right: 0,
-          child: ChatButton(),
+          child: ChatButton(userData: userData, creadorData: creadorData),
         ),
       ],
     );
@@ -232,9 +340,14 @@ class InformationWidget extends StatelessWidget {
 }
 
 class ChatButton extends StatelessWidget {
+  final Map<String, dynamic> userData;
+  final Map<String, dynamic> creadorData;
+
   const ChatButton({
-    super.key,
-  });
+    Key? key,
+    required this.userData,
+    required this.creadorData,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -244,19 +357,43 @@ class ChatButton extends StatelessWidget {
       height: gHeight / 16,
       child: ElevatedButton(
         onPressed: () async {
-          Get.to(ChatPage());
+          String userId1 = userData['_id'] ?? '';
+          String userId2 = creadorData['_id'] ?? '';
+
+          ApiResponse response =
+              await RoomService.checkIfRoomExists(userId1, userId2);
+
+          if (response.statusCode == 200) {
+            bool roomExists = response.data['exist'];
+
+            if (roomExists) {
+              Get.to(ChatPage());
+            } else {
+              ApiResponse createResponse =
+                  await RoomService.createRoom(userId1, userId2);
+
+              if (createResponse.statusCode == 201) {
+                Get.to(ChatPage());
+              } else {
+                print("Error al crear la sala: ${createResponse.data}");
+              }
+            }
+          } else {
+            print("Error al verificar la sala: ${response.data}");
+          }
         },
         child: Text(
           "Contacta",
           style: TextStyle(fontSize: 25),
         ),
         style: ButtonStyle(
-            shape: MaterialStateProperty.all(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(100),
-              ),
+          shape: MaterialStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(100),
             ),
-            backgroundColor: MaterialStateProperty.all(buttonColor)),
+          ),
+          backgroundColor: MaterialStateProperty.all(buttonColor),
+        ),
       ),
     );
   }

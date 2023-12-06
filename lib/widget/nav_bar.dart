@@ -1,21 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:proyecto_flutter/api/services/token_service.dart';
 import 'package:proyecto_flutter/screens/chat.dart';
 import 'package:proyecto_flutter/screens/create_product.dart';
+import 'package:proyecto_flutter/screens/favorites.dart';
 import 'package:proyecto_flutter/screens/home.dart';
 import 'package:proyecto_flutter/screens/profile.dart';
-import 'package:proyecto_flutter/screens/shopping_basket.dart';
+import 'package:proyecto_flutter/bindings/map_Bindings.dart';
 import 'package:get/get.dart';
 
 class CustomBottomNavigationBarController extends GetxController {
+  String userId = '';
+
   void updateIndex(int index) {
     switch (index) {
       case 0:
         Get.to(HomePage(), transition: Transition.noTransition);
         break;
       case 1:
-        Get.to(ShoppingBasketPage(), transition: Transition.noTransition);
+        MapPageBinding().requestNavigation();
         break;
       case 2:
         Get.to(CreateProduct(), transition: Transition.noTransition);
@@ -24,6 +30,9 @@ class CustomBottomNavigationBarController extends GetxController {
         Get.to(ChatPage(), transition: Transition.noTransition);
         break;
       case 4:
+        Get.to(FavoritesScreen(), transition: Transition.noTransition);
+        break;
+      case 5:
         Get.to(ProfilePage(), transition: Transition.noTransition);
         break;
       default:
@@ -68,8 +77,8 @@ class CustomBottomNavigationBar extends StatelessWidget {
                   text: "Inicio",
                 ),
                 GButton(
-                  icon: LineIcons.shoppingBasket,
-                  text: "Cesta",
+                  icon: LineIcons.map,
+                  text: "Mapa",
                 ),
                 GButton(
                   icon: LineIcons.plusCircle,
@@ -78,6 +87,10 @@ class CustomBottomNavigationBar extends StatelessWidget {
                 GButton(
                   icon: LineIcons.comment,
                   text: "Chat",
+                ),
+                GButton(
+                  icon: LineAwesomeIcons.heart,
+                  text: "Favoritos",
                 ),
                 GButton(
                   icon: LineIcons.user,
