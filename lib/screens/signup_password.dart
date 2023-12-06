@@ -7,6 +7,7 @@ import 'package:line_icons/line_icons.dart';
 import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
 import 'package:proyecto_flutter/screens/login.dart';
+import 'package:proyecto_flutter/screens/signup_image.dart';
 import 'package:proyecto_flutter/screens/signup.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
 import 'package:proyecto_flutter/widget/rep_textfiled.dart';
@@ -108,7 +109,7 @@ class _SignUpScreenState extends State<SignUpPasswordScreen> {
                 },
               ),
               SizedBox(height: 40),
-              SubmitButton(
+              ContinueButton(
                 signUpController: signUpController,
                 success: success,
               ),
@@ -153,56 +154,7 @@ class SignUpPasswordController extends GetxController {
       return;
     } else {
       try {
-        ApiResponse response = await UserService.registerUser(registrationData);
-        print(registrationData);
-
-        Get.defaultDialog(
-          title: "Cuenta creada",
-          backgroundColor: Color(0xFFFFFCEA),
-          content: ClipRect(
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 50.0, sigmaY: 50.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.0),
-                  color: Color(0xFFFFFCEA),
-                ),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Color(0xFFFFFCEA),
-                  ),
-                  child: Column(
-                    children: [
-                      Lottie.asset(
-                        "assets/json/check3.json",
-                        width: 100,
-                        height: 100,
-                        repeat: false,
-                      ),
-                      SizedBox(height: 20),
-                      Text("¡Bienvenido a Km0Market!"),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          radius: 10.0,
-          confirm: ElevatedButton(
-            onPressed: () {
-              Get.offAll(LoginScreen());
-            },
-            child: Text("Aceptar"),
-            style: ButtonStyle(
-              shape: MaterialStateProperty.all(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-              ),
-              backgroundColor: MaterialStateProperty.all(buttonColor),
-            ),
-          ),
-        );
+        Get.to(SignUpImageScreen(registrationData: registrationData));
       } catch (error) {
         Get.snackbar('Error', 'Ocurrió un error al registrar el usuario',
             snackPosition: SnackPosition.BOTTOM);
@@ -226,11 +178,11 @@ class SpanishStrings implements FlutterPwValidatorStrings {
   final String normalLetters = '- Letras normales';
 }
 
-class SubmitButton extends StatelessWidget {
+class ContinueButton extends StatelessWidget {
   final SignUpPasswordController signUpController;
   final bool success;
 
-  SubmitButton({required this.signUpController, required this.success});
+  ContinueButton({required this.signUpController, required this.success});
 
   @override
   Widget build(BuildContext context) {
@@ -250,7 +202,7 @@ class SubmitButton extends StatelessWidget {
             }
           },
           child: Text(
-            "Regístrate",
+            "Continuar",
             style: TextStyle(fontSize: 25),
           ),
           style: ButtonStyle(

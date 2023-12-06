@@ -1,3 +1,7 @@
+import 'package:cloudinary_flutter/cloudinary_context.dart';
+import 'package:cloudinary_flutter/image/cld_image.dart';
+import 'package:cloudinary_url_gen/cloudinary.dart';
+import 'package:cloudinary_url_gen/config/cloudinary_config.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:proyecto_flutter/api/services/token_service.dart';
@@ -21,6 +25,8 @@ class _ProfilePageState extends State<ProfilePage> {
     super.initState();
     checkAuthAndNavigate();
     obtenerDatosUsuario();
+    CloudinaryContext.cloudinary =
+        Cloudinary.fromCloudName(cloudName: "dfwsx27vx");
   }
 
   Future<void> obtenerDatosUsuario() async {
@@ -49,7 +55,9 @@ class _ProfilePageState extends State<ProfilePage> {
             child: Column(
               children: [
                 SizedBox(height: 50),
-                ProfileImage(),
+                ProfileImage(
+                  userData: userData,
+                ),
                 const SizedBox(height: 10),
                 if (userData.isNotEmpty) UsernameText(userData: userData),
                 const SizedBox(height: 10),
@@ -134,21 +142,29 @@ class UsernameText extends StatelessWidget {
 class ProfileImage extends StatelessWidget {
   const ProfileImage({
     super.key,
+    required this.userData,
   });
+
+  final Map<String, dynamic> userData;
 
   @override
   Widget build(BuildContext context) {
+    String profileImage = userData['profileImage'] ??
+        "https://res.cloudinary.com/dfwsx27vx/image/upload/v1701028188/profile_ju3yvo.png";
     return SizedBox(
       width: 175,
       height: 175,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(100),
-        child: const Image(image: AssetImage('assets/images/profile.png')),
+        child: CldImageWidget(
+          publicId: profileImage,
+        ),
       ),
     );
   }
 }
 
+// "assets/images/profile.png"
 class EditProfileButton extends StatelessWidget {
   const EditProfileButton({
     super.key,

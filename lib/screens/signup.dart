@@ -105,7 +105,7 @@ class SignUpController extends GetxController {
         Get.snackbar('Error', 'El email ya existe',
             snackPosition: SnackPosition.BOTTOM);
       } else {
-        Get.offAll(SignUpPasswordScreen(userData: userData));
+        Get.to(SignUpPasswordScreen(userData: userData));
         print(userData);
       }
     }

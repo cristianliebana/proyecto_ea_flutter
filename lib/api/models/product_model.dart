@@ -4,6 +4,7 @@ class Product {
   String? description;
   double? price;
   int? units;
+  String? productImage;
 
   Product({
     this.id,
@@ -11,6 +12,7 @@ class Product {
     this.description,
     this.price,
     this.units,
+    this.productImage,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
@@ -20,6 +22,7 @@ class Product {
       description: json['description'] ?? '',
       price: (json['price'] ?? 0).toDouble(),
       units: json['units'] ?? 0,
+      productImage: json['productImage'] ?? '',
     );
   }
 
@@ -30,6 +33,7 @@ class Product {
       'description': description,
       'price': price,
       'units': units,
+      'productImage': productImage,
     };
   }
 }
