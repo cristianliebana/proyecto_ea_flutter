@@ -2,73 +2,69 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:proyecto_flutter/api/models/product_model.dart';
 import 'package:proyecto_flutter/api/services/favorite_service.dart';
-import 'package:proyecto_flutter/api/services/product_service.dart';
 import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
 import 'package:proyecto_flutter/screens/product_detail.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
 import 'package:proyecto_flutter/widget/nav_bar.dart';
 
-
 class FavoritesScreen extends StatefulWidget {
- 
- @override
- _FavoritesScreenState createState() => _FavoritesScreenState();
+  @override
+  _FavoritesScreenState createState() => _FavoritesScreenState();
 }
 
 class _FavoritesScreenState extends State<FavoritesScreen> {
- List<Product> products = [];
- Map<String, dynamic> userData = {};
- late ScrollController _scrollController;
- bool _loading = false;
+  List<Product> products = [];
+  Map<String, dynamic> userData = {};
+  late ScrollController _scrollController;
+  bool _loading = false;
 
- @override
- void initState() {
+  @override
+  void initState() {
     super.initState();
     _scrollController = ScrollController();
     obtenerDatosUsuario();
- }
+  }
 
- Future<void> obtenerDatosUsuario() async {
+  Future<void> obtenerDatosUsuario() async {
     ApiResponse response = await UserService.getUserById();
     setState(() {
       userData = response.data;
       loadUserFavorites(userData['_id']);
     });
-      
   }
 
-Future<void> loadUserFavorites(String? userId) async {
-  if (userId != null) {
-    final FavoriteService favoriteService = FavoriteService();
-    final List<Product> favorites = await favoriteService.getFavorites(userId);
-    setState(() {
-      products = favorites;
-      print(products);
-    });
-  } else {
-    print('UserId is null.');
+  Future<void> loadUserFavorites(String? userId) async {
+    if (userId != null) {
+      final FavoriteService favoriteService = FavoriteService();
+      final List<Product> favorites =
+          await favoriteService.getFavorites(userId);
+      setState(() {
+        products = favorites;
+        print(products);
+      });
+    } else {
+      print('UserId is null.');
+    }
   }
-}
 
-
-@override
+  @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: CustomBottomNavigationBar(currentIndex: 4),
       appBar: AppBar(
-        title: Text('Productos favoritos'),
-        backgroundColor: Color(0xFF486D28),
-        centerTitle: true),
+          title: Text('Productos favoritos'),
+          backgroundColor: Color(0xFF486D28),
+          centerTitle: true),
       body: CustomScrollView(
         controller: _scrollController,
-                slivers: [
+        slivers: [
           SliverToBoxAdapter(
             child: SearchBar(),
           ),
@@ -134,7 +130,6 @@ class SearchBar extends StatelessWidget {
     );
   }
 }
-
 
 class ProductsVerticalItem extends StatelessWidget {
   final Product product;

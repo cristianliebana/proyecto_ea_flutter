@@ -9,8 +9,7 @@ import 'package:proyecto_flutter/api/services/product_service.dart';
 import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
 import 'package:proyecto_flutter/screens/create_product.dart';
-import 'package:proyecto_flutter/screens/home.dart';
-import 'package:proyecto_flutter/screens/login.dart';
+import 'package:proyecto_flutter/screens/create_product_image.dart';
 import 'package:proyecto_flutter/screens/user_products.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
 import 'package:proyecto_flutter/widget/rep_textfiled.dart';
@@ -158,53 +157,7 @@ class CreateProductController extends GetxController {
     try {
       print(productData);
       ApiResponse response = await ProductService.addProduct(productData);
-      Get.defaultDialog(
-        title: "¡Felicidades!",
-        backgroundColor: Color(0xFFFFFCEA),
-        content: ClipRect(
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 50.0, sigmaY: 50.0),
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.0),
-                color: Color(0xFFFFFCEA),
-              ),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Color(0xFFFFFCEA),
-                ),
-                child: Column(
-                  children: [
-                    Lottie.asset(
-                      "assets/json/check3.json",
-                      width: 100,
-                      height: 100,
-                      repeat: false,
-                    ),
-                    SizedBox(height: 20),
-                    Text("¡Acabas de publicar tu producto!"),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-        radius: 10.0,
-        confirm: ElevatedButton(
-          onPressed: () {
-            Get.offAll(UserProductsScreen());
-          },
-          child: Text("Aceptar"),
-          style: ButtonStyle(
-            shape: MaterialStateProperty.all(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-            ),
-            backgroundColor: MaterialStateProperty.all(buttonColor),
-          ),
-        ),
-      );
+      Get.offAll(CreateProductImage(productData: productData));
     } catch (e) {
       Get.snackbar(
         "Error",
@@ -379,7 +332,7 @@ class SaveButton extends StatelessWidget {
             createProductController.addProduct(context);
           },
           child: Text(
-            "Añadir Producto",
+            "Continuar",
             style: TextStyle(fontSize: 25),
           ),
           style: ButtonStyle(

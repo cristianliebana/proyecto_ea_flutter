@@ -1,8 +1,6 @@
-import 'package:proyecto_flutter/api/models/room_model.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
 
-class RoomService{
-  
+class RoomService {
   static Future<ApiResponse> createRoom(String userId1, String userId2) async {
     ApiResponse response = ApiResponse(data: {}, statusCode: 404);
 
@@ -24,14 +22,16 @@ class RoomService{
       return response;
     }
   }
-static Future<ApiResponse> readRoomsByUserId(String userId) async {
-  ApiResponse response = ApiResponse(data: {}, statusCode: 404);
-  response = await Api().get('/rooms/readrooms/$userId');
+
+  static Future<ApiResponse> readRoomsByUserId(String userId) async {
+    ApiResponse response = ApiResponse(data: {}, statusCode: 404);
+    response = await Api().get('/rooms/readrooms/$userId');
     print('API Response: $response');
     return response;
-}
+  }
 
- static Future<ApiResponse> checkIfRoomExists(String userId1, String userId2) async {
+  static Future<ApiResponse> checkIfRoomExists(
+      String userId1, String userId2) async {
     ApiResponse response = ApiResponse(data: {}, statusCode: 404);
 
     try {
@@ -44,5 +44,3 @@ static Future<ApiResponse> readRoomsByUserId(String userId) async {
     }
   }
 }
-
-  

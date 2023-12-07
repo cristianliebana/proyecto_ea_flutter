@@ -6,29 +6,28 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
 import 'package:proyecto_flutter/api/services/cloudinary_service.dart';
-import 'package:proyecto_flutter/api/services/user_service.dart';
+import 'package:proyecto_flutter/api/services/product_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
-import 'package:proyecto_flutter/screens/login.dart';
+import 'package:proyecto_flutter/screens/user_products.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
 
-class SignUpImageScreen extends StatefulWidget {
-  final Map<String, dynamic> registrationData;
+class CreateProductImage extends StatefulWidget {
+  final Map<String, dynamic> productData;
 
-  SignUpImageScreen({Key? key, required this.registrationData})
-      : super(key: key);
+  CreateProductImage({Key? key, required this.productData}) : super(key: key);
 
   @override
-  _SignUpImageScreenState createState() => _SignUpImageScreenState();
+  _CreateProductImageState createState() => _CreateProductImageState();
 }
 
-class _SignUpImageScreenState extends State<SignUpImageScreen> {
-  late SignUpImageController signUpController;
+class _CreateProductImageState extends State<CreateProductImage> {
+  late CreateProductController productController;
 
   @override
   void initState() {
     super.initState();
-    signUpController = SignUpImageController(
-      registrationData: widget.registrationData,
+    productController = CreateProductController(
+      productData: widget.productData,
       state: this,
     );
   }
@@ -60,7 +59,7 @@ class _SignUpImageScreenState extends State<SignUpImageScreen> {
 
       // Subir la imagen a Cloudinary usando CloudinaryServices
       final uploadedUrl = await cloudinaryServices.uploadImage(
-        _imageFile!, /* "registroUsuario"*/
+        _imageFile!, /*"registroProducto"*/
       );
       print("URL de Cloudinary: $uploadedUrl");
 
@@ -149,23 +148,8 @@ class _SignUpImageScreenState extends State<SignUpImageScreen> {
                             : SizedBox.shrink(),
                       ),
                     ),
-                    // if (_imageFile != null) ...[
-                    //   Image.network(_imageFile!.path),
-                    // ElevatedButton(
-                    //   onPressed: _uploadImage,
-                    //   child: const Text('Subelo a cloudinary'),
-                    // ),
-                    // ],
-                    // if (_imageUrl != null) ...[
-                    //   // Image.network(_imageUrl!),
-                    //   Text("Cloudinary URL: $_imageUrl",
-                    //       style: const TextStyle(fontSize: 20)),
-                    //   const Padding(
-                    //       padding:
-                    //           EdgeInsets.only(left: 20, top: 60, bottom: 100)),
-                    // ],
                     SizedBox(height: 20),
-                    SubmitButton(signUpController: signUpController),
+                    SubmitButton(productController: productController),
                   ],
                 ),
               ),
@@ -173,97 +157,103 @@ class _SignUpImageScreenState extends State<SignUpImageScreen> {
   }
 }
 
-class SignUpImageController extends GetxController {
-  final Map<String, dynamic> registrationData;
-  final TextEditingController profileImageController = TextEditingController();
-  final _SignUpImageScreenState _state;
+class CreateProductController extends GetxController {
+  final Map<String, dynamic> productData;
+  final TextEditingController productImageController = TextEditingController();
+  final _CreateProductImageState _state;
 
-  SignUpImageController({
-    required this.registrationData,
-    required _SignUpImageScreenState state,
+  CreateProductController({
+    required this.productData,
+    required _CreateProductImageState state,
   }) : _state = state;
 
-  Future<void> _uploadImageAndSignUp(BuildContext context) async {
+  Future<void> _uploadImageAndCreateProduct(BuildContext context) async {
     await _state._uploadImage(); // Llama a la función de subir imagen
-    signUp(context); // Llama a la función signUp después de subir la imagen
+    addProduct(context);
   }
 
-  void signUp(BuildContext context) async {
-    String? username = registrationData['username'];
-    String? fullname = registrationData['fullname'];
-    String? email = registrationData['email'];
-    String? password = registrationData['password'];
-    String? rol = registrationData['rol'];
-    int? rating = registrationData['rating'];
-    String? profileImage = _state.getImageUrl();
+  void addProduct(BuildContext context) async {
+    String? name = productData['name'];
+    String? description = productData['description'];
+    int? units = productData['units'];
+    double? price = productData['price'];
+    String? userId = productData['user'];
+    String? productImage = _state.getImageUrl();
 
-    Map<String, dynamic> imageData = {
-      'username': username,
-      'fullname': fullname,
-      'email': email,
-      'password': password,
-      'rol': rol,
-      'rating': rating,
-      'profileImage': profileImage,
+    Map<String, dynamic> productImageData = {
+      'name': name,
+      'description': description,
+      'price': price,
+      'units': units,
+      'user': userId,
+      'productImage': productImage,
     };
-    ApiResponse response = await UserService.registerUser(imageData);
-    print(imageData);
 
-    Get.defaultDialog(
-      title: "Cuenta creada",
-      backgroundColor: Color(0xFFFFFCEA),
-      content: ClipRect(
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 50.0, sigmaY: 50.0),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.0),
-              color: Color(0xFFFFFCEA),
-            ),
+    try {
+      print(productData);
+      ApiResponse response = await ProductService.addProduct(productImageData);
+      Get.defaultDialog(
+        title: "¡Felicidades!",
+        backgroundColor: Color(0xFFFFFCEA),
+        content: ClipRect(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 50.0, sigmaY: 50.0),
             child: Container(
               decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.0),
                 color: Color(0xFFFFFCEA),
               ),
-              child: Column(
-                children: [
-                  Lottie.asset(
-                    "assets/json/check3.json",
-                    width: 100,
-                    height: 100,
-                    repeat: false,
-                  ),
-                  SizedBox(height: 20),
-                  Text("¡Bienvenido a Km0Market!"),
-                ],
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Color(0xFFFFFCEA),
+                ),
+                child: Column(
+                  children: [
+                    Lottie.asset(
+                      "assets/json/check3.json",
+                      width: 100,
+                      height: 100,
+                      repeat: false,
+                    ),
+                    SizedBox(height: 20),
+                    Text("¡Acabas de publicar tu producto!"),
+                  ],
+                ),
               ),
             ),
           ),
         ),
-      ),
-      radius: 10.0,
-      confirm: ElevatedButton(
-        onPressed: () {
-          Get.offAll(LoginScreen());
-        },
-        child: Text("Aceptar"),
-        style: ButtonStyle(
-          shape: MaterialStateProperty.all(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
+        radius: 10.0,
+        confirm: ElevatedButton(
+          onPressed: () {
+            Get.offAll(UserProductsScreen());
+          },
+          child: Text("Aceptar"),
+          style: ButtonStyle(
+            shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
             ),
+            backgroundColor: MaterialStateProperty.all(buttonColor),
           ),
-          backgroundColor: MaterialStateProperty.all(buttonColor),
         ),
-      ),
-    );
+      );
+    } catch (e) {
+      Get.snackbar(
+        "Error",
+        "Algo falló al intentar publicar el producto",
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
   }
 }
 
 class SubmitButton extends StatelessWidget {
-  final SignUpImageController signUpController;
+  final CreateProductController productController;
 
   SubmitButton({
-    required this.signUpController,
+    required this.productController,
   });
 
   @override
@@ -276,13 +266,10 @@ class SubmitButton extends StatelessWidget {
         height: gHeight / 15,
         child: ElevatedButton(
           onPressed: () async {
-            await signUpController._uploadImageAndSignUp(context);
+            await productController._uploadImageAndCreateProduct(context);
           },
-          // onPressed: () async {
-          //   signUpController.signUp(context);
-          // },
           child: Text(
-            "Regístrate",
+            "Añadir Producto",
             style: TextStyle(fontSize: 25),
           ),
           style: ButtonStyle(
@@ -309,7 +296,7 @@ class ImageText extends StatelessWidget {
       child: Container(
           margin: EdgeInsets.only(top: 10, left: 10),
           child: Text(
-            "Escoge tu foto de perfil",
+            "¡Escoge una foto para tu producto!",
             style: TextStyle(
                 color: Colors.black, fontSize: 30, fontWeight: FontWeight.bold),
             textAlign: TextAlign.left,

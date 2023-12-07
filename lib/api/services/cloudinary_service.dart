@@ -21,17 +21,20 @@ class CloudinaryServices {
     env = environment;
   }
 
-  Future<String?> uploadImage(XFile file, String name) async {
+  Future<String?> uploadImage(
+    XFile file,
+    /*String name*/
+  ) async {
     try {
-      print('111111111');
+      // print('111111111');
       await parseStringToMap(assetsFileName: '.env');
-      print('22222222222222');
+      // print('22222222222222');
       final cloudinary = Cloudinary.signedConfig(
         apiKey: '992747211431623',
         apiSecret: 'UYEH8bjX2XAbyHzmH8R_mqmCLuo',
         cloudName: 'dfwsx27vx',
       );
-      print('3333333');
+      // print('3333333');
       var filebytes = await file.readAsBytes();
       print(file.path);
       final response = await cloudinary.upload(
@@ -39,21 +42,21 @@ class CloudinaryServices {
         fileBytes: filebytes,
         resourceType: CloudinaryResourceType.image,
         folder: 'km0',
-        fileName: name,
+        // fileName: name,
         progressCallback: (count, total) {
           print('Uploading image from file with progress: $count/$total');
         },
       );
 
-      print("4444444444444");
+      // print("4444444444444");
       if (response.isSuccessful) {
-        print("55555555555");
+        // print("55555555555");
         final secureUrl = response.secureUrl;
         if (secureUrl != null && secureUrl is String) {
           print('Get your image from with $secureUrl');
           return secureUrl;
         } else {
-          print("6666666666");
+          // print("6666666666");
           print('Error uploading image: secureUrl is not a valid String');
           return null;
         }
