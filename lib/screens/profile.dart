@@ -50,8 +50,6 @@ class _ProfilePageState extends State<ProfilePage> {
       bottomNavigationBar: CustomBottomNavigationBar(currentIndex: 5),
       body: SingleChildScrollView(
         child: Container(
-            width: gWidth,
-            height: gHeight,
             child: Column(
               children: [
                 SizedBox(height: 50),
@@ -151,13 +149,16 @@ class ProfileImage extends StatelessWidget {
   Widget build(BuildContext context) {
     String profileImage = userData['profileImage'] ??
         "https://res.cloudinary.com/dfwsx27vx/image/upload/v1701028188/profile_ju3yvo.png";
-    return SizedBox(
+    return Container(
       width: 175,
       height: 175,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(100),
         child: CldImageWidget(
           publicId: profileImage,
+          width: 175, // Set to the same size as the container
+          height: 175, 
+          fit: BoxFit.cover,
         ),
       ),
     );
