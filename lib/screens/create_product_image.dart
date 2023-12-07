@@ -1,9 +1,12 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'dart:ui';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:lottie/lottie.dart';
 import 'package:proyecto_flutter/api/services/cloudinary_service.dart';
 import 'package:proyecto_flutter/api/services/product_service.dart';
@@ -161,14 +164,21 @@ class CreateProductController extends GetxController {
   final Map<String, dynamic> productData;
   final TextEditingController productImageController = TextEditingController();
   final _CreateProductImageState _state;
+  LatLng? chosenLocation;
 
   CreateProductController({
     required this.productData,
     required _CreateProductImageState state,
-  }) : _state = state;
+  }) : _state = state {
+    if (productData.containsKey('location') && productData['location'] != null) {
+      var location = productData['location'];
+      chosenLocation = LatLng(location['latitude'], location['longitude']);
+    } else {
+    }
+  }
 
   Future<void> _uploadImageAndCreateProduct(BuildContext context) async {
-    await _state._uploadImage(); // Llama a la función de subir imagen
+    await _state._uploadImage();
     addProduct(context);
   }
 
@@ -187,10 +197,16 @@ class CreateProductController extends GetxController {
       'units': units,
       'user': userId,
       'productImage': productImage,
+      'location': chosenLocation != null 
+        ? {
+            'latitude': chosenLocation!.latitude, 
+            'longitude': chosenLocation!.longitude
+          } 
+        : null,
     };
 
     try {
-      print(productData);
+      print(productImageData);
       ApiResponse response = await ProductService.addProduct(productImageData);
       Get.defaultDialog(
         title: "¡Felicidades!",

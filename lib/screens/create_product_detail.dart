@@ -10,6 +10,7 @@ import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
 import 'package:proyecto_flutter/screens/create_product.dart';
 import 'package:proyecto_flutter/screens/create_product_image.dart';
+import 'package:proyecto_flutter/screens/create_product_location.dart';
 import 'package:proyecto_flutter/screens/user_products.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
 import 'package:proyecto_flutter/widget/rep_textfiled.dart';
@@ -157,7 +158,7 @@ class CreateProductController extends GetxController {
     try {
       print(productData);
       ApiResponse response = await ProductService.addProduct(productData);
-      Get.offAll(CreateProductImage(productData: productData));
+      Get.offAll(CreateProductLocation(productData: productData));
     } catch (e) {
       Get.snackbar(
         "Error",
