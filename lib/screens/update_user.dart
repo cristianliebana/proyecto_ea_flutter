@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:animate_do/animate_do.dart';
+import 'package:cloudinary_flutter/image/cld_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_icons/line_icons.dart';
@@ -79,7 +80,9 @@ class _UpdateScreenState extends State<UpdateScreen> {
             child: Column(
               children: [
                 SizedBox(height: 50),
-                ProfileImage(),
+                ProfileImage(
+                  userData: userData,
+                ),
                 SizedBox(height: 20),
                 UpdateText(),
                 FullnameTextFiled(updateController: updateController),
@@ -263,16 +266,26 @@ class UpdateText extends StatelessWidget {
 class ProfileImage extends StatelessWidget {
   const ProfileImage({
     super.key,
+    required this.userData,
   });
+
+  final Map<String, dynamic> userData;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    String profileImage = userData['profileImage'] ??
+        "https://res.cloudinary.com/dfwsx27vx/image/upload/v1701028188/profile_ju3yvo.png";
+    return Container(
       width: 175,
       height: 175,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(100),
-        child: const Image(image: AssetImage('assets/images/profile.png')),
+        child: CldImageWidget(
+          publicId: profileImage,
+          width: 175, // Set to the same size as the container
+          height: 175,
+          fit: BoxFit.cover,
+        ),
       ),
     );
   }

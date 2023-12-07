@@ -24,11 +24,6 @@ class ProductDetailScreen extends StatefulWidget {
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   Map<String, dynamic> productData = {};
   Map<String, dynamic> creadorData = {};
-  // final List<String> imagePaths = [
-  //   'assets/images/tomate.jpeg',
-  //   'assets/images/tomate2.jpg',
-  //   'assets/images/tomate3.jpg',
-  // ];
   Map<String, dynamic> userData = {};
   bool _isFavoriteExists = false;
   Map<String, dynamic> favoriteData = {};
@@ -87,10 +82,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     } else {
       try {
         if (_isFavoriteExists) {
-          await borrarFavorito(userId, widget.productId);
+          await borrarFavorito(userData['_id'], widget.productId);
           Get.snackbar('Éxito', 'Producto eliminado de favoritos');
         } else {
-          await crearFavorito(userId, widget.productId);
+          await crearFavorito(userData['_id'], widget.productId);
           Get.snackbar('Éxito', 'Producto agregado a favoritos');
         }
 
@@ -181,6 +176,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 color: Color(0xFFFFFCEA),
               ),
               onPressed: () async {
+                await checkFavoriteExistence();
                 await _handleFavoriteButton();
               },
             ),
@@ -523,9 +519,13 @@ class _ImagesCarouselState extends State<ImagesCarousel> {
 
   @override
   Widget build(BuildContext context) {
-    List<String?> imageUrls = [
-      widget.productData['productImage'],
-    ];
+    List<String?> imageUrls =
+        List<String?>.from(widget.productData['productImage'] ?? []);
+
+    // Agrega 'assets/images/profile.png' si la lista de imágenes está vacía
+    if (imageUrls.isEmpty) {
+      imageUrls.add('assets/images/profile.png');
+    }
 
     return Column(
       children: [
@@ -550,8 +550,7 @@ class _ImagesCarouselState extends State<ImagesCarousel> {
                       (imageUrl) => Container(
                         width: MediaQuery.of(context).size.width,
                         child: Image.network(
-                          widget.productData['productImage'] ??
-                              'assets/images/profile.png',
+                          imageUrl ?? 'assets/images/profile.png',
                           fit: BoxFit.cover,
                         ),
                       ),

@@ -149,9 +149,7 @@ class ProductsVerticalItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.to(
-          ProductDetailScreen(productId: product.id ?? ''),
-        );
+        Get.to(ProductDetailScreen(productId: product.id ?? ''));
       },
       child: Container(
         margin: EdgeInsets.only(
@@ -159,18 +157,58 @@ class ProductsVerticalItem extends StatelessWidget {
         width: gWidth / 1.5,
         height: gHeight / 4,
         decoration: BoxDecoration(
-          color: Color(0xFF486D28),
           borderRadius: BorderRadius.circular(30),
         ),
-        child: Row(
+        child: Stack(
           children: [
-            SizedBox(width: 20),
             Container(
-              margin: EdgeInsets.only(top: 10),
-              child: Text(
-                product.name ?? '',
-                style: TextStyle(
-                  color: Colors.white,
+              width: double.infinity,
+              height: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+                image: DecorationImage(
+                  image: product.productImage != null &&
+                          product.productImage!.isNotEmpty
+                      ? NetworkImage(product.productImage!.first)
+                      : AssetImage('assets/images/profile.png')
+                          as ImageProvider, // Use the image URL
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            Positioned(
+              top: 10,
+              left: 20,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                decoration: BoxDecoration(
+                  color: Color(0xFF486D28),
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: Text(
+                  product.name ?? '',
+                  style: TextStyle(
+                    color: Color(0xFFFFFCEA),
+                    fontSize: 18.0,
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: 10,
+              right: 10,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                decoration: BoxDecoration(
+                  color: Color(0xFF486D28),
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: Text(
+                  '${product.price} €/Kg', // Agrega el precio del producto
+                  style: TextStyle(
+                    color: Color(0xFFFFFCEA),
+                    fontSize: 18.0,
+                  ),
                 ),
               ),
             ),

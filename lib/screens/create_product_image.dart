@@ -1,10 +1,13 @@
+import 'dart:async';
+import 'dart:typed_data';
 import 'dart:ui';
 import 'package:animate_do/animate_do.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
+
 import 'package:proyecto_flutter/api/services/cloudinary_service.dart';
 import 'package:proyecto_flutter/api/services/product_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
@@ -22,6 +25,8 @@ class CreateProductImage extends StatefulWidget {
 
 class _CreateProductImageState extends State<CreateProductImage> {
   late CreateProductController productController;
+  List<XFile> _selectedImages = [];
+  List<String> _imageUrls = [];
 
   @override
   void initState() {
@@ -32,128 +37,162 @@ class _CreateProductImageState extends State<CreateProductImage> {
     );
   }
 
-  XFile? _imageFile;
-  String? _imageUrl;
-  String? getImageUrl() {
-    return _imageUrl;
-  }
-
-  Future<void> _pickImage(ImageSource source) async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? pickedFile = await picker.pickImage(source: source);
-    setState(() {
-      _imageFile = pickedFile;
-    });
-  }
-
-  Future<void> _uploadImage() async {
+  Future<void> _pickImages() async {
     try {
-      if (_imageFile == null) {
-        // Manejar el caso cuando _imageFile es nulo
-        print('Error: _imageFile es nulo.');
-        return;
-      }
+      List<XFile>? resultList = await ImagePicker().pickMultiImage();
 
-      // Crear una instancia de CloudinaryServices
-      final cloudinaryServices = CloudinaryServices();
-
-      // Subir la imagen a Cloudinary usando CloudinaryServices
-      final uploadedUrl = await cloudinaryServices.uploadImage(
-        _imageFile!, /*"registroProducto"*/
-      );
-      print("URL de Cloudinary: $uploadedUrl");
-
-      if (uploadedUrl != null) {
-        // Si uploadedUrl no es nulo, actualizar la interfaz de usuario
+      if (resultList != null) {
         setState(() {
-          _imageUrl = uploadedUrl;
+          _selectedImages = resultList;
         });
-      } else {
-        // Manejar el caso cuando uploadedUrl es nulo
-        print('Error: uploadedUrl es nulo.');
       }
-    } catch (error) {
-      // Manejar errores generales
-      print('Error en la carga de la imagen: $error');
+    } catch (e) {
+      print('Error: $e');
     }
+  }
+
+  Future<void> _uploadImages() async {
+    try {
+      List<String> imageUrls = [];
+
+      for (var file in _selectedImages) {
+        if (file is XFile) {
+          final cloudinaryServices = CloudinaryServices();
+          final uploadedUrl = await cloudinaryServices.uploadImage(file);
+
+          if (uploadedUrl != null) {
+            imageUrls.add(uploadedUrl);
+          } else {
+            print('Error: uploadedUrl es nulo para una imagen.');
+          }
+        }
+      }
+
+      setState(() {
+        _imageUrls = List<String>.from(imageUrls);
+      });
+    } catch (error) {
+      print('Error en la carga de imágenes: $error');
+    }
+  }
+
+  String? getImageUrl() {
+    return _imageUrls.isNotEmpty ? _imageUrls.first : null;
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-        child: Scaffold(
-            resizeToAvoidBottomInset: true,
-            body: SingleChildScrollView(
+    return Scaffold(
+      backgroundColor: Color(0xFF486D28),
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(height: 40),
+            ImageText(),
+            SizedBox(height: 20),
+            Expanded(
               child: Container(
-                margin: EdgeInsets.all(15),
-                width: gWidth,
-                height: gHeight,
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                decoration: BoxDecoration(
+                  color: Color(0xFFFFFCEA),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
+                  ),
+                ),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: 20),
-                    ImageText(),
-                    SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            _pickImage(ImageSource.camera);
-                          },
-                          child: const Text('Abre la cámara'),
-                          style: ButtonStyle(
-                            shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(100),
-                              ),
-                            ),
-                            backgroundColor:
-                                MaterialStateProperty.all(buttonColor),
-                            minimumSize: MaterialStateProperty.all(Size(150,
-                                50)), // Ajusta el tamaño según sea necesario
+                    ElevatedButton(
+                      onPressed: _pickImages,
+                      child: const Text('Abre la galería'),
+                      style: ButtonStyle(
+                        shape: MaterialStateProperty.all(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(100),
                           ),
                         ),
-                        SizedBox(width: 10), // Espacio entre los botones
-                        ElevatedButton(
-                          onPressed: () {
-                            _pickImage(ImageSource.gallery);
-                          },
-                          child: const Text('Abre la galería'),
-                          style: ButtonStyle(
-                            shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(100),
-                              ),
-                            ),
-                            backgroundColor:
-                                MaterialStateProperty.all(buttonColor),
-                            minimumSize: MaterialStateProperty.all(Size(150,
-                                50)), // Ajusta el tamaño según sea necesario
-                          ),
+                        backgroundColor: MaterialStateProperty.all(buttonColor),
+                        minimumSize: MaterialStateProperty.all(
+                          Size(150, 50),
                         ),
-                      ],
+                      ),
                     ),
-                    SizedBox(height: 20),
-                    Container(
-                      height:
-                          300, // Altura fija para el contenedor que contiene CircleAvatar
-                      child: Center(
-                        child: _imageFile != null
-                            ? CircleAvatar(
-                                radius: 150,
-                                backgroundImage: NetworkImage(_imageFile!.path),
+                    SizedBox(height: 5),
+                    Text('Fotos seleccionadas: ${_selectedImages.length} de 8'),
+                    Expanded(
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 30),
+                        decoration: BoxDecoration(
+                          color: Color(0xFFFFFCEA),
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(30),
+                            topRight: Radius.circular(30),
+                          ),
+                        ),
+                        child: _selectedImages.isNotEmpty
+                            ? GridView.builder(
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: 10,
+                                  mainAxisSpacing: 10,
+                                  childAspectRatio: 1.6,
+                                ),
+                                itemBuilder: (context, index) {
+                                  if (index < _selectedImages.length) {
+                                    return Image(
+                                      width: double.infinity,
+                                      height: double.infinity,
+                                      fit: BoxFit.cover,
+                                      image: NetworkImage(
+                                          _selectedImages[index].path),
+                                    );
+                                  } else {
+                                    return Image(
+                                      width: double.infinity,
+                                      height: double.infinity,
+                                      fit: BoxFit.cover,
+                                      image: AssetImage(
+                                          'assets/images/fotos3.png'),
+                                    );
+                                  }
+                                },
+                                itemCount: 8,
                               )
-                            : SizedBox.shrink(),
+                            : GridView.builder(
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: 10,
+                                  mainAxisSpacing: 10,
+                                  childAspectRatio: 1.6,
+                                ),
+                                itemBuilder: (context, index) {
+                                  return Image(
+                                    width: double.infinity,
+                                    height: double.infinity,
+                                    fit: BoxFit.cover,
+                                    image:
+                                        AssetImage('assets/images/fotos3.png'),
+                                  );
+                                },
+                                itemCount: 8,
+                              ),
                       ),
                     ),
                     SizedBox(height: 20),
                     SubmitButton(productController: productController),
+                    SizedBox(height: 20),
                   ],
                 ),
               ),
-            )));
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -167,8 +206,8 @@ class CreateProductController extends GetxController {
     required _CreateProductImageState state,
   }) : _state = state;
 
-  Future<void> _uploadImageAndCreateProduct(BuildContext context) async {
-    await _state._uploadImage(); // Llama a la función de subir imagen
+  Future<void> _uploadImagesAndCreateProduct(BuildContext context) async {
+    await _state._uploadImages();
     addProduct(context);
   }
 
@@ -178,7 +217,7 @@ class CreateProductController extends GetxController {
     int? units = productData['units'];
     double? price = productData['price'];
     String? userId = productData['user'];
-    String? productImage = _state.getImageUrl();
+    List<String> productImage = List<String>.from(_state._imageUrls);
 
     Map<String, dynamic> productImageData = {
       'name': name,
@@ -190,7 +229,6 @@ class CreateProductController extends GetxController {
     };
 
     try {
-      print(productData);
       ApiResponse response = await ProductService.addProduct(productImageData);
       Get.defaultDialog(
         title: "¡Felicidades!",
@@ -266,19 +304,20 @@ class SubmitButton extends StatelessWidget {
         height: gHeight / 15,
         child: ElevatedButton(
           onPressed: () async {
-            await productController._uploadImageAndCreateProduct(context);
+            await productController._uploadImagesAndCreateProduct(context);
           },
           child: Text(
             "Añadir Producto",
             style: TextStyle(fontSize: 25),
           ),
           style: ButtonStyle(
-              shape: MaterialStateProperty.all(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(100),
-                ),
+            shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(100),
               ),
-              backgroundColor: MaterialStateProperty.all(buttonColor)),
+            ),
+            backgroundColor: MaterialStateProperty.all(buttonColor),
+          ),
         ),
       ),
     );
@@ -294,13 +333,16 @@ class ImageText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: Container(
-          margin: EdgeInsets.only(top: 10, left: 10),
-          child: Text(
-            "¡Escoge una foto para tu producto!",
-            style: TextStyle(
-                color: Colors.black, fontSize: 30, fontWeight: FontWeight.bold),
-            textAlign: TextAlign.left,
-          )),
+        margin: EdgeInsets.only(top: 10, left: 10),
+        child: Text(
+          "¡Escoge fotos para tu producto!",
+          style: TextStyle(
+              color: Color(0xFFFFFCEA),
+              fontSize: 30,
+              fontWeight: FontWeight.bold),
+          textAlign: TextAlign.left,
+        ),
+      ),
     );
   }
 }

@@ -4,7 +4,7 @@ class Product {
   String? description;
   double? price;
   int? units;
-  String? productImage;
+  List<String>? productImage;
 
   Product({
     this.id,
@@ -22,7 +22,7 @@ class Product {
       description: json['description'] ?? '',
       price: (json['price'] ?? 0).toDouble(),
       units: json['units'] ?? 0,
-      productImage: json['productImage'] ?? '',
+      productImage: (json['productImage'] as List<dynamic>).cast<String>(),
     );
   }
 
@@ -37,4 +37,3 @@ class Product {
     };
   }
 }
-
