@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:proyecto_flutter/screens/create_product_detail.dart';
 import 'package:proyecto_flutter/screens/create_product_image.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
 
 class CreateProductLocation extends StatefulWidget {
   final Map<String, dynamic> productData;
 
-  CreateProductLocation({Key? key, required this.productData}) : super(key: key);
+  CreateProductLocation({Key? key, required this.productData})
+      : super(key: key);
 
   @override
   _CreateProductLocationState createState() => _CreateProductLocationState();
@@ -55,6 +59,9 @@ class _CreateProductLocationState extends State<CreateProductLocation> {
         options: MapOptions(
           center: _currentLocation,
           zoom: 13.0,
+          onTap: (TapPosition tapPosition, LatLng latLng) {
+            _handleMapTap(latLng);
+          },
         ),
         children: [
           TileLayer(
@@ -80,6 +87,12 @@ class _CreateProductLocationState extends State<CreateProductLocation> {
     );
   }
 
+  void _handleMapTap(LatLng tappedPoint) {
+    setState(() {
+      _currentLocation = tappedPoint;
+    });
+  }
+
   Widget _buildBackButton() {
     return Positioned(
       top: 8.0,
@@ -94,7 +107,11 @@ class _CreateProductLocationState extends State<CreateProductLocation> {
             Icons.arrow_back,
             color: Color(0xFFFFFCEA),
           ),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () {
+            Get.to(CreateProductDetail(
+              productName: '',
+            ));
+          },
         ),
       ),
     );
@@ -107,12 +124,13 @@ class _CreateProductLocationState extends State<CreateProductLocation> {
         _mapController.move(_currentLocation, 13.0);
       },
       child: Icon(Icons.my_location),
+      backgroundColor: Color(0xFF486D28),
     );
   }
 
   Widget _buildBottomNavigationBar() {
     return Container(
-      padding: EdgeInsets.all(20), // Increase padding for a bigger button
+      padding: EdgeInsets.all(20),
       child: ElevatedButton(
         onPressed: () {
           widget.productData['location'] = {
@@ -121,7 +139,9 @@ class _CreateProductLocationState extends State<CreateProductLocation> {
           };
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => CreateProductImage(productData: widget.productData)),
+            MaterialPageRoute(
+                builder: (context) =>
+                    CreateProductImage(productData: widget.productData)),
           );
         },
         child: Text(
