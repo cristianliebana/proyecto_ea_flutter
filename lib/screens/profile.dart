@@ -11,6 +11,7 @@ import 'package:proyecto_flutter/screens/update_user.dart';
 import 'package:proyecto_flutter/screens/user_products.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
 import 'package:proyecto_flutter/widget/nav_bar.dart';
+import 'package:proyecto_flutter/widget/socket_manager.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -40,6 +41,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _onRemoveTokenPressed() {
+    
     TokenService.removeToken();
   }
 
