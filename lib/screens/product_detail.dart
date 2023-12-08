@@ -167,13 +167,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         ? Container(
             margin: EdgeInsets.all(8.0),
             decoration: BoxDecoration(
-              color: Color(0xFF486D28),
+              color: Theme.of(context).colorScheme.onPrimary,
               shape: BoxShape.circle,
             ),
             child: IconButton(
               icon: Icon(
                 Icons.favorite,
-                color: Color(0xFFFFFCEA),
+                color: Theme.of(context).colorScheme.primary,
               ),
               onPressed: () async {
                 await checkFavoriteExistence();
@@ -184,13 +184,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         : Container(
             margin: EdgeInsets.all(8.0),
             decoration: BoxDecoration(
-              color: Color(0xFF486D28),
+              color: Theme.of(context).colorScheme.onPrimary,
               shape: BoxShape.circle,
             ),
             child: IconButton(
               icon: Icon(
                 Icons.favorite_border,
-                color: Color(0xFFFFFCEA),
+                color: Theme.of(context).colorScheme.primary,
               ),
               onPressed: () async {
                 await _handleFavoriteButton();
@@ -203,13 +203,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     return Container(
       margin: EdgeInsets.all(8.0),
       decoration: BoxDecoration(
-        color: Color(0xFF486D28),
+        color: Theme.of(context).colorScheme.onPrimary,
         shape: BoxShape.circle,
       ),
       child: IconButton(
         icon: Icon(
           Icons.arrow_back,
-          color: Color(0xFFFFFCEA),
+          color: Theme.of(context).colorScheme.primary,
         ),
         onPressed: () {
           Get.to(HomePage());
@@ -242,11 +242,11 @@ class InformationWidget extends StatelessWidget {
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               clipBehavior: Clip.hardEdge,
-              decoration: const BoxDecoration(
-                color: Color(0xFFFFFCEA),
-                borderRadius: BorderRadius.only(
-                  topLeft: const Radius.circular(20),
-                  topRight: const Radius.circular(20),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primary,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
                 ),
               ),
               child: SingleChildScrollView(
@@ -383,7 +383,8 @@ class ChatButton extends StatelessWidget {
         },
         child: Text(
           "Contacta",
-          style: TextStyle(fontSize: 25),
+          style: TextStyle(
+              fontSize: 25, color: Theme.of(context).colorScheme.primary),
         ),
         style: ButtonStyle(
           shape: MaterialStateProperty.all(
@@ -391,7 +392,8 @@ class ChatButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(100),
             ),
           ),
-          backgroundColor: MaterialStateProperty.all(buttonColor),
+          backgroundColor: MaterialStateProperty.all(
+              Theme.of(context).colorScheme.onPrimary),
         ),
       ),
     );
@@ -413,7 +415,7 @@ class DescText extends StatelessWidget {
           child: SizedBox(
             child: Text("Descripción",
                 style: TextStyle(
-                  color: Colors.black,
+                  color: Theme.of(context).primaryColor,
                   fontWeight: FontWeight.bold,
                   fontSize: 25,
                 )),
@@ -435,7 +437,7 @@ class PriceText extends StatelessWidget {
     int price = productData['price'] ?? 0;
 
     return Text(price != 0 ? "$price €/Kg" : "",
-        style: TextStyle(color: Color.fromARGB(255, 99, 99, 99), fontSize: 30),
+        style: TextStyle(color: Theme.of(context).shadowColor, fontSize: 30),
         textAlign: TextAlign.right);
   }
 }
@@ -454,7 +456,7 @@ class UserText extends StatelessWidget {
 
     return Text(
       username != "N/A" ? "$username" : "",
-      style: TextStyle(fontSize: 25),
+      style: TextStyle(fontSize: 25, color: Theme.of(context).primaryColor),
     );
   }
 }
@@ -474,7 +476,7 @@ class DescriptionText extends StatelessWidget {
     return Text(
       description != "N/A" ? "$description" : "",
       style: TextStyle(
-        color: Color.fromARGB(255, 99, 99, 99),
+        color: Theme.of(context).shadowColor,
         fontSize: 20,
         fontWeight: FontWeight.w200,
       ),
@@ -498,7 +500,9 @@ class NameText extends StatelessWidget {
     return Text(
       name != "N/A" ? "$name" : "",
       style: TextStyle(
-          color: Colors.black, fontSize: 50, fontWeight: FontWeight.bold),
+          color: Theme.of(context).primaryColor,
+          fontSize: 50,
+          fontWeight: FontWeight.bold),
     );
   }
 }

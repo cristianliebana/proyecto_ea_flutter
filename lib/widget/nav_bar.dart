@@ -56,19 +56,21 @@ class CustomBottomNavigationBar extends StatelessWidget {
             child: Column(mainAxisSize: MainAxisSize.min, children: [
           Container(
             height: 1,
-            color: Color(0xFF486D28).withOpacity(0.2),
+            color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.2),
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
             child: GNav(
-              rippleColor: Color(0xFF486D28).withOpacity(0.8),
-              hoverColor: Color(0xFF486D28).withOpacity(0.8),
+              rippleColor:
+                  Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
+              hoverColor:
+                  Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
               gap: 8,
-              activeColor: Color(0xFFFFFCEA),
+              activeColor: Theme.of(context).colorScheme.primary,
               iconSize: 24,
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              tabBackgroundColor: Color(0xFF486D28),
-              color: Color(0xFF486D28),
+              tabBackgroundColor: Theme.of(context).colorScheme.onPrimary,
+              color: Theme.of(context).colorScheme.onPrimary,
               tabs: [
                 GButton(
                   icon: LineIcons.home,

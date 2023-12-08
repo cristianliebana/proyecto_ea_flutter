@@ -83,7 +83,7 @@ class _CreateProductImageState extends State<CreateProductImage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF486D28),
+      backgroundColor: Theme.of(context).colorScheme.onPrimary,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -95,7 +95,7 @@ class _CreateProductImageState extends State<CreateProductImage> {
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 decoration: BoxDecoration(
-                  color: Color(0xFFFFFCEA),
+                  color: Theme.of(context).colorScheme.primary,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(30),
                     topRight: Radius.circular(30),
@@ -106,26 +106,35 @@ class _CreateProductImageState extends State<CreateProductImage> {
                     SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: _pickImages,
-                      child: const Text('Abre la galería'),
+                      child: Text(
+                        'Abre la galería',
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary,
+                            fontSize: 20),
+                      ),
                       style: ButtonStyle(
                         shape: MaterialStateProperty.all(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(100),
                           ),
                         ),
-                        backgroundColor: MaterialStateProperty.all(buttonColor),
+                        backgroundColor: MaterialStateProperty.all(
+                            Theme.of(context).colorScheme.onPrimary),
                         minimumSize: MaterialStateProperty.all(
                           Size(150, 50),
                         ),
                       ),
                     ),
                     SizedBox(height: 5),
-                    Text('Fotos seleccionadas: ${_selectedImages.length} de 8'),
+                    Text(
+                      'Fotos seleccionadas: ${_selectedImages.length} de 8',
+                      style: TextStyle(color: Theme.of(context).primaryColor),
+                    ),
                     Expanded(
                       child: Container(
                         padding: EdgeInsets.symmetric(vertical: 30),
                         decoration: BoxDecoration(
-                          color: Color(0xFFFFFCEA),
+                          color: Theme.of(context).colorScheme.primary,
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(30),
                             topRight: Radius.circular(30),
@@ -232,18 +241,19 @@ class CreateProductController extends GetxController {
       ApiResponse response = await ProductService.addProduct(productImageData);
       Get.defaultDialog(
         title: "¡Felicidades!",
-        backgroundColor: Color(0xFFFFFCEA),
+        titleStyle: TextStyle(color: Theme.of(context).primaryColor),
+        backgroundColor: Theme.of(context).colorScheme.primary,
         content: ClipRect(
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 50.0, sigmaY: 50.0),
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10.0),
-                color: Color(0xFFFFFCEA),
+                color: Theme.of(context).colorScheme.primary,
               ),
               child: Container(
                 decoration: BoxDecoration(
-                  color: Color(0xFFFFFCEA),
+                  color: Theme.of(context).colorScheme.primary,
                 ),
                 child: Column(
                   children: [
@@ -254,7 +264,10 @@ class CreateProductController extends GetxController {
                       repeat: false,
                     ),
                     SizedBox(height: 20),
-                    Text("¡Acabas de publicar tu producto!"),
+                    Text(
+                      "¡Acabas de publicar tu producto!",
+                      style: TextStyle(color: Theme.of(context).primaryColor),
+                    ),
                   ],
                 ),
               ),
@@ -266,14 +279,18 @@ class CreateProductController extends GetxController {
           onPressed: () {
             Get.offAll(UserProductsScreen());
           },
-          child: Text("Aceptar"),
+          child: Text(
+            "Aceptar",
+            style: TextStyle(color: Theme.of(context).colorScheme.primary),
+          ),
           style: ButtonStyle(
             shape: MaterialStateProperty.all(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15),
               ),
             ),
-            backgroundColor: MaterialStateProperty.all(buttonColor),
+            backgroundColor: MaterialStateProperty.all(
+                Theme.of(context).colorScheme.onPrimary),
           ),
         ),
       );
@@ -308,7 +325,8 @@ class SubmitButton extends StatelessWidget {
           },
           child: Text(
             "Añadir Producto",
-            style: TextStyle(fontSize: 25),
+            style: TextStyle(
+                fontSize: 25, color: Theme.of(context).colorScheme.primary),
           ),
           style: ButtonStyle(
             shape: MaterialStateProperty.all(
@@ -316,7 +334,8 @@ class SubmitButton extends StatelessWidget {
                 borderRadius: BorderRadius.circular(100),
               ),
             ),
-            backgroundColor: MaterialStateProperty.all(buttonColor),
+            backgroundColor: MaterialStateProperty.all(
+                Theme.of(context).colorScheme.onPrimary),
           ),
         ),
       ),
@@ -337,7 +356,7 @@ class ImageText extends StatelessWidget {
         child: Text(
           "¡Escoge fotos para tu producto!",
           style: TextStyle(
-              color: Color(0xFFFFFCEA),
+              color: Theme.of(context).colorScheme.primary,
               fontSize: 30,
               fontWeight: FontWeight.bold),
           textAlign: TextAlign.left,

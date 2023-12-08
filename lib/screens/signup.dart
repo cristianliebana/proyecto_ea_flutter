@@ -13,26 +13,26 @@ class SignUpScreen extends StatelessWidget {
   SignUpScreen({Key? key}) : super(key: key);
   final SignUpController signUpController = SignUpController();
 
-  AppBar _buildAppBar() {
+  AppBar _buildAppBar(BuildContext context) {
     return AppBar(
       elevation: 0,
       backgroundColor: Colors.transparent,
       centerTitle: true,
-      leading: _buildAppBarBackButton(),
+      leading: _buildAppBarBackButton(context),
     );
   }
 
-  Widget _buildAppBarBackButton() {
+  Widget _buildAppBarBackButton(BuildContext context) {
     return Container(
       margin: EdgeInsets.all(8.0),
       decoration: BoxDecoration(
-        color: Color(0xFF486D28),
+        color: Theme.of(context).colorScheme.onPrimary,
         shape: BoxShape.circle,
       ),
       child: IconButton(
         icon: Icon(
           Icons.arrow_back,
-          color: Color(0xFFFFFCEA),
+          color: Theme.of(context).colorScheme.primary,
         ),
         onPressed: () {
           Get.to(LoginScreen());
@@ -46,7 +46,7 @@ class SignUpScreen extends StatelessWidget {
     return GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: Scaffold(
-          appBar: _buildAppBar(),
+          appBar: _buildAppBar(context),
           body: Container(
             margin: EdgeInsets.only(left: 15, right: 15, top: 0),
             child: Column(
@@ -133,7 +133,8 @@ class ContinueButton extends StatelessWidget {
           },
           child: Text(
             "Continuar",
-            style: TextStyle(fontSize: 25),
+            style: TextStyle(
+                fontSize: 25, color: Theme.of(context).colorScheme.primary),
           ),
           style: ButtonStyle(
               shape: MaterialStateProperty.all(
@@ -141,7 +142,8 @@ class ContinueButton extends StatelessWidget {
                   borderRadius: BorderRadius.circular(100),
                 ),
               ),
-              backgroundColor: MaterialStateProperty.all(buttonColor)),
+              backgroundColor: MaterialStateProperty.all(
+                  Theme.of(context).colorScheme.onPrimary)),
         ),
       ),
     );
@@ -165,13 +167,13 @@ class BottomText extends StatelessWidget {
               text: TextSpan(
                   text: "Al registrarte, estas aceptando los",
                   style: TextStyle(
-                    color: text2Color,
+                    color: Theme.of(context).canvasColor,
                   ),
                   children: [
                     TextSpan(
                       text: " Terminos y condiciones",
                       style: TextStyle(
-                        color: text1Color,
+                        color: Theme.of(context).colorScheme.onPrimary,
                       ),
                     )
                   ]),
@@ -253,8 +255,8 @@ class SignUpText extends StatelessWidget {
           child: FittedBox(
             child: Text("Regístrate",
                 style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                )),
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).primaryColor)),
           )),
     );
   }

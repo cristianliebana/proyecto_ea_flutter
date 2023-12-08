@@ -4,8 +4,10 @@ import 'package:get/get.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:proyecto_flutter/bindings/map_Bindings.dart';
 import 'package:proyecto_flutter/screens/login.dart';
+import 'package:proyecto_flutter/utils/theme_provider.dart';
 
 void main() {
+  Get.put(ThemeProvider());
   runApp(const MyApp());
 }
 
@@ -14,15 +16,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'KM0 MARKET',
-      theme: ThemeData(
-        scaffoldBackgroundColor: Color(0xFFFFFCEA),
-      ),
-      home: const SplashScreen(),
-      initialBinding: MapPageBinding(),
-    );
+    return Obx(() {
+      final ThemeProvider themeProvider = Get.find<ThemeProvider>();
+      return GetMaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'KM0 MARKET',
+        theme: themeProvider.getTheme(),
+        home: const SplashScreen(),
+        initialBinding: MapPageBinding(),
+      );
+    });
   }
 }
 

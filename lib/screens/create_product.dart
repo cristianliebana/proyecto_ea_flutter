@@ -31,7 +31,8 @@ class CreateProduct extends StatelessWidget {
             GetBuilder<TitleTextFiledController>(
               init: TitleTextFiledController(),
               builder: (controller) {
-                TextEditingController textEditingController = TextEditingController();
+                TextEditingController textEditingController =
+                    TextEditingController();
                 textEditingController.text = controller.productName;
                 return TitleTextFiled(
                   controller: controller,
@@ -66,13 +67,17 @@ class FormButton extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => CreateProductDetail(productName: productName),
+              builder: (context) =>
+                  CreateProductDetail(productName: productName),
             ),
           );
         },
         child: Text(
           "Continuar",
-          style: TextStyle(fontSize: 25),
+          style: TextStyle(
+            fontSize: 25,
+            color: Theme.of(context).colorScheme.primary,
+          ),
         ),
         style: ButtonStyle(
           shape: MaterialStateProperty.all(
@@ -80,7 +85,8 @@ class FormButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(100),
             ),
           ),
-          backgroundColor: MaterialStateProperty.all(buttonColor),
+          backgroundColor: MaterialStateProperty.all(
+              Theme.of(context).colorScheme.onPrimary),
         ),
       ),
     );
@@ -100,7 +106,7 @@ class SampleText extends StatelessWidget {
         child: Text(
           "Ejemplo: Plátano de Canarias",
           style: TextStyle(
-            color: Color.fromARGB(255, 99, 99, 99),
+            color: Theme.of(context).shadowColor,
             fontSize: 12,
           ),
           textAlign: TextAlign.justify,
@@ -128,7 +134,8 @@ class TitleTextFiled extends StatelessWidget {
         text: "Título del producto",
         controller: textEditingController,
         onChanged: (value) {
-          controller.setProductName(value); // Call the method to set productName
+          controller
+              .setProductName(value); // Call the method to set productName
         },
       ),
     );
@@ -148,7 +155,7 @@ class DescriptionText extends StatelessWidget {
         child: Text(
           "Los buenos títulos presentan el producto y sus detalles clave en pocas palabras.",
           style: TextStyle(
-            color: Color.fromARGB(255, 99, 99, 99),
+            color: Theme.of(context).shadowColor,
             fontSize: 20,
           ),
           textAlign: TextAlign.justify,
@@ -171,7 +178,7 @@ class TitleText extends StatelessWidget {
         child: Text(
           "¿Qué vas a vender?",
           style: TextStyle(
-            color: Colors.black,
+            color: Theme.of(context).primaryColor,
             fontSize: 35,
             fontWeight: FontWeight.bold,
           ),
@@ -198,4 +205,3 @@ class AnimationFarmer extends StatelessWidget {
     );
   }
 }
-

@@ -59,9 +59,14 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     return Scaffold(
       bottomNavigationBar: CustomBottomNavigationBar(currentIndex: 4),
       appBar: AppBar(
-          title: Text('Productos favoritos'),
-          backgroundColor: Color(0xFF486D28),
-          centerTitle: true),
+        title: Text('Productos favoritos',
+            style: TextStyle(color: Theme.of(context).colorScheme.primary)),
+        backgroundColor: Theme.of(context).colorScheme.onPrimary,
+        centerTitle: true,
+        iconTheme: IconThemeData(
+          color: Theme.of(context).colorScheme.primary,
+        ),
+      ),
       body: CustomScrollView(
         controller: _scrollController,
         slivers: [
@@ -98,24 +103,28 @@ class SearchBar extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
-                color: Color(0xFFFFFCEA),
+                color: Theme.of(context).colorScheme.primary,
               ),
               decoration: InputDecoration(
                 contentPadding:
                     const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
                 filled: true,
-                fillColor: Color(0xFF486D28),
+                fillColor: Theme.of(context).colorScheme.onPrimary,
                 prefixIcon: IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
+                  onPressed: () {
+                    // Acción a realizar cuando se presiona el botón
+                  },
+                  icon: Icon(
                     Icons.search,
-                    color: Color(0xFFFFFCEA),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .primary, // Usando primary definido en el tema
                   ),
                 ),
                 hintStyle: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
-                  color: Color(0xFFFFFCEA),
+                  color: Theme.of(context).colorScheme.primary,
                 ),
                 hintText: "Busca en tus productos favoritos",
                 border: OutlineInputBorder(
@@ -174,13 +183,13 @@ class ProductsVerticalItem extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                 decoration: BoxDecoration(
-                  color: Color(0xFF486D28),
+                  color: Theme.of(context).colorScheme.onPrimary,
                   borderRadius: BorderRadius.circular(30),
                 ),
                 child: Text(
                   product.name ?? '',
                   style: TextStyle(
-                    color: Color(0xFFFFFCEA),
+                    color: Theme.of(context).colorScheme.primary,
                     fontSize: 18.0,
                   ),
                 ),
@@ -192,13 +201,13 @@ class ProductsVerticalItem extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                 decoration: BoxDecoration(
-                  color: Color(0xFF486D28),
+                  color: Theme.of(context).colorScheme.onPrimary,
                   borderRadius: BorderRadius.circular(30),
                 ),
                 child: Text(
                   '${product.price} €/Kg', // Agrega el precio del producto
                   style: TextStyle(
-                    color: Color(0xFFFFFCEA),
+                    color: Theme.of(context).colorScheme.primary,
                     fontSize: 18.0,
                   ),
                 ),

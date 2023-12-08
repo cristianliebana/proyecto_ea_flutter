@@ -39,7 +39,7 @@ class _RepTextFiledState extends State<RepTextFiled> {
           children: [
             Icon(
               widget.icon,
-              color: iconColor,
+              color: Theme.of(context).colorScheme.onPrimary,
               size: 30,
             ),
             SizedBox(width: 10),
@@ -63,8 +63,8 @@ class _RepTextFiledState extends State<RepTextFiled> {
                     }
                   },
                   readOnly: false,
-                  cursorColor: Colors.black,
-                  style: TextStyle(color: Colors.black),
+                  cursorColor: Theme.of(context).primaryColor,
+                  style: TextStyle(color: Theme.of(context).primaryColor),
                   showCursor: true,
                   obscureText: widget.obscureText,
                   decoration: InputDecoration(
@@ -79,14 +79,17 @@ class _RepTextFiledState extends State<RepTextFiled> {
                           )
                         : null,
                     focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black),
+                      borderSide:
+                          BorderSide(color: Theme.of(context).primaryColor),
                     ),
                     enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey, width: 2),
+                      borderSide: BorderSide(
+                          color: Theme.of(context).secondaryHeaderColor,
+                          width: 2),
                     ),
                     labelText: widget.text,
                     labelStyle: TextStyle(
-                      color: Colors.grey,
+                      color: Theme.of(context).secondaryHeaderColor,
                       fontSize: 15,
                       fontWeight: FontWeight.w400,
                     ),

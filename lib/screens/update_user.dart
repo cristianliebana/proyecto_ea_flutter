@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:animate_do/animate_do.dart';
 import 'package:cloudinary_flutter/image/cld_image.dart';
 import 'package:flutter/material.dart';
@@ -52,13 +51,13 @@ class _UpdateScreenState extends State<UpdateScreen> {
     return Container(
       margin: EdgeInsets.all(8.0),
       decoration: BoxDecoration(
-        color: Color(0xFF486D28),
+        color: Theme.of(context).colorScheme.onPrimary,
         shape: BoxShape.circle,
       ),
       child: IconButton(
         icon: Icon(
           Icons.arrow_back,
-          color: Color(0xFFFFFCEA),
+          color: Theme.of(context).colorScheme.primary,
         ),
         onPressed: () {
           Get.to(ProfilePage());
@@ -119,18 +118,19 @@ class UpdateController extends GetxController {
     //print(userData);
     Get.defaultDialog(
       title: "¡Felicidades!",
-      backgroundColor: Color(0xFFFFFCEA),
+      titleStyle: TextStyle(color: Theme.of(context).primaryColor),
+      backgroundColor: Theme.of(context).colorScheme.primary,
       content: ClipRect(
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 50.0, sigmaY: 50.0),
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10.0),
-              color: Color(0xFFFFFCEA),
+              color: Theme.of(context).colorScheme.primary,
             ),
             child: Container(
               decoration: BoxDecoration(
-                color: Color(0xFFFFFCEA),
+                color: Theme.of(context).colorScheme.primary,
               ),
               child: Column(
                 children: [
@@ -141,7 +141,10 @@ class UpdateController extends GetxController {
                     repeat: false,
                   ),
                   SizedBox(height: 20),
-                  Text("¡Has actualizado tu perfil!"),
+                  Text(
+                    "¡Has actualizado tu perfil!",
+                    style: TextStyle(color: Theme.of(context).primaryColor),
+                  ),
                 ],
               ),
             ),
@@ -153,14 +156,18 @@ class UpdateController extends GetxController {
         onPressed: () {
           Get.offAll(ProfilePage());
         },
-        child: Text("Aceptar"),
+        child: Text(
+          "Aceptar",
+          style: TextStyle(color: Theme.of(context).colorScheme.primary),
+        ),
         style: ButtonStyle(
           shape: MaterialStateProperty.all(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15),
             ),
           ),
-          backgroundColor: MaterialStateProperty.all(buttonColor),
+          backgroundColor: MaterialStateProperty.all(
+              Theme.of(context).colorScheme.onPrimary),
         ),
       ),
     );
@@ -188,7 +195,8 @@ class UpdateButton extends StatelessWidget {
           },
           child: Text(
             "Guardar cambios",
-            style: TextStyle(fontSize: 25),
+            style: TextStyle(
+                fontSize: 25, color: Theme.of(context).colorScheme.primary),
           ),
           style: ButtonStyle(
               shape: MaterialStateProperty.all(
@@ -196,7 +204,8 @@ class UpdateButton extends StatelessWidget {
                   borderRadius: BorderRadius.circular(100),
                 ),
               ),
-              backgroundColor: MaterialStateProperty.all(buttonColor)),
+              backgroundColor: MaterialStateProperty.all(
+                  Theme.of(context).colorScheme.onPrimary)),
         ),
       ),
     );

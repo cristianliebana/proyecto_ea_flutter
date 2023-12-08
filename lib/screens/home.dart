@@ -134,24 +134,24 @@ class SearchBar extends StatelessWidget {
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w400,
-            color: Color(0xFFFFFCEA),
+            color: Theme.of(context).colorScheme.primary,
           ),
           decoration: InputDecoration(
             contentPadding:
                 const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
             filled: true,
-            fillColor: Color(0xFF486D28),
+            fillColor: Theme.of(context).colorScheme.onPrimary,
             prefixIcon: IconButton(
               onPressed: () {},
-              icon: const Icon(
+              icon: Icon(
                 Icons.search,
-                color: Color(0xFFFFFCEA),
+                color: Theme.of(context).colorScheme.primary,
               ),
             ),
             hintStyle: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w400,
-              color: Color(0xFFFFFCEA),
+              color: Theme.of(context).colorScheme.primary,
             ),
             hintText: "Busca en Km0 Market",
             border: OutlineInputBorder(
@@ -182,7 +182,7 @@ class ProductsVerticalItem extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.only(left: 5, top: 5, right: 5),
         decoration: BoxDecoration(
-          color: Color(0xFFFFFCEA),
+          color: Theme.of(context).colorScheme.primary,
           borderRadius: BorderRadius.circular(30),
         ),
         child: Stack(
@@ -208,13 +208,13 @@ class ProductsVerticalItem extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                 decoration: BoxDecoration(
-                  color: Color(0xFF486D28),
+                  color: Theme.of(context).colorScheme.onPrimary,
                   borderRadius: BorderRadius.circular(30),
                 ),
                 child: Text(
                   product.name ?? '',
                   style: TextStyle(
-                    color: Color(0xFFFFFCEA),
+                    color: Theme.of(context).colorScheme.primary,
                     fontSize: 18.0,
                   ),
                 ),
@@ -226,13 +226,13 @@ class ProductsVerticalItem extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                 decoration: BoxDecoration(
-                  color: Color(0xFF486D28),
+                  color: Theme.of(context).colorScheme.onPrimary,
                   borderRadius: BorderRadius.circular(30),
                 ),
                 child: Text(
                   '${product.price} €/Kg', // Agrega el precio del producto
                   style: TextStyle(
-                    color: Color(0xFFFFFCEA),
+                    color: Theme.of(context).colorScheme.primary,
                     fontSize: 18.0,
                   ),
                 ),
@@ -262,6 +262,7 @@ class MidText extends StatelessWidget {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 30,
+                  color: Theme.of(context).primaryColor,
                 )),
           )),
     );
@@ -324,13 +325,13 @@ class ProductsHorizontal extends StatelessWidget {
                             padding: EdgeInsets.symmetric(
                                 horizontal: 16.0, vertical: 8.0),
                             decoration: BoxDecoration(
-                              color: Color(0xFF486D28),
+                              color: Theme.of(context).colorScheme.onPrimary,
                               borderRadius: BorderRadius.circular(30),
                             ),
                             child: Text(
                               productList[index].name ?? '',
                               style: TextStyle(
-                                color: Color(0xFFFFFCEA),
+                                color: Theme.of(context).colorScheme.primary,
                                 fontSize: 18.0,
                               ),
                             ),
@@ -343,13 +344,13 @@ class ProductsHorizontal extends StatelessWidget {
                             padding: EdgeInsets.symmetric(
                                 horizontal: 16.0, vertical: 8.0),
                             decoration: BoxDecoration(
-                              color: Color(0xFF486D28),
+                              color: Theme.of(context).colorScheme.onPrimary,
                               borderRadius: BorderRadius.circular(30),
                             ),
                             child: Text(
                               '${productList[index].price} €/Kg', // Agrega el precio del producto
                               style: TextStyle(
-                                color: Color(0xFFFFFCEA),
+                                color: Theme.of(context).colorScheme.primary,
                                 fontSize: 18.0,
                               ),
                             ),
@@ -380,11 +381,12 @@ class TopText extends StatelessWidget {
           margin: EdgeInsets.only(top: 10, left: 20),
           width: gWidth,
           height: gHeight / 25,
-          child: const SizedBox(
+          child: SizedBox(
             child: Text("Productos en oferta",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 30,
+                  color: Theme.of(context).primaryColor,
                 )),
           )),
     );
