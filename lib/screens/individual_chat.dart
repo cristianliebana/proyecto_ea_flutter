@@ -9,7 +9,6 @@ import 'package:socket_io_client/socket_io_client.dart' as io;
 class ChatMessage {
   final bool isMeChatting;
   final String messageBody;
-  
 
   ChatMessage({required this.isMeChatting, required this.messageBody});
 }
@@ -17,7 +16,9 @@ class ChatMessage {
 class IndividualChat extends StatefulWidget {
   final String roomId;
   final String userId2;
-  const IndividualChat({Key? key, required this.roomId, required this. userId2,req}) : super(key: key);
+  const IndividualChat(
+      {Key? key, required this.roomId, required this.userId2, req})
+      : super(key: key);
 
   @override
   _IndividualChatState createState() => _IndividualChatState();
@@ -25,7 +26,7 @@ class IndividualChat extends StatefulWidget {
 
 class _IndividualChatState extends State<IndividualChat> {
   Map<String, dynamic> userData = {};
-   Map<String, dynamic> userData2 = {};
+  Map<String, dynamic> userData2 = {};
   late io.Socket socket;
   TextEditingController messageController = TextEditingController();
   List<ChatMessage> messages = [];
@@ -51,7 +52,7 @@ class _IndividualChatState extends State<IndividualChat> {
     });
   }
 
-    Future<void> obtenerDatosUsuario2(String userId2) async {
+  Future<void> obtenerDatosUsuario2(String userId2) async {
     ApiResponse response = await UserService.getCreadorById(userId2);
     setState(() {
       userData2 = response.data;
@@ -65,7 +66,8 @@ class _IndividualChatState extends State<IndividualChat> {
 
     socket.on('connect', (_) {
       print('Conectado al servidor Socket.IO');
-      socket.emit('join room', {'userId': userData['_id'], 'roomId': widget.roomId});
+      socket.emit(
+          'join room', {'userId': userData['_id'], 'roomId': widget.roomId});
     });
 
     socket.on('chat message', (data) {
@@ -100,6 +102,7 @@ class _IndividualChatState extends State<IndividualChat> {
       messageController.clear();
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -115,12 +118,12 @@ class _IndividualChatState extends State<IndividualChat> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-BackButton(
-  color: Color(0xFFFFFCEA),
-  onPressed: () {
-    Get.to(ChatPage());
-  },
-),
+                  BackButton(
+                    color: Color(0xFFFFFCEA),
+                    onPressed: () {
+                      Get.to(ChatPage());
+                    },
+                  ),
                   SizedBox(width: 5),
                   CircleAvatar(
                     backgroundImage:
@@ -140,25 +143,23 @@ BackButton(
                           color: Color(0xFFFFFCEA),
                         ),
                       ),
-  Text(
-  widget.roomId,
-  style: TextStyle(
-    fontWeight: FontWeight.w500,
-    color: Color(0xFFFFFCEA).withOpacity(0.7),
-  ),
-),
+                      Text(
+                        widget.roomId,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xFFFFFCEA).withOpacity(0.7),
+                        ),
+                      ),
                     ],
                   ),
                   Spacer(),
                   IconButton(
-  onPressed: () {
- 
-  },
-  icon: Icon(
-    Icons.more_vert,
-    color: Color(0xFFFFFCEA), 
-  ),
-),
+                    onPressed: () {},
+                    icon: Icon(
+                      Icons.more_vert,
+                      color: Color(0xFFFFFCEA),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -198,15 +199,15 @@ BackButton(
           ],
         ),
       ),
-  bottomNavigationBar: Container(
-    height: 70,
-    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-    margin: EdgeInsets.all(10),
-    decoration: BoxDecoration(
-      color: Color(0xFFFFFCEA),
-      borderRadius: BorderRadius.circular(13),
-      border: Border.all(color: Color(0xFF486D28),width: 3.0), 
-    ),
+      bottomNavigationBar: Container(
+        height: 70,
+        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+        margin: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: Color(0xFFFFFCEA),
+          borderRadius: BorderRadius.circular(13),
+          border: Border.all(color: Color(0xFF486D28), width: 3.0),
+        ),
         child: Container(
           child: Row(
             children: [
@@ -240,8 +241,8 @@ BackButton(
                     borderRadius: BorderRadius.circular(13),
                   ),
                   alignment: Alignment.center,
-                  child:
-                      Icon(Icons.send_rounded, color: Color(0xFFFFFCEA), size: 25),
+                  child: Icon(Icons.send_rounded,
+                      color: Color(0xFFFFFCEA), size: 25),
                 ),
               ),
             ],

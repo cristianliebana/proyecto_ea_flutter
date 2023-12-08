@@ -274,9 +274,12 @@ class InformationWidget extends StatelessWidget {
                       children: [
                         CircleAvatar(
                           radius: 35,
-                          backgroundImage: creadorData['profileImage'] != null
+                          backgroundImage: creadorData['profileImage'] !=
+                                      null &&
+                                  creadorData['profileImage'].isNotEmpty
                               ? NetworkImage(creadorData['profileImage']!)
                               : Image.asset('assets/images/profile.png').image,
+                          backgroundColor: Colors.transparent,
                         ),
                         SizedBox(width: 10),
                         SizedBox(height: 30),

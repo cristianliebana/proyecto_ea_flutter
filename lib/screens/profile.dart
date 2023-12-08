@@ -50,49 +50,47 @@ class _ProfilePageState extends State<ProfilePage> {
       body: SingleChildScrollView(
         child: Container(
             child: Column(
-              children: [
-                SizedBox(height: 50),
-                ProfileImage(
-                  userData: userData,
-                ),
-                const SizedBox(height: 10),
-                if (userData.isNotEmpty) UsernameText(userData: userData),
-                const SizedBox(height: 10),
-                if (userData.isNotEmpty) EmailText(userData: userData),
-                if (userData.isEmpty) CircularProgressIndicator(),
-                const SizedBox(height: 20),
-                EditProfileButton(),
-                const SizedBox(height: 30),
-                const Divider(),
-                ProfileMenuWidget(
-                    title: "Ajustes",
-                    icon: LineAwesomeIcons.cog,
-                    onPress: () {}),
-                ProfileMenuWidget(
-                    title: "PlaceHolder",
-                    icon: LineAwesomeIcons.question,
-                    onPress: () {}),
-                ProfileMenuWidget(
-                    title: "Mis Productos",
-                    icon: LineAwesomeIcons.user_check,
-                    onPress: () {
-                      Get.to(UserProductsScreen());
-                    }),
-                const Divider(),
-                ProfileMenuWidget(
-                    title: "Información",
-                    icon: LineAwesomeIcons.info,
-                    onPress: () {}),
-                ProfileMenuWidget(
-                    title: "Cerrar sesión",
-                    icon: LineAwesomeIcons.alternate_sign_out,
-                    onPress: () {
-                      _onRemoveTokenPressed();
-                    },
-                    text1Color: Color(0xFF486D28),
-                    endIcon: false),
-              ],
-            )),
+          children: [
+            SizedBox(height: 50),
+            ProfileImage(
+              userData: userData,
+            ),
+            const SizedBox(height: 10),
+            if (userData.isNotEmpty) UsernameText(userData: userData),
+            const SizedBox(height: 10),
+            if (userData.isNotEmpty) EmailText(userData: userData),
+            if (userData.isEmpty) CircularProgressIndicator(),
+            const SizedBox(height: 20),
+            EditProfileButton(),
+            const SizedBox(height: 30),
+            const Divider(),
+            ProfileMenuWidget(
+                title: "Ajustes", icon: LineAwesomeIcons.cog, onPress: () {}),
+            ProfileMenuWidget(
+                title: "PlaceHolder",
+                icon: LineAwesomeIcons.question,
+                onPress: () {}),
+            ProfileMenuWidget(
+                title: "Mis Productos",
+                icon: LineAwesomeIcons.user_check,
+                onPress: () {
+                  Get.to(UserProductsScreen());
+                }),
+            const Divider(),
+            ProfileMenuWidget(
+                title: "Información",
+                icon: LineAwesomeIcons.info,
+                onPress: () {}),
+            ProfileMenuWidget(
+                title: "Cerrar sesión",
+                icon: LineAwesomeIcons.alternate_sign_out,
+                onPress: () {
+                  _onRemoveTokenPressed();
+                },
+                text1Color: Color(0xFF486D28),
+                endIcon: false),
+          ],
+        )),
       ),
     );
   }
@@ -138,25 +136,27 @@ class UsernameText extends StatelessWidget {
 
 class ProfileImage extends StatelessWidget {
   const ProfileImage({
-    super.key,
+    Key? key,
     required this.userData,
-  });
+  }) : super(key: key);
 
   final Map<String, dynamic> userData;
 
   @override
   Widget build(BuildContext context) {
-    String profileImage = userData['profileImage'] ??
-        "https://res.cloudinary.com/dfwsx27vx/image/upload/v1701028188/profile_ju3yvo.png";
+    String profileImage = userData['profileImage'] ?? "";
+
     return Container(
       width: 175,
       height: 175,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(100),
         child: CldImageWidget(
-          publicId: profileImage,
-          width: 175, // Set to the same size as the container
-          height: 175, 
+          publicId: profileImage.isNotEmpty
+              ? profileImage
+              : "https://res.cloudinary.com/dfwsx27vx/image/upload/v1701028188/profile_ju3yvo.png",
+          width: 175,
+          height: 175,
           fit: BoxFit.cover,
         ),
       ),

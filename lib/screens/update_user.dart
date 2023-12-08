@@ -265,24 +265,26 @@ class UpdateText extends StatelessWidget {
 
 class ProfileImage extends StatelessWidget {
   const ProfileImage({
-    super.key,
+    Key? key,
     required this.userData,
-  });
+  }) : super(key: key);
 
   final Map<String, dynamic> userData;
 
   @override
   Widget build(BuildContext context) {
-    String profileImage = userData['profileImage'] ??
-        "https://res.cloudinary.com/dfwsx27vx/image/upload/v1701028188/profile_ju3yvo.png";
+    String profileImage = userData['profileImage'] ?? "";
+
     return Container(
       width: 175,
       height: 175,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(100),
         child: CldImageWidget(
-          publicId: profileImage,
-          width: 175, // Set to the same size as the container
+          publicId: profileImage.isNotEmpty
+              ? profileImage
+              : "https://res.cloudinary.com/dfwsx27vx/image/upload/v1701028188/profile_ju3yvo.png",
+          width: 175,
           height: 175,
           fit: BoxFit.cover,
         ),
