@@ -12,7 +12,7 @@ class MapPageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFFFFCEA),
+      backgroundColor: Theme.of(context).colorScheme.primary,
       bottomNavigationBar: CustomBottomNavigationBar(currentIndex: 1),
       body: FutureBuilder<LatLng>(
         future: currentPositionFuture,
@@ -59,7 +59,8 @@ class MapPageView extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
+                  color:
+                      Theme.of(context).secondaryHeaderColor.withOpacity(0.5),
                   spreadRadius: 5,
                   blurRadius: 7,
                   offset: const Offset(0, 3),

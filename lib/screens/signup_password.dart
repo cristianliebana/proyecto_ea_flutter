@@ -45,13 +45,13 @@ class _SignUpScreenState extends State<SignUpPasswordScreen> {
     return Container(
       margin: EdgeInsets.all(8.0),
       decoration: BoxDecoration(
-        color: Color(0xFF486D28),
+        color: Theme.of(context).colorScheme.onPrimary,
         shape: BoxShape.circle,
       ),
       child: IconButton(
         icon: Icon(
           Icons.arrow_back,
-          color: Color(0xFFFFFCEA),
+          color: Theme.of(context).colorScheme.primary,
         ),
         onPressed: () {
           Get.to(SignUpScreen());
@@ -85,7 +85,8 @@ class _SignUpScreenState extends State<SignUpPasswordScreen> {
               FlutterPwValidator(
                 defaultColor: Colors.grey.shade300,
                 controller: controller,
-                successColor: Colors.green.shade700,
+                successColor: Theme.of(context).focusColor,
+                failureColor: Theme.of(context).disabledColor,
                 minLength: 8,
                 uppercaseCharCount: 1,
                 numericCharCount: 3,
@@ -200,7 +201,8 @@ class ContinueButton extends StatelessWidget {
           },
           child: Text(
             "Continuar",
-            style: TextStyle(fontSize: 25),
+            style: TextStyle(
+                fontSize: 25, color: Theme.of(context).colorScheme.primary),
           ),
           style: ButtonStyle(
             shape: MaterialStateProperty.all(
@@ -208,7 +210,8 @@ class ContinueButton extends StatelessWidget {
                 borderRadius: BorderRadius.circular(100),
               ),
             ),
-            backgroundColor: MaterialStateProperty.all(buttonColor),
+            backgroundColor: MaterialStateProperty.all(
+                Theme.of(context).colorScheme.onPrimary),
           ),
         ),
       ),
@@ -319,8 +322,8 @@ class PasswordText extends StatelessWidget {
           child: FittedBox(
             child: Text("Regístrate",
                 style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                )),
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).primaryColor)),
           )),
     );
   }

@@ -8,6 +8,7 @@ import 'package:proyecto_flutter/api/utils/http_api.dart';
 import 'package:proyecto_flutter/screens/home.dart';
 import 'package:proyecto_flutter/screens/signup.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
+import 'package:proyecto_flutter/utils/theme_provider.dart';
 import 'package:proyecto_flutter/widget/rep_textfiled.dart';
 import 'package:proyecto_flutter/widget/socket_manager.dart';
 
@@ -93,7 +94,8 @@ class RegisterText extends StatelessWidget {
           child: RichText(
             text: TextSpan(
               text: "¿No tienes una cuenta? ",
-              style: TextStyle(color: text2Color, fontSize: 18),
+              style:
+                  TextStyle(color: Theme.of(context).canvasColor, fontSize: 18),
               children: [
                 WidgetSpan(
                   child: GestureDetector(
@@ -104,7 +106,7 @@ class RegisterText extends StatelessWidget {
                       "Regístrate",
                       style: TextStyle(
                         decoration: TextDecoration.underline,
-                        color: text1Color,
+                        color: Theme.of(context).colorScheme.onPrimary,
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
                       ),
@@ -156,15 +158,17 @@ class OrText extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(width: 75, height: 0.5, color: text2Color),
+              Container(
+                  width: 75, height: 0.5, color: Theme.of(context).canvasColor),
               Text(
                 " Otros métodos de autenticación ",
                 style: TextStyle(
-                    color: text2Color,
+                    color: Theme.of(context).canvasColor,
                     fontSize: 20,
                     fontWeight: FontWeight.bold),
               ),
-              Container(width: 75, height: 0.5, color: text2Color),
+              Container(
+                  width: 75, height: 0.5, color: Theme.of(context).canvasColor),
             ],
           ),
         ),
@@ -194,7 +198,8 @@ class LoginButton extends StatelessWidget {
           },
           child: Text(
             "Iniciar Sesión",
-            style: TextStyle(fontSize: 25,  color: Colors.white),
+            style: TextStyle(
+                fontSize: 25, color: Theme.of(context).colorScheme.primary),
           ),
           style: ButtonStyle(
               shape: MaterialStateProperty.all(
@@ -202,7 +207,8 @@ class LoginButton extends StatelessWidget {
                   borderRadius: BorderRadius.circular(100),
                 ),
               ),
-              backgroundColor: MaterialStateProperty.all(buttonColor)),
+              backgroundColor: MaterialStateProperty.all(
+                  Theme.of(context).colorScheme.onPrimary)),
         ),
       ),
     );
@@ -226,7 +232,9 @@ class ForgotText extends StatelessWidget {
             height: gHeight / 20,
             child: Center(
                 child: Text("¿Has olvidado tu contraseña?",
-                    style: TextStyle(color: buttonColor, fontSize: 15)))),
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        fontSize: 15)))),
       ),
     );
   }
@@ -293,30 +301,6 @@ class EmailTextFiled extends StatelessWidget {
   }
 }
 
-class LoginText extends StatelessWidget {
-  const LoginText({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return FadeInDown(
-      delay: Duration(milliseconds: 250),
-      child: Container(
-          margin: EdgeInsets.only(top: 10, right: 270),
-          width: gWidth / 4,
-          height: gHeight / 18,
-          color: Colors.red,
-          child: FittedBox(
-            child: Text("Login",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                )),
-          )),
-    );
-  }
-}
-
 class TopImage extends StatelessWidget {
   const TopImage({
     super.key,
@@ -324,13 +308,20 @@ class TopImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeProvider themeProvider = Get.find<ThemeProvider>();
+
+    // Elegir la imagen según el tema actual
+    String topImage = themeProvider.isDarkMode
+        ? 'assets/images/logo2.png'
+        : 'assets/images/logo.jpeg';
+
     return FadeInDown(
       delay: Duration(milliseconds: 275),
       child: Container(
-          width: gWidth,
-          height: gHeight / 2.85,
-          child: Image.asset('assets/images/logo.jpeg')),
+        width: gWidth,
+        height: gHeight / 2.85,
+        child: Image.asset(topImage),
+      ),
     );
   }
 }
-

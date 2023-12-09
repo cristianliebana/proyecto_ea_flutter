@@ -9,6 +9,7 @@ import 'package:proyecto_flutter/api/services/cloudinary_service.dart';
 import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
 import 'package:proyecto_flutter/screens/login.dart';
+import 'package:proyecto_flutter/screens/signup_password.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
 
 class SignUpImageScreen extends StatefulWidget {
@@ -82,7 +83,7 @@ class _SignUpImageScreenState extends State<SignUpImageScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF486D28),
+      backgroundColor: Theme.of(context).colorScheme.onPrimary,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -94,7 +95,7 @@ class _SignUpImageScreenState extends State<SignUpImageScreen> {
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 decoration: BoxDecoration(
-                  color: Color(0xFFFFFCEA),
+                  color: Theme.of(context).colorScheme.primary,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(30),
                     topRight: Radius.circular(30),
@@ -113,15 +114,18 @@ class _SignUpImageScreenState extends State<SignUpImageScreen> {
                             onPressed: () {
                               _pickImage(ImageSource.camera);
                             },
-                            child: const Text('Abre la cámara'),
+                            child: Text('Abre la cámara',
+                                style: TextStyle(
+                                    color:
+                                        Theme.of(context).colorScheme.primary)),
                             style: ButtonStyle(
                               shape: MaterialStateProperty.all(
                                 RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(100),
                                 ),
                               ),
-                              backgroundColor:
-                                  MaterialStateProperty.all(buttonColor),
+                              backgroundColor: MaterialStateProperty.all(
+                                  Theme.of(context).colorScheme.onPrimary),
                               minimumSize: MaterialStateProperty.all(
                                 Size(150, 50),
                               ),
@@ -132,15 +136,19 @@ class _SignUpImageScreenState extends State<SignUpImageScreen> {
                             onPressed: () {
                               _pickImage(ImageSource.gallery);
                             },
-                            child: const Text('Abre la galería'),
+                            child: Text(
+                              'Abre la galería',
+                              style: TextStyle(
+                                  color: Theme.of(context).colorScheme.primary),
+                            ),
                             style: ButtonStyle(
                               shape: MaterialStateProperty.all(
                                 RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(100),
                                 ),
                               ),
-                              backgroundColor:
-                                  MaterialStateProperty.all(buttonColor),
+                              backgroundColor: MaterialStateProperty.all(
+                                  Theme.of(context).colorScheme.onPrimary),
                               minimumSize: MaterialStateProperty.all(
                                 Size(150, 50),
                               ),
@@ -222,18 +230,19 @@ class SignUpImageController extends GetxController {
 
     Get.defaultDialog(
       title: "Cuenta creada",
-      backgroundColor: Color(0xFFFFFCEA),
+      titleStyle: TextStyle(color: Theme.of(context).primaryColor),
+      backgroundColor: Theme.of(context).colorScheme.primary,
       content: ClipRect(
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 50.0, sigmaY: 50.0),
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10.0),
-              color: Color(0xFFFFFCEA),
+              color: Theme.of(context).colorScheme.primary,
             ),
             child: Container(
               decoration: BoxDecoration(
-                color: Color(0xFFFFFCEA),
+                color: Theme.of(context).colorScheme.primary,
               ),
               child: Column(
                 children: [
@@ -244,7 +253,10 @@ class SignUpImageController extends GetxController {
                     repeat: false,
                   ),
                   SizedBox(height: 20),
-                  Text("¡Bienvenido a Km0Market!"),
+                  Text(
+                    "¡Bienvenido a Km0Market!",
+                    style: TextStyle(color: Theme.of(context).primaryColor),
+                  ),
                 ],
               ),
             ),
@@ -256,14 +268,18 @@ class SignUpImageController extends GetxController {
         onPressed: () {
           Get.offAll(LoginScreen());
         },
-        child: Text("Aceptar"),
+        child: Text(
+          "Aceptar",
+          style: TextStyle(color: Theme.of(context).colorScheme.primary),
+        ),
         style: ButtonStyle(
           shape: MaterialStateProperty.all(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15),
             ),
           ),
-          backgroundColor: MaterialStateProperty.all(buttonColor),
+          backgroundColor: MaterialStateProperty.all(
+              Theme.of(context).colorScheme.onPrimary),
         ),
       ),
     );
@@ -294,7 +310,8 @@ class SubmitButton extends StatelessWidget {
           // },
           child: Text(
             "Regístrate",
-            style: TextStyle(fontSize: 25),
+            style: TextStyle(
+                fontSize: 25, color: Theme.of(context).colorScheme.primary),
           ),
           style: ButtonStyle(
               shape: MaterialStateProperty.all(
@@ -302,7 +319,8 @@ class SubmitButton extends StatelessWidget {
                   borderRadius: BorderRadius.circular(100),
                 ),
               ),
-              backgroundColor: MaterialStateProperty.all(buttonColor)),
+              backgroundColor: MaterialStateProperty.all(
+                  Theme.of(context).colorScheme.onPrimary)),
         ),
       ),
     );
@@ -322,7 +340,7 @@ class ImageText extends StatelessWidget {
           child: Text(
             "Escoge tu foto de perfil",
             style: TextStyle(
-                color: Color(0xFFFFFCEA),
+                color: Theme.of(context).colorScheme.primary,
                 fontSize: 30,
                 fontWeight: FontWeight.bold),
             textAlign: TextAlign.left,

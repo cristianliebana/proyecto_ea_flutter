@@ -4,8 +4,11 @@ import 'package:get/get.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:proyecto_flutter/bindings/map_Bindings.dart';
 import 'package:proyecto_flutter/screens/login.dart';
+import 'package:proyecto_flutter/utils/theme_provider.dart';
 
-void main() {
+void main() async {
+  Get.put(ThemeProvider());
+  await Get.find<ThemeProvider>().loadTheme();
   runApp(const MyApp());
 }
 
@@ -14,15 +17,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'KM0 MARKET',
-      theme: ThemeData(
-        scaffoldBackgroundColor: Color(0xFFFFFCEA),
-      ),
-      home: const SplashScreen(),
-      initialBinding: MapPageBinding(),
-    );
+    return Obx(() {
+      final ThemeProvider themeProvider = Get.find<ThemeProvider>();
+      return GetMaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'KM0 MARKET',
+        theme: themeProvider.getTheme(),
+        home: const SplashScreen(),
+        initialBinding: MapPageBinding(),
+      );
+    });
   }
 }
 
@@ -31,11 +35,16 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeProvider themeProvider = Get.find<ThemeProvider>();
+
+    String splashImage = themeProvider.isDarkMode
+        ? 'assets/images/logo2.png'
+        : 'assets/images/logo.jpeg';
     return AnimatedSplashScreen(
       splash: Center(
-        child: Image.asset('assets/images/logo.jpeg'),
+        child: Image.asset(splashImage),
       ),
-      backgroundColor: Color(0xFFFFFCEA),
+      backgroundColor: Theme.of(context).colorScheme.primary,
       nextScreen: LoginScreen(),
       splashIconSize: 500,
       duration: 1000,
