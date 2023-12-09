@@ -1,7 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:proyecto_flutter/api/models/room_model.dart';
+//import 'package:proyecto_flutter/api/models/room_model.dart';
 import 'package:proyecto_flutter/api/services/room_service.dart';
 import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';

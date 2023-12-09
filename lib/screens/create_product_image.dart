@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui';
@@ -6,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:lottie/lottie.dart';
 
 import 'package:proyecto_flutter/api/services/cloudinary_service.dart';
@@ -210,11 +213,18 @@ class CreateProductController extends GetxController {
   final Map<String, dynamic> productData;
   final TextEditingController productImageController = TextEditingController();
   final _CreateProductImageState _state;
+  LatLng? chosenLocation;
 
   CreateProductController({
     required this.productData,
     required _CreateProductImageState state,
-  }) : _state = state;
+  }) : _state = state {
+    if (productData.containsKey('location') && productData['location'] != null) {
+      var location = productData['location'];
+      chosenLocation = LatLng(location['latitude'], location['longitude']);
+    } else {
+    }
+  }
 
   Future<void> _uploadImagesAndCreateProduct(BuildContext context) async {
     await _state._uploadImages();
@@ -236,6 +246,12 @@ class CreateProductController extends GetxController {
       'units': units,
       'user': userId,
       'productImage': productImage,
+      'location': chosenLocation != null 
+        ? {
+            'latitude': chosenLocation!.latitude, 
+            'longitude': chosenLocation!.longitude
+          } 
+        : null,
     };
 
     try {
