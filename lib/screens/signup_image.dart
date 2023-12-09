@@ -6,11 +6,15 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
 import 'package:proyecto_flutter/api/services/cloudinary_service.dart';
+import 'package:proyecto_flutter/api/services/token_service.dart';
 import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
+import 'package:proyecto_flutter/screens/home.dart';
 import 'package:proyecto_flutter/screens/login.dart';
+import 'package:proyecto_flutter/screens/on_boarding.dart';
 import 'package:proyecto_flutter/screens/signup_password.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
+import 'package:proyecto_flutter/widget/socket_manager.dart';
 
 class SignUpImageScreen extends StatefulWidget {
   final Map<String, dynamic> registrationData;
@@ -207,6 +211,30 @@ class SignUpImageController extends GetxController {
     signUp(context); // Llama a la función signUp después de subir la imagen
   }
 
+  void login(BuildContext context) async {
+    String? email = registrationData['email'];
+    String? password = registrationData['password'];
+
+    Map<String, dynamic> userData = {
+      'email': email,
+      'password': password,
+    };
+
+    ApiResponse response = await UserService.loginUser(userData);
+    if (response.statusCode == 200) {
+      String? token = response.data['token'];
+      if (token != null) {
+        await TokenService.saveToken(token);
+        SocketManager();
+      } else {
+        print('No se recibió un token en la respuesta');
+      }
+    } else {
+      Get.snackbar('Error', 'Correo o contraseña incorrectos',
+          snackPosition: SnackPosition.BOTTOM);
+    }
+  }
+
   void signUp(BuildContext context) async {
     String? username = registrationData['username'];
     String? fullname = registrationData['fullname'];
@@ -226,6 +254,8 @@ class SignUpImageController extends GetxController {
       'profileImage': profileImage,
     };
     ApiResponse response = await UserService.registerUser(imageData);
+    login(context);
+
     print(imageData);
 
     Get.defaultDialog(
@@ -266,7 +296,7 @@ class SignUpImageController extends GetxController {
       radius: 10.0,
       confirm: ElevatedButton(
         onPressed: () {
-          Get.offAll(LoginScreen());
+          Get.to(ConcentricTransitionPage());
         },
         child: Text(
           "Aceptar",
