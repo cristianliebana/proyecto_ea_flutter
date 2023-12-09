@@ -1,68 +1,77 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:latlong2/latlong.dart';
+import 'package:proyecto_flutter/api/models/product_model.dart';
+import 'package:proyecto_flutter/api/services/product_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:proyecto_flutter/screens/map.dart';
 
 class MapPageBinding extends Bindings {
-  bool _requestedNavigation = false;
-
   @override
   Future<void> dependencies() async {
-    if (_requestedNavigation) {
-      Get.to(() => MapPageView(
-          currentPositionFuture: _getPositionFuture()
-      ));
-    }
-  }
+    final sharedPreferences = await SharedPreferences.getInstance();
+    final userId = sharedPreferences.getString('userId');
 
-  void requestNavigation() {
-    _requestedNavigation = true;
-    dependencies();
-  }
-
-  Future<LatLng> _getPositionFuture() async {
     final bool hasPermission = await _handleLocationPermission();
     if (!hasPermission) {
-      return LatLng(41.2731, 1.9865);
+      return;
+    }
+
+    final Position? currentPosition = await _getCurrentPosition();
+    final MapPageController mapPageController = Get.put(MapPageController());
+
+    if (currentPosition != null) {
+      mapPageController.currentPosition.value = currentPosition;
+    } else {
     }
 
     try {
-      final Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-      return LatLng(position.latitude, position.longitude);
+      final List<Product> productList = await ProductService.getProducts(1);
+      mapPageController.listProducts.assignAll(productList);
     } catch (e) {
-      debugPrint(e.toString());
-      return LatLng(41.2731, 1.9865);
+      debugPrint('Error fetching products: ${e.toString()}');
     }
   }
 
- Future<bool> _handleLocationPermission() async {
-  bool serviceEnabled;
-  LocationPermission permission;
-  serviceEnabled = await Geolocator.isLocationServiceEnabled();
-  if (!serviceEnabled) {
-    ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(
-      content: Text('Location services are disabled. Please enable the services')));
-    return false;
-  }
+  Future<bool> _handleLocationPermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
 
-  permission = await Geolocator.checkPermission();
-  if (permission == LocationPermission.denied) {
-    permission = await Geolocator.requestPermission();
-    if (permission == LocationPermission.denied) {
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
       ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(
-        content: Text('Location permissions are denied. You can still view the map.')));
+          content: Text(
+              'Location services are disabled. Please enable the services')));
       return false;
     }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        ScaffoldMessenger.of(Get.context!).showSnackBar(
+            const SnackBar(content: Text('Location permissions are denied')));
+        return false;
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(
+          content: Text(
+              'Location permissions are permanently denied, we cannot request permissions.')));
+      return false;
+    }
+    return true;
   }
 
-  if (permission == LocationPermission.deniedForever) {
-    ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(
-      content: Text('Location permissions denied.')));
-    return false;
+  Future<Position?> _getCurrentPosition() async {
+    try {
+      final Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+      return position;
+    } catch (e) {
+      debugPrint(e.toString());
+      return null;
+    }
   }
-
-  return true;
 }
-}
-
