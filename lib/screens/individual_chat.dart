@@ -4,21 +4,34 @@ import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
 import 'package:proyecto_flutter/screens/chat.dart';
 import 'package:proyecto_flutter/screens/chat_message_item.dart';
+import 'package:proyecto_flutter/widget/socket_manager.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
 class ChatMessage {
   final bool isMeChatting;
   final String messageBody;
+  final bool isReviewLink;
+  final String userId2;
 
-  ChatMessage({required this.isMeChatting, required this.messageBody});
+  ChatMessage({
+    required this.isMeChatting,
+    required this.messageBody,
+    required this.isReviewLink,
+    required this.userId2
+  });
 }
 
 class IndividualChat extends StatefulWidget {
   final String roomId;
   final String userId2;
-  const IndividualChat(
-      {Key? key, required this.roomId, required this.userId2, req})
-      : super(key: key);
+
+
+  const IndividualChat({
+    Key? key,
+    required this.roomId,
+    required this.userId2,
+  }) : super(key: key);
+
 
   @override
   _IndividualChatState createState() => _IndividualChatState();
@@ -27,21 +40,44 @@ class IndividualChat extends StatefulWidget {
 class _IndividualChatState extends State<IndividualChat> {
   Map<String, dynamic> userData = {};
   Map<String, dynamic> userData2 = {};
-  late io.Socket socket;
   TextEditingController messageController = TextEditingController();
   List<ChatMessage> messages = [];
   bool isDisconnected = false;
+  late SocketManager _socketManager;
+
+  _IndividualChatState() {
+    _socketManager = SocketManager();
+
+    _socketManager.setMessageHandler((data) {
+      String senderId = data['userId'];
+      String message = data['message'];
+      bool isMe = senderId == userData['_id'];
+
+       print("isReviewLink value received: ${data['isReviewLink']}");
+
+      setState(() {
+        messages.add(ChatMessage(
+          isMeChatting: isMe,
+          messageBody: message,
+          isReviewLink: data['isReviewLink'] ?? false,
+          userId2: userData2['_id']
+        ));
+      });
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    iniciarChat();
+    init();
   }
 
-  Future<void> iniciarChat() async {
+  Future<void> init() async {
     await obtenerDatosUsuario();
-    obtenerDatosUsuario2(widget.userId2);
-    connectToSocket();
+    await obtenerDatosUsuario2(widget.userId2);
+
+    // El resto de tu código que depende de los datos obtenidos.
+    _socketManager.joinRoom(userData['_id'], widget.roomId);
   }
 
   Future<void> obtenerDatosUsuario() async {
@@ -55,52 +91,48 @@ class _IndividualChatState extends State<IndividualChat> {
   Future<void> obtenerDatosUsuario2(String userId2) async {
     ApiResponse response = await UserService.getCreadorById(userId2);
     setState(() {
-      userData2 = response.data;
-    });
-  }
 
-  void connectToSocket() {
-    socket = io.io('http://localhost:9090', <String, dynamic>{
-      'transports': ['websocket'],
-    });
-
-    socket.on('connect', (_) {
-      print('Conectado al servidor Socket.IO');
-      socket.emit(
-          'join room', {'userId': userData['_id'], 'roomId': widget.roomId});
-    });
-
-    socket.on('chat message', (data) {
-      String senderId = data['userId'];
-      String message = data['message'];
-      bool isMe = senderId == userData['_id'];
-
-      setState(() {
-        messages.add(ChatMessage(isMeChatting: isMe, messageBody: message));
-      });
-    });
-
-    socket.on('disconnect', (_) {
-      if (!isDisconnected) {
-        print('Desconectado del servidor Socket.IO');
-        isDisconnected = true;
-      }
+      userData2 = response.data ?? {};
     });
   }
 
   void sendMessage() {
     String message = messageController.text;
     if (message.isNotEmpty) {
-      Map<String, dynamic> messageData = {
-        'message': message,
-        'userId': userData['_id'],
-        'roomId': widget.roomId,
-      };
+      if (message == 'Dejar una revisión') {
+        sendReviewLink();
+      } else {
+        Map<String, dynamic> messageData = {
+          'message': message,
+          'userId': userData['_id'],
+          'roomId': widget.roomId,
+        };
 
-      socket.emit('chat message', messageData);
+        _socketManager.socket.emit('chat message', messageData);
+      }
 
       messageController.clear();
     }
+  }
+
+
+  void sendReviewLink() {
+    String reviewMessage = 'Hola, me gustaría que me dejaras una valoración. ¡Puedes dejarmela haciendo click en este mensaje!';
+
+    Map<String, dynamic> reviewMessageData = {
+      'message': reviewMessage,
+      'userId': userData['_id'],
+      'roomId': widget.roomId,
+      'isReviewLink': true,
+    };
+
+    _socketManager.socket.emit('chat message', reviewMessageData);
+  }
+
+  @override
+  void dispose() {
+    _socketManager.leaveRoom(userData['_id'], widget.roomId);
+    super.dispose();
   }
 
   @override
@@ -126,8 +158,9 @@ class _IndividualChatState extends State<IndividualChat> {
                   ),
                   SizedBox(width: 5),
                   CircleAvatar(
-                    backgroundImage:
-                        AssetImage("assets/chatimages/Jones Noa.jpg"),
+                    backgroundImage: userData2['profileImage'] != null
+                        ? NetworkImage(userData2['profileImage']!)
+                        : Image.asset('assets/images/profile.png').image,
                     maxRadius: 28,
                   ),
                   SizedBox(width: 20),
@@ -136,7 +169,9 @@ class _IndividualChatState extends State<IndividualChat> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        userData2['username'] ?? 'Username not available',
+                        userData2['username'] != null
+                            ? userData2['username']
+                            : 'Username not available',
                         style: TextStyle(
                           fontSize: 19,
                           fontWeight: FontWeight.bold,
@@ -154,9 +189,11 @@ class _IndividualChatState extends State<IndividualChat> {
                   ),
                   Spacer(),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      sendReviewLink(); // Al hacer clic en "más opciones", envía el enlace de revisión
+                    },
                     icon: Icon(
-                      Icons.more_vert,
+                      Icons.reviews,
                       color: Color(0xFFFFFCEA),
                     ),
                   ),
@@ -190,6 +227,8 @@ class _IndividualChatState extends State<IndividualChat> {
                         child: ChatMessageItem(
                           isMeChatting: message.isMeChatting,
                           messageBody: message.messageBody,
+                          isReviewLink: message.isReviewLink,
+                          userId2: message.userId2,
                         ),
                       ),
                   ],
@@ -241,8 +280,8 @@ class _IndividualChatState extends State<IndividualChat> {
                     borderRadius: BorderRadius.circular(13),
                   ),
                   alignment: Alignment.center,
-                  child: Icon(Icons.send_rounded,
-                      color: Color(0xFFFFFCEA), size: 25),
+                  child: Icon(Icons.send_rounded, color: Color(0xFFFFFCEA), size: 25),
+
                 ),
               ),
             ],

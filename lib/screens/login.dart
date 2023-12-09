@@ -9,6 +9,7 @@ import 'package:proyecto_flutter/screens/home.dart';
 import 'package:proyecto_flutter/screens/signup.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
 import 'package:proyecto_flutter/widget/rep_textfiled.dart';
+import 'package:proyecto_flutter/widget/socket_manager.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
@@ -65,6 +66,7 @@ class LoginController extends GetxController {
       print(token);
       if (token != null) {
         await TokenService.saveToken(token);
+        SocketManager();
         Get.offAll(() => HomePage());
       } else {
         print('No se recibió un token en la respuesta');
