@@ -25,11 +25,13 @@ class IndividualChat extends StatefulWidget {
   final String roomId;
   final String userId2;
 
+
   const IndividualChat({
     Key? key,
     required this.roomId,
     required this.userId2,
   }) : super(key: key);
+
 
   @override
   _IndividualChatState createState() => _IndividualChatState();
@@ -89,6 +91,7 @@ class _IndividualChatState extends State<IndividualChat> {
   Future<void> obtenerDatosUsuario2(String userId2) async {
     ApiResponse response = await UserService.getCreadorById(userId2);
     setState(() {
+
       userData2 = response.data ?? {};
     });
   }
@@ -111,6 +114,7 @@ class _IndividualChatState extends State<IndividualChat> {
       messageController.clear();
     }
   }
+
 
   void sendReviewLink() {
     String reviewMessage = 'Hola, me gustaría que me dejaras una valoración. ¡Puedes dejarmela haciendo click en este mensaje!';
@@ -277,6 +281,7 @@ class _IndividualChatState extends State<IndividualChat> {
                   ),
                   alignment: Alignment.center,
                   child: Icon(Icons.send_rounded, color: Color(0xFFFFFCEA), size: 25),
+
                 ),
               ),
             ],

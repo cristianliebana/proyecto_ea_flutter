@@ -154,7 +154,7 @@ class CreateProductController extends GetxController {
 
     try {
       print(productData);
-      ApiResponse response = await ProductService.addProduct(productData);
+      // ApiResponse response = await ProductService.addProduct(productData);
       Get.offAll(CreateProductImage(productData: productData));
     } catch (e) {
       Get.snackbar(
