@@ -86,6 +86,7 @@ class _SignUpScreenState extends State<SignUpPasswordScreen> {
                 defaultColor: Colors.grey.shade300,
                 controller: controller,
                 successColor: Theme.of(context).focusColor,
+                failureColor: Theme.of(context).disabledColor,
                 minLength: 8,
                 uppercaseCharCount: 1,
                 numericCharCount: 3,

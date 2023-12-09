@@ -316,7 +316,9 @@ class InformationWidget extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: 20),
-                    Divider(),
+                    Divider(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    ),
                     SizedBox(height: 10),
                     DescText(),
                     DescriptionText(productData: productData),

@@ -11,6 +11,7 @@ import 'package:lottie/lottie.dart';
 import 'package:proyecto_flutter/api/services/cloudinary_service.dart';
 import 'package:proyecto_flutter/api/services/product_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
+import 'package:proyecto_flutter/screens/create_product_detail.dart';
 import 'package:proyecto_flutter/screens/user_products.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
 

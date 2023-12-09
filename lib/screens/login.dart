@@ -8,6 +8,7 @@ import 'package:proyecto_flutter/api/utils/http_api.dart';
 import 'package:proyecto_flutter/screens/home.dart';
 import 'package:proyecto_flutter/screens/signup.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
+import 'package:proyecto_flutter/utils/theme_provider.dart';
 import 'package:proyecto_flutter/widget/rep_textfiled.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -305,12 +306,20 @@ class TopImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeProvider themeProvider = Get.find<ThemeProvider>();
+
+    // Elegir la imagen según el tema actual
+    String topImage = themeProvider.isDarkMode
+        ? 'assets/images/logo2.png'
+        : 'assets/images/logo.jpeg';
+
     return FadeInDown(
       delay: Duration(milliseconds: 275),
       child: Container(
-          width: gWidth,
-          height: gHeight / 2.85,
-          child: Image.asset('assets/images/logo.jpeg')),
+        width: gWidth,
+        height: gHeight / 2.85,
+        child: Image.asset(topImage),
+      ),
     );
   }
 }

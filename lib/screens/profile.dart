@@ -44,9 +44,43 @@ class _ProfilePageState extends State<ProfilePage> {
     TokenService.removeToken();
   }
 
+  AppBar _buildAppBar() {
+    return AppBar(
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      centerTitle: true,
+      actions: [
+        _buildAppBarThemeButton(),
+      ],
+    );
+  }
+
+  Widget _buildAppBarThemeButton() {
+    final ThemeProvider themeProvider = Get.find<ThemeProvider>();
+
+    return Container(
+      margin: EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.onPrimary,
+        shape: BoxShape.circle,
+      ),
+      child: IconButton(
+        icon: Icon(
+          themeProvider.isDarkMode ? Icons.dark_mode : Icons.light_mode,
+          color: Theme.of(context).colorScheme.primary,
+        ),
+        onPressed: () {
+          // Lógica para cambiar el tema
+          Get.find<ThemeProvider>().toggleTheme();
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: _buildAppBar(),
       bottomNavigationBar: CustomBottomNavigationBar(currentIndex: 5),
       body: SingleChildScrollView(
         child: Container(
@@ -71,11 +105,9 @@ class _ProfilePageState extends State<ProfilePage> {
             ProfileMenuWidget(
                 title: "Ajustes", icon: LineAwesomeIcons.cog, onPress: () {}),
             ProfileMenuWidget(
-                title: "Cambiar Tema",
+                title: "Placeholder",
                 icon: LineAwesomeIcons.question,
-                onPress: () {
-                  Get.find<ThemeProvider>().toggleTheme();
-                }),
+                onPress: () {}),
             ProfileMenuWidget(
                 title: "Mis Productos",
                 icon: LineAwesomeIcons.user_check,

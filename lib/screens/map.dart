@@ -40,8 +40,8 @@ class MapPageView extends StatelessWidget {
           height: 80.0,
           point: currentPosition,
           builder: (ctx) => Container(
-            child: Icon(Icons.location_pin,
-                color: Theme.of(context).colorScheme.onPrimary, size: 40.0),
+            child:
+                Icon(Icons.location_pin, color: Color(0xFF486D28), size: 40.0),
           ),
         ),
       );

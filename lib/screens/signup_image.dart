@@ -9,6 +9,7 @@ import 'package:proyecto_flutter/api/services/cloudinary_service.dart';
 import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
 import 'package:proyecto_flutter/screens/login.dart';
+import 'package:proyecto_flutter/screens/signup_password.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
 
 class SignUpImageScreen extends StatefulWidget {
