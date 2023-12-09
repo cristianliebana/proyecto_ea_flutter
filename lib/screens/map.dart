@@ -52,7 +52,7 @@ class _MapPageViewState extends State<MapPageView>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.primary,
       bottomNavigationBar: CustomBottomNavigationBar(currentIndex: 1),
       body: Column(
         mainAxisSize: MainAxisSize.min,
@@ -111,7 +111,7 @@ class _MapPageViewState extends State<MapPageView>{
                       ),
                     ),
                   );
-
+                  
                   return FlutterMap(
                     options: MapOptions(
                       center: LatLng(currentPosition.latitude, currentPosition.longitude),

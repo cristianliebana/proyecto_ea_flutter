@@ -4,7 +4,7 @@ class Product {
   String? description;
   double? price;
   int? units;
-  String? productImage;
+  List<String>? productImage;
   Location? location;
 
   Product({
@@ -24,7 +24,7 @@ class Product {
       description: json['description'] ?? '',
       price: (json['price'] ?? 0).toDouble(),
       units: json['units'] ?? 0,
-      productImage: json['productImage'] ?? '',
+      productImage: (json['productImage'] as List<dynamic>).cast<String>(),
       location: json['location'] != null ? Location.fromJson(json['location']) : null,
     );
   }
@@ -61,5 +61,3 @@ class Location {
     };
   }
 }
-
-

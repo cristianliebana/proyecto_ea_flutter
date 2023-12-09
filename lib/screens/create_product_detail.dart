@@ -1,11 +1,9 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:lottie/lottie.dart';
-import 'package:proyecto_flutter/api/services/product_service.dart';
 import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
 import 'package:proyecto_flutter/screens/create_product.dart';
@@ -54,13 +52,13 @@ class _CreateProductDetailState extends State<CreateProductDetail> {
     return Container(
       margin: EdgeInsets.all(8.0),
       decoration: BoxDecoration(
-        color: Color(0xFF486D28),
+        color: Theme.of(context).colorScheme.onPrimary,
         shape: BoxShape.circle,
       ),
       child: IconButton(
         icon: Icon(
           Icons.arrow_back,
-          color: Color(0xFFFFFCEA),
+          color: Theme.of(context).colorScheme.primary,
         ),
         onPressed: () {
           Get.to(CreateProduct());
@@ -159,6 +157,8 @@ class CreateProductController extends GetxController {
       print(productData);
       ApiResponse response = await ProductService.addProduct(productData);
       Get.offAll(CreateProductLocation(productData: productData));
+      // ApiResponse response = await ProductService.addProduct(productData);
+      Get.offAll(CreateProductImage(productData: productData));
     } catch (e) {
       Get.snackbar(
         "Error",
@@ -199,7 +199,7 @@ class TitleText extends StatelessWidget {
         child: Text(
           "¡Cuentanos mas!",
           style: TextStyle(
-            color: Colors.black,
+            color: Theme.of(context).primaryColor,
             fontSize: 35,
             fontWeight: FontWeight.bold,
           ),
@@ -223,7 +223,7 @@ class DescriptionText extends StatelessWidget {
         child: Text(
           "Queremos que nos cuentes todo para dar a conocer tu producto",
           style: TextStyle(
-            color: Color.fromARGB(255, 99, 99, 99),
+            color: Theme.of(context).shadowColor,
             fontSize: 20,
           ),
           textAlign: TextAlign.justify,
@@ -334,7 +334,8 @@ class SaveButton extends StatelessWidget {
           },
           child: Text(
             "Continuar",
-            style: TextStyle(fontSize: 25),
+            style: TextStyle(
+                fontSize: 25, color: Theme.of(context).colorScheme.primary),
           ),
           style: ButtonStyle(
             shape: MaterialStateProperty.all(
@@ -342,7 +343,8 @@ class SaveButton extends StatelessWidget {
                 borderRadius: BorderRadius.circular(100),
               ),
             ),
-            backgroundColor: MaterialStateProperty.all(buttonColor),
+            backgroundColor: MaterialStateProperty.all(
+                Theme.of(context).colorScheme.onPrimary),
           ),
         ),
       ),

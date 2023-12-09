@@ -9,6 +9,7 @@ import 'package:proyecto_flutter/api/services/cloudinary_service.dart';
 import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
 import 'package:proyecto_flutter/screens/login.dart';
+import 'package:proyecto_flutter/screens/signup_password.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
 
 class SignUpImageScreen extends StatefulWidget {
@@ -34,7 +35,7 @@ class _SignUpImageScreenState extends State<SignUpImageScreen> {
   }
 
   XFile? _imageFile;
-  String? _imageUrl;
+  String? _imageUrl = '';
   String? getImageUrl() {
     return _imageUrl;
   }
@@ -81,62 +82,82 @@ class _SignUpImageScreenState extends State<SignUpImageScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-        child: Scaffold(
-            resizeToAvoidBottomInset: true,
-            body: SingleChildScrollView(
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.onPrimary,
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(height: 40),
+            ImageText(),
+            SizedBox(height: 20),
+            Expanded(
               child: Container(
-                margin: EdgeInsets.all(15),
-                width: gWidth,
-                height: gHeight,
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
+                  ),
+                ),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(height: 20),
-                    ImageText(),
-                    SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            _pickImage(ImageSource.camera);
-                          },
-                          child: const Text('Abre la cámara'),
-                          style: ButtonStyle(
-                            shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(100),
+                    SizedBox(height: 40),
+                    Container(
+                      width: double.infinity,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              _pickImage(ImageSource.camera);
+                            },
+                            child: Text('Abre la cámara',
+                                style: TextStyle(
+                                    color:
+                                        Theme.of(context).colorScheme.primary)),
+                            style: ButtonStyle(
+                              shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(100),
+                                ),
+                              ),
+                              backgroundColor: MaterialStateProperty.all(
+                                  Theme.of(context).colorScheme.onPrimary),
+                              minimumSize: MaterialStateProperty.all(
+                                Size(150, 50),
                               ),
                             ),
-                            backgroundColor:
-                                MaterialStateProperty.all(buttonColor),
-                            minimumSize: MaterialStateProperty.all(Size(150,
-                                50)), // Ajusta el tamaño según sea necesario
                           ),
-                        ),
-                        SizedBox(width: 10), // Espacio entre los botones
-                        ElevatedButton(
-                          onPressed: () {
-                            _pickImage(ImageSource.gallery);
-                          },
-                          child: const Text('Abre la galería'),
-                          style: ButtonStyle(
-                            shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(100),
+                          SizedBox(width: 10),
+                          ElevatedButton(
+                            onPressed: () {
+                              _pickImage(ImageSource.gallery);
+                            },
+                            child: Text(
+                              'Abre la galería',
+                              style: TextStyle(
+                                  color: Theme.of(context).colorScheme.primary),
+                            ),
+                            style: ButtonStyle(
+                              shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(100),
+                                ),
+                              ),
+                              backgroundColor: MaterialStateProperty.all(
+                                  Theme.of(context).colorScheme.onPrimary),
+                              minimumSize: MaterialStateProperty.all(
+                                Size(150, 50),
                               ),
                             ),
-                            backgroundColor:
-                                MaterialStateProperty.all(buttonColor),
-                            minimumSize: MaterialStateProperty.all(Size(150,
-                                50)), // Ajusta el tamaño según sea necesario
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: 40),
                     Container(
                       height:
                           300, // Altura fija para el contenedor que contiene CircleAvatar
@@ -145,31 +166,27 @@ class _SignUpImageScreenState extends State<SignUpImageScreen> {
                             ? CircleAvatar(
                                 radius: 150,
                                 backgroundImage: NetworkImage(_imageFile!.path),
+                                backgroundColor: Colors.transparent,
                               )
-                            : SizedBox.shrink(),
+                            : CircleAvatar(
+                                radius: 150,
+                                backgroundImage:
+                                    AssetImage('assets/images/fotos3.png'),
+                                backgroundColor: Colors.transparent,
+                              ),
                       ),
                     ),
-                    // if (_imageFile != null) ...[
-                    //   Image.network(_imageFile!.path),
-                    // ElevatedButton(
-                    //   onPressed: _uploadImage,
-                    //   child: const Text('Subelo a cloudinary'),
-                    // ),
-                    // ],
-                    // if (_imageUrl != null) ...[
-                    //   // Image.network(_imageUrl!),
-                    //   Text("Cloudinary URL: $_imageUrl",
-                    //       style: const TextStyle(fontSize: 20)),
-                    //   const Padding(
-                    //       padding:
-                    //           EdgeInsets.only(left: 20, top: 60, bottom: 100)),
-                    // ],
-                    SizedBox(height: 20),
+                    SizedBox(height: 40),
                     SubmitButton(signUpController: signUpController),
+                    SizedBox(height: 20),
                   ],
                 ),
               ),
-            )));
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -184,7 +201,9 @@ class SignUpImageController extends GetxController {
   }) : _state = state;
 
   Future<void> _uploadImageAndSignUp(BuildContext context) async {
-    await _state._uploadImage(); // Llama a la función de subir imagen
+    if (_state._imageFile != null) {
+      await _state._uploadImage(); // Llama a la función de subir imagen
+    }
     signUp(context); // Llama a la función signUp después de subir la imagen
   }
 
@@ -211,18 +230,19 @@ class SignUpImageController extends GetxController {
 
     Get.defaultDialog(
       title: "Cuenta creada",
-      backgroundColor: Color(0xFFFFFCEA),
+      titleStyle: TextStyle(color: Theme.of(context).primaryColor),
+      backgroundColor: Theme.of(context).colorScheme.primary,
       content: ClipRect(
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 50.0, sigmaY: 50.0),
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10.0),
-              color: Color(0xFFFFFCEA),
+              color: Theme.of(context).colorScheme.primary,
             ),
             child: Container(
               decoration: BoxDecoration(
-                color: Color(0xFFFFFCEA),
+                color: Theme.of(context).colorScheme.primary,
               ),
               child: Column(
                 children: [
@@ -233,7 +253,10 @@ class SignUpImageController extends GetxController {
                     repeat: false,
                   ),
                   SizedBox(height: 20),
-                  Text("¡Bienvenido a Km0Market!"),
+                  Text(
+                    "¡Bienvenido a Km0Market!",
+                    style: TextStyle(color: Theme.of(context).primaryColor),
+                  ),
                 ],
               ),
             ),
@@ -245,14 +268,18 @@ class SignUpImageController extends GetxController {
         onPressed: () {
           Get.offAll(LoginScreen());
         },
-        child: Text("Aceptar"),
+        child: Text(
+          "Aceptar",
+          style: TextStyle(color: Theme.of(context).colorScheme.primary),
+        ),
         style: ButtonStyle(
           shape: MaterialStateProperty.all(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15),
             ),
           ),
-          backgroundColor: MaterialStateProperty.all(buttonColor),
+          backgroundColor: MaterialStateProperty.all(
+              Theme.of(context).colorScheme.onPrimary),
         ),
       ),
     );
@@ -283,7 +310,8 @@ class SubmitButton extends StatelessWidget {
           // },
           child: Text(
             "Regístrate",
-            style: TextStyle(fontSize: 25),
+            style: TextStyle(
+                fontSize: 25, color: Theme.of(context).colorScheme.primary),
           ),
           style: ButtonStyle(
               shape: MaterialStateProperty.all(
@@ -291,7 +319,8 @@ class SubmitButton extends StatelessWidget {
                   borderRadius: BorderRadius.circular(100),
                 ),
               ),
-              backgroundColor: MaterialStateProperty.all(buttonColor)),
+              backgroundColor: MaterialStateProperty.all(
+                  Theme.of(context).colorScheme.onPrimary)),
         ),
       ),
     );
@@ -311,7 +340,9 @@ class ImageText extends StatelessWidget {
           child: Text(
             "Escoge tu foto de perfil",
             style: TextStyle(
-                color: Colors.black, fontSize: 30, fontWeight: FontWeight.bold),
+                color: Theme.of(context).colorScheme.primary,
+                fontSize: 30,
+                fontWeight: FontWeight.bold),
             textAlign: TextAlign.left,
           )),
     );

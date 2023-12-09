@@ -24,11 +24,6 @@ class ProductDetailScreen extends StatefulWidget {
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   Map<String, dynamic> productData = {};
   Map<String, dynamic> creadorData = {};
-  // final List<String> imagePaths = [
-  //   'assets/images/tomate.jpeg',
-  //   'assets/images/tomate2.jpg',
-  //   'assets/images/tomate3.jpg',
-  // ];
   Map<String, dynamic> userData = {};
   bool _isFavoriteExists = false;
   Map<String, dynamic> favoriteData = {};
@@ -87,10 +82,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     } else {
       try {
         if (_isFavoriteExists) {
-          await borrarFavorito(userId, widget.productId);
+          await borrarFavorito(userData['_id'], widget.productId);
           Get.snackbar('Éxito', 'Producto eliminado de favoritos');
         } else {
-          await crearFavorito(userId, widget.productId);
+          await crearFavorito(userData['_id'], widget.productId);
           Get.snackbar('Éxito', 'Producto agregado a favoritos');
         }
 
@@ -172,15 +167,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         ? Container(
             margin: EdgeInsets.all(8.0),
             decoration: BoxDecoration(
-              color: Color(0xFF486D28),
+              color: Theme.of(context).colorScheme.onPrimary,
               shape: BoxShape.circle,
             ),
             child: IconButton(
               icon: Icon(
                 Icons.favorite,
-                color: Color(0xFFFFFCEA),
+                color: Theme.of(context).colorScheme.primary,
               ),
               onPressed: () async {
+                await checkFavoriteExistence();
                 await _handleFavoriteButton();
               },
             ),
@@ -188,13 +184,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         : Container(
             margin: EdgeInsets.all(8.0),
             decoration: BoxDecoration(
-              color: Color(0xFF486D28),
+              color: Theme.of(context).colorScheme.onPrimary,
               shape: BoxShape.circle,
             ),
             child: IconButton(
               icon: Icon(
                 Icons.favorite_border,
-                color: Color(0xFFFFFCEA),
+                color: Theme.of(context).colorScheme.primary,
               ),
               onPressed: () async {
                 await _handleFavoriteButton();
@@ -207,13 +203,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     return Container(
       margin: EdgeInsets.all(8.0),
       decoration: BoxDecoration(
-        color: Color(0xFF486D28),
+        color: Theme.of(context).colorScheme.onPrimary,
         shape: BoxShape.circle,
       ),
       child: IconButton(
         icon: Icon(
           Icons.arrow_back,
-          color: Color(0xFFFFFCEA),
+          color: Theme.of(context).colorScheme.primary,
         ),
         onPressed: () {
           Get.to(HomePage());
@@ -246,11 +242,11 @@ class InformationWidget extends StatelessWidget {
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               clipBehavior: Clip.hardEdge,
-              decoration: const BoxDecoration(
-                color: Color(0xFFFFFCEA),
-                borderRadius: BorderRadius.only(
-                  topLeft: const Radius.circular(20),
-                  topRight: const Radius.circular(20),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primary,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
                 ),
               ),
               child: SingleChildScrollView(
@@ -278,9 +274,12 @@ class InformationWidget extends StatelessWidget {
                       children: [
                         CircleAvatar(
                           radius: 35,
-                          backgroundImage: creadorData['profileImage'] != null
+                          backgroundImage: creadorData['profileImage'] !=
+                                      null &&
+                                  creadorData['profileImage'].isNotEmpty
                               ? NetworkImage(creadorData['profileImage']!)
                               : Image.asset('assets/images/profile.png').image,
+                          backgroundColor: Colors.transparent,
                         ),
                         SizedBox(width: 10),
                         SizedBox(height: 30),
@@ -317,7 +316,9 @@ class InformationWidget extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: 20),
-                    Divider(),
+                    Divider(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    ),
                     SizedBox(height: 10),
                     DescText(),
                     DescriptionText(productData: productData),
@@ -384,7 +385,8 @@ class ChatButton extends StatelessWidget {
         },
         child: Text(
           "Contacta",
-          style: TextStyle(fontSize: 25),
+          style: TextStyle(
+              fontSize: 25, color: Theme.of(context).colorScheme.primary),
         ),
         style: ButtonStyle(
           shape: MaterialStateProperty.all(
@@ -392,7 +394,8 @@ class ChatButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(100),
             ),
           ),
-          backgroundColor: MaterialStateProperty.all(buttonColor),
+          backgroundColor: MaterialStateProperty.all(
+              Theme.of(context).colorScheme.onPrimary),
         ),
       ),
     );
@@ -414,7 +417,7 @@ class DescText extends StatelessWidget {
           child: SizedBox(
             child: Text("Descripción",
                 style: TextStyle(
-                  color: Colors.black,
+                  color: Theme.of(context).primaryColor,
                   fontWeight: FontWeight.bold,
                   fontSize: 25,
                 )),
@@ -436,7 +439,7 @@ class PriceText extends StatelessWidget {
     int price = productData['price'] ?? 0;
 
     return Text(price != 0 ? "$price €/Kg" : "",
-        style: TextStyle(color: Color.fromARGB(255, 99, 99, 99), fontSize: 30),
+        style: TextStyle(color: Theme.of(context).shadowColor, fontSize: 30),
         textAlign: TextAlign.right);
   }
 }
@@ -455,7 +458,7 @@ class UserText extends StatelessWidget {
 
     return Text(
       username != "N/A" ? "$username" : "",
-      style: TextStyle(fontSize: 25),
+      style: TextStyle(fontSize: 25, color: Theme.of(context).primaryColor),
     );
   }
 }
@@ -475,7 +478,7 @@ class DescriptionText extends StatelessWidget {
     return Text(
       description != "N/A" ? "$description" : "",
       style: TextStyle(
-        color: Color.fromARGB(255, 99, 99, 99),
+        color: Theme.of(context).shadowColor,
         fontSize: 20,
         fontWeight: FontWeight.w200,
       ),
@@ -499,7 +502,9 @@ class NameText extends StatelessWidget {
     return Text(
       name != "N/A" ? "$name" : "",
       style: TextStyle(
-          color: Colors.black, fontSize: 50, fontWeight: FontWeight.bold),
+          color: Theme.of(context).primaryColor,
+          fontSize: 50,
+          fontWeight: FontWeight.bold),
     );
   }
 }
@@ -523,9 +528,13 @@ class _ImagesCarouselState extends State<ImagesCarousel> {
 
   @override
   Widget build(BuildContext context) {
-    List<String?> imageUrls = [
-      widget.productData['productImage'],
-    ];
+    List<String?> imageUrls =
+        List<String?>.from(widget.productData['productImage'] ?? []);
+
+    // Agrega 'assets/images/profile.png' si la lista de imágenes está vacía
+    if (imageUrls.isEmpty) {
+      imageUrls.add('assets/images/profile.png');
+    }
 
     return Column(
       children: [
@@ -550,8 +559,7 @@ class _ImagesCarouselState extends State<ImagesCarousel> {
                       (imageUrl) => Container(
                         width: MediaQuery.of(context).size.width,
                         child: Image.network(
-                          widget.productData['productImage'] ??
-                              'assets/images/profile.png',
+                          imageUrl ?? 'assets/images/profile.png',
                           fit: BoxFit.cover,
                         ),
                       ),
