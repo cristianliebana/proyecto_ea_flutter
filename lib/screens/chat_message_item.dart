@@ -6,11 +6,13 @@ class ChatMessageItem extends StatelessWidget {
   final bool isMeChatting;
   final String messageBody;
   final bool isReviewLink;
+  final String userId2;
 
   ChatMessageItem({
     required this.isMeChatting,
     required this.messageBody,
     required this.isReviewLink,
+    required this.userId2,
   });
 
   @override
@@ -35,7 +37,7 @@ class ChatMessageItem extends StatelessWidget {
                   bottomRight: Radius.circular(12),
                 ),
           color: isReviewLink
-              ? Color.fromARGB(255, 34, 230, 184) // Color para mensajes de revisión
+              ? Color.fromARGB(255, 34, 230, 184)
               : isMeChatting
                   ? Color(0xFF486D28)
                   : Color.fromARGB(255, 97, 76, 61),
@@ -46,7 +48,7 @@ class ChatMessageItem extends StatelessWidget {
                 onTap: () {
                   if (!isMeChatting) {
                     print("Review Link Tapped");
-                    Get.to(ReviewScreen());
+                    Get.to(ReviewScreen(userId2: userId2));
                   }
                 },
                 child: Text(
@@ -55,7 +57,7 @@ class ChatMessageItem extends StatelessWidget {
                     fontSize: 15,
                     fontWeight: FontWeight.w500,
                     color: isReviewLink
-                        ? Color(0xFFFFFCEA) // Cambiado el color del texto para mensajes de revisión
+                        ? Color(0xFFFFFCEA)
                         : isMeChatting
                             ? Color(0xFFFFFCEA)
                             : Colors.black,

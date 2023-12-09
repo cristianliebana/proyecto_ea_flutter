@@ -11,11 +11,13 @@ class ChatMessage {
   final bool isMeChatting;
   final String messageBody;
   final bool isReviewLink;
+  final String userId2;
 
   ChatMessage({
     required this.isMeChatting,
     required this.messageBody,
-    required this.isReviewLink
+    required this.isReviewLink,
+    required this.userId2
   });
 }
 
@@ -56,6 +58,7 @@ class _IndividualChatState extends State<IndividualChat> {
           isMeChatting: isMe,
           messageBody: message,
           isReviewLink: data['isReviewLink'] ?? false,
+          userId2: userData2['_id']
         ));
       });
     });
@@ -221,6 +224,7 @@ class _IndividualChatState extends State<IndividualChat> {
                           isMeChatting: message.isMeChatting,
                           messageBody: message.messageBody,
                           isReviewLink: message.isReviewLink,
+                          userId2: message.userId2,
                         ),
                       ),
                   ],
