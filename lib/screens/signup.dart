@@ -215,7 +215,7 @@ class NameTextFiled extends StatelessWidget {
         delay: Duration(milliseconds: 75),
         child: RepTextFiled(
           icon: LineIcons.user,
-          text: "Nombre Completo",
+          text: "Nombre completo",
           controller: signUpController.fullnameController,
         ));
   }

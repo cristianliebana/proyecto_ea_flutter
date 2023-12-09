@@ -7,6 +7,7 @@ import 'package:proyecto_flutter/api/services/token_service.dart';
 import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
 import 'package:get/get.dart';
+import 'package:proyecto_flutter/screens/on_boarding.dart';
 import 'package:proyecto_flutter/screens/update_user.dart';
 import 'package:proyecto_flutter/screens/user_products.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
@@ -42,7 +43,6 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _onRemoveTokenPressed() {
-    
     TokenService.removeToken();
   }
 
@@ -123,7 +123,9 @@ class _ProfilePageState extends State<ProfilePage> {
             ProfileMenuWidget(
                 title: "Información",
                 icon: LineAwesomeIcons.info,
-                onPress: () {}),
+                onPress: () {
+                  Get.to(ConcentricTransitionPage());
+                }),
             ProfileMenuWidget(
                 title: "Cerrar sesión",
                 icon: LineAwesomeIcons.alternate_sign_out,
