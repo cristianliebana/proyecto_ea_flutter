@@ -18,25 +18,25 @@ class MapPageController extends GetxController {
     loadProducts();
   }
 
-Future<void> loadProducts() async {
-  try {
-    bool morePagesAvailable = true;
-    int currentPage = 1;
+  Future<void> loadProducts() async {
+    try {
+      bool morePagesAvailable = true;
+      int currentPage = 1;
 
-    while (morePagesAvailable) {
-      var products = await ProductService.getProducts(currentPage);
+      while (morePagesAvailable) {
+        var products = await ProductService.getProducts(currentPage);
 
-      if (products.isNotEmpty) {
-        listProducts.addAll(products);
-        currentPage++;
-      } else {
-        morePagesAvailable = false;
+        if (products.isNotEmpty) {
+          listProducts.addAll(products);
+          currentPage++;
+        } else {
+          morePagesAvailable = false;
+        }
       }
+    } catch (e) {
+      print("Error loading products: $e");
     }
-  } catch (e) {
-    print("Error loading products: $e");
   }
-}
 }
 
 class MapPageView extends StatefulWidget {
@@ -46,101 +46,104 @@ class MapPageView extends StatefulWidget {
   _MapPageViewState createState() => _MapPageViewState();
 }
 
-class _MapPageViewState extends State<MapPageView>{
+class _MapPageViewState extends State<MapPageView> {
   final MapPageController controller = Get.put(MapPageController());
 
-@override
-Widget build(BuildContext context) {
-  return Scaffold(
-    backgroundColor: Theme.of(context).colorScheme.primary,
-    bottomNavigationBar: CustomBottomNavigationBar(currentIndex: 1),
-    body: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const SizedBox(height: 50),
-        Expanded(
-          flex: 9,
-          child: Row(children: <Widget>[
-            Expanded(
-              flex: 9,
-              child: FutureBuilder(
-                future: controller.loadProducts(), // Cambia a FutureBuilder
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    final currentPosition = controller.currentPosition.value;
-                    if (currentPosition == null) {
-                      return Center(
-                        child: Text('noLocation'.tr),
-                      );
-                    }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.primary,
+      bottomNavigationBar: CustomBottomNavigationBar(currentIndex: 1),
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Expanded(
+            flex: 9,
+            child: Row(children: <Widget>[
+              Expanded(
+                flex: 9,
+                child: FutureBuilder(
+                  future: controller.loadProducts(), // Cambia a FutureBuilder
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      final currentPosition = controller.currentPosition.value;
+                      if (currentPosition == null) {
+                        return Center(
+                          child: Text('noLocation'.tr),
+                        );
+                      }
 
-                    final markers = controller.listProducts.map((product) {
-                      final latitude = product.location?.latitude;
-                      final longitude = product.location?.longitude;
+                      final markers = controller.listProducts.map((product) {
+                        final latitude = product.location?.latitude;
+                        final longitude = product.location?.longitude;
 
-                      return Marker(
-                        width: 80.0,
-                        height: 80.0,
-                        point: LatLng(latitude ?? 41.2833, longitude ?? 1.9667),
-                        builder: (ctx) => GestureDetector(
-                          onTap: () {
-                            if (product.id != null) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ProductDetailScreen(productId: product.id!),
-                                ),
-                              );
-                            }
-                          },
-                          child: const Icon(
-                            Icons.location_on,
+                        return Marker(
+                          width: 80.0,
+                          height: 80.0,
+                          point:
+                              LatLng(latitude ?? 41.2833, longitude ?? 1.9667),
+                          builder: (ctx) => GestureDetector(
+                            onTap: () {
+                              if (product.id != null) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ProductDetailScreen(
+                                        productId: product.id!),
+                                  ),
+                                );
+                              }
+                            },
+                            child: const Icon(
+                              Icons.location_on,
+                              size: 30.0,
+                              color: Color(0xFF486D28),
+                            ),
+                          ),
+                        );
+                      }).toList();
+
+                      markers.add(
+                        Marker(
+                          width: 80.0,
+                          height: 80.0,
+                          point: LatLng(currentPosition.latitude,
+                              currentPosition.longitude),
+                          builder: (ctx) => const Icon(
+                            Icons.my_location,
                             size: 30.0,
                             color: Color(0xFF486D28),
                           ),
                         ),
                       );
-                    }).toList();
 
-                    markers.add(
-                      Marker(
-                        width: 80.0,
-                        height: 80.0,
-                        point: LatLng(currentPosition.latitude, currentPosition.longitude),
-                        builder: (ctx) => const Icon(
-                          Icons.my_location,
-                          size: 30.0,
-                          color: Color(0xFF486D28),
+                      return FlutterMap(
+                        options: MapOptions(
+                          center: LatLng(currentPosition.latitude,
+                              currentPosition.longitude),
+                          zoom: 10,
                         ),
-                      ),
-                    );
-
-                    return FlutterMap(
-                      options: MapOptions(
-                        center: LatLng(currentPosition.latitude, currentPosition.longitude),
-                        zoom: 10,
-                      ),
-                      children: [
-                        TileLayer(
-                          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                          userAgentPackageName: 'com.example.app',
-                        ),
-                        MarkerLayer(
-                          markers: markers,
-                        )
-                      ],
-                    );
-                  } else {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                },
+                        children: [
+                          TileLayer(
+                            urlTemplate:
+                                'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                            userAgentPackageName: 'com.example.app',
+                          ),
+                          MarkerLayer(
+                            markers: markers,
+                          )
+                        ],
+                      );
+                    } else {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                  },
+                ),
               ),
-            ),
-          ]),
-        ),
-      ],
-    ),
-  );
+            ]),
+          ),
+        ],
+      ),
+    );
+  }
 }
-}
-

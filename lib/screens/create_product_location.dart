@@ -43,11 +43,12 @@ class _CreateProductLocationState extends State<CreateProductLocation> {
       body: Stack(
         children: [
           _buildMap(),
+          _buildTitleWidget(),
           _buildBackButton(),
+          _buildLocationButton(),
+          _buildBottomNavigationBar(),
         ],
       ),
-      floatingActionButton: _buildLocationButton(),
-      bottomNavigationBar: _buildBottomNavigationBar(),
     );
   }
 
@@ -117,42 +118,92 @@ class _CreateProductLocationState extends State<CreateProductLocation> {
     );
   }
 
+  Widget _buildTitleWidget() {
+    return Positioned(
+      top: 0.0, // Ajusta la posición según sea necesario
+      left: 0.0,
+      right: 0.0,
+      child: Align(
+        alignment: Alignment.topCenter,
+        child: Container(
+          margin: EdgeInsets.symmetric(horizontal: 80.0, vertical: 8.0),
+          child: Wrap(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Color(0xFF486D28),
+                  borderRadius: BorderRadius.circular(
+                      10.0), // Ajusta el radio según sea necesario
+                ),
+                padding: EdgeInsets.all(
+                    8.0), // Ajusta el padding según sea necesario
+                child: Text(
+                  '¿Dónde vas a vender el producto?',
+                  style: TextStyle(
+                    color: Color(0xFFFFFCEA),
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildLocationButton() {
-    return FloatingActionButton(
-      onPressed: () {
-        _getCurrentUserLocation();
-        _mapController.move(_currentLocation, 13.0);
-      },
-      child: Icon(Icons.my_location),
-      backgroundColor: Color(0xFF486D28),
+    return Positioned(
+      bottom: 100.0,
+      right: 16.0,
+      child: FloatingActionButton(
+        onPressed: () {
+          _getCurrentUserLocation();
+          _mapController.move(_currentLocation, 13.0);
+        },
+        child: Icon(Icons.my_location,
+            color: Theme.of(context).colorScheme.primary),
+        backgroundColor: Color(0xFF486D28),
+      ),
     );
   }
 
   Widget _buildBottomNavigationBar() {
-    return Container(
-      padding: EdgeInsets.all(20),
-      child: ElevatedButton(
-        onPressed: () {
-          widget.productData['location'] = {
-            'latitude': _currentLocation.latitude,
-            'longitude': _currentLocation.longitude,
-          };
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    CreateProductImage(productData: widget.productData)),
-          );
-        },
-        child: Text(
-          "Guardar Ubicación",
-          style: TextStyle(fontSize: 20),
-        ),
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(buttonColor),
-          shape: MaterialStateProperty.all(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
+    return Positioned(
+      bottom: 0,
+      left: 0,
+      right: 0,
+      child: Container(
+        margin: EdgeInsets.all(20.0),
+        child: ElevatedButton(
+          onPressed: () {
+            widget.productData['location'] = {
+              'latitude': _currentLocation.latitude,
+              'longitude': _currentLocation.longitude,
+            };
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      CreateProductImage(productData: widget.productData)),
+            );
+          },
+          child: Container(
+            padding: EdgeInsets.symmetric(
+                vertical: 16), // Ajusta la altura del botón aquí
+            child: Text(
+              "Guardar Ubicación",
+              style: TextStyle(
+                  fontSize: 20, color: Theme.of(context).colorScheme.primary),
+            ),
+          ),
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(buttonColor),
+            shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30),
+              ),
             ),
           ),
         ),
