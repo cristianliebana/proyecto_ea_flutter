@@ -8,11 +8,11 @@ import 'package:proyecto_flutter/screens/favorites.dart';
 import 'package:proyecto_flutter/screens/home.dart';
 import 'package:proyecto_flutter/screens/map.dart';
 import 'package:proyecto_flutter/screens/profile.dart';
-import 'package:proyecto_flutter/bindings/map_Bindings.dart';
 import 'package:get/get.dart';
 
 class CustomBottomNavigationBarController extends GetxController {
   String userId = '';
+   final MapPageController mapPageController = Get.find<MapPageController>();
 
   void updateIndex(int index) {
     switch (index) {
@@ -21,6 +21,7 @@ class CustomBottomNavigationBarController extends GetxController {
         break;
       case 1:
         Get.to(const MapPageView(), transition: Transition.noTransition);
+        mapPageController.loadProducts();
         break;
       case 2:
         Get.to(CreateProduct(), transition: Transition.noTransition);
