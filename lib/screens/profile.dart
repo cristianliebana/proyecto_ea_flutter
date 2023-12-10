@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:proyecto_flutter/screens/on_boarding.dart';
 import 'package:proyecto_flutter/screens/update_user.dart';
 import 'package:proyecto_flutter/screens/user_products.dart';
+import 'package:proyecto_flutter/screens/user_profile.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
 import 'package:proyecto_flutter/utils/theme_provider.dart';
 import 'package:proyecto_flutter/widget/nav_bar.dart';
@@ -107,12 +108,14 @@ class _ProfilePageState extends State<ProfilePage> {
             ProfileMenuWidget(
                 title: "Ajustes", icon: LineAwesomeIcons.cog, onPress: () {}),
             ProfileMenuWidget(
-                title: "Placeholder",
-                icon: LineAwesomeIcons.question,
-                onPress: () {}),
+                title: "Perfil",
+                icon: LineAwesomeIcons.user,
+                onPress: () {
+                  Get.to(UserProfileScreen());
+                }),
             ProfileMenuWidget(
                 title: "Mis Productos",
-                icon: LineAwesomeIcons.user_check,
+                icon: LineAwesomeIcons.fruit_apple,
                 onPress: () {
                   Get.to(UserProductsScreen());
                 }),
