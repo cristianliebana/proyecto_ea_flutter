@@ -39,7 +39,7 @@ class ChatMessageItem extends StatelessWidget {
           color: isReviewLink
               ? Color.fromARGB(255, 34, 230, 184)
               : isMeChatting
-                  ? Color(0xFF486D28)
+                  ? Theme.of(context).cardColor
                   : Color.fromARGB(255, 97, 76, 61),
         ),
         margin: EdgeInsets.all(10),

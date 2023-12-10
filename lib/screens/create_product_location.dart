@@ -100,13 +100,13 @@ class _CreateProductLocationState extends State<CreateProductLocation> {
       left: 8.0,
       child: Container(
         decoration: BoxDecoration(
-          color: Color(0xFF486D28),
+          color: Theme.of(context).colorScheme.onPrimary,
           shape: BoxShape.circle,
         ),
         child: IconButton(
           icon: Icon(
             Icons.arrow_back,
-            color: Color(0xFFFFFCEA),
+            color: Theme.of(context).colorScheme.primary,
           ),
           onPressed: () {
             Get.to(CreateProductDetail(
@@ -131,7 +131,7 @@ class _CreateProductLocationState extends State<CreateProductLocation> {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: Color(0xFF486D28),
+                  color: Theme.of(context).colorScheme.onPrimary,
                   borderRadius: BorderRadius.circular(
                       10.0), // Ajusta el radio según sea necesario
                 ),
@@ -140,7 +140,7 @@ class _CreateProductLocationState extends State<CreateProductLocation> {
                 child: Text(
                   '¿Dónde vas a vender el producto?',
                   style: TextStyle(
-                    color: Color(0xFFFFFCEA),
+                    color: Theme.of(context).colorScheme.primary,
                     fontSize: 18.0,
                     fontWeight: FontWeight.bold,
                   ),
@@ -164,7 +164,7 @@ class _CreateProductLocationState extends State<CreateProductLocation> {
         },
         child: Icon(Icons.my_location,
             color: Theme.of(context).colorScheme.primary),
-        backgroundColor: Color(0xFF486D28),
+        backgroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
     );
   }
@@ -199,7 +199,8 @@ class _CreateProductLocationState extends State<CreateProductLocation> {
             ),
           ),
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(buttonColor),
+            backgroundColor: MaterialStateProperty.all(
+                Theme.of(context).colorScheme.onPrimary),
             shape: MaterialStateProperty.all(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30),
