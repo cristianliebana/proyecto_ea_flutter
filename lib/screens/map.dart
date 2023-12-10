@@ -78,8 +78,8 @@ class _MapPageViewState extends State<MapPageView> {
     final longitude = product.location?.longitude;
 
     return Marker(
-      width: 80.0,
-      height: 80.0,
+      width: 30.0,
+      height: 30.0,
       point: LatLng(latitude ?? 41.2833, longitude ?? 1.9667),
       builder: (ctx) => GestureDetector(
         onTap: () {
@@ -124,8 +124,8 @@ class _MapPageViewState extends State<MapPageView> {
 
     markers.add(
       Marker(
-        width: 30.0,
-        height: 30.0,
+        width: 80.0,
+        height: 80.0,
         point: LatLng(currentPosition.latitude, currentPosition.longitude),
         builder: (ctx) => const Icon(
           Icons.my_location,
