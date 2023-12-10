@@ -40,7 +40,7 @@ class MapPageController extends GetxController {
 }
 
 class MapPageView extends StatefulWidget {
-  const MapPageView({super.key});
+  const MapPageView({Key? key});
 
   @override
   _MapPageViewState createState() => _MapPageViewState();
@@ -54,96 +54,101 @@ class _MapPageViewState extends State<MapPageView> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primary,
       bottomNavigationBar: CustomBottomNavigationBar(currentIndex: 1),
-      body: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Expanded(
-            flex: 9,
-            child: Row(children: <Widget>[
+      body: Obx(() => Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
               Expanded(
                 flex: 9,
-                child: FutureBuilder(
-                  future: controller.loadProducts(), // Cambia a FutureBuilder
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      final currentPosition = controller.currentPosition.value;
-                      if (currentPosition == null) {
-                        return Center(
-                          child: Text('noLocation'.tr),
-                        );
-                      }
-
-                      final markers = controller.listProducts.map((product) {
-                        final latitude = product.location?.latitude;
-                        final longitude = product.location?.longitude;
-
-                        return Marker(
-                          width: 80.0,
-                          height: 80.0,
-                          point:
-                              LatLng(latitude ?? 41.2833, longitude ?? 1.9667),
-                          builder: (ctx) => GestureDetector(
-                            onTap: () {
-                              if (product.id != null) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ProductDetailScreen(
-                                        productId: product.id!),
-                                  ),
-                                );
-                              }
-                            },
-                            child: const Icon(
-                              Icons.location_on,
-                              size: 30.0,
-                              color: Color(0xFF486D28),
-                            ),
-                          ),
-                        );
-                      }).toList();
-
-                      markers.add(
-                        Marker(
-                          width: 80.0,
-                          height: 80.0,
-                          point: LatLng(currentPosition.latitude,
-                              currentPosition.longitude),
-                          builder: (ctx) => const Icon(
-                            Icons.my_location,
-                            size: 30.0,
-                            color: Color(0xFF486D28),
-                          ),
-                        ),
-                      );
-
-                      return FlutterMap(
-                        options: MapOptions(
-                          center: LatLng(currentPosition.latitude,
-                              currentPosition.longitude),
-                          zoom: 10,
-                        ),
-                        children: [
-                          TileLayer(
-                            urlTemplate:
-                                'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                            userAgentPackageName: 'com.example.app',
-                          ),
-                          MarkerLayer(
-                            markers: markers,
-                          )
-                        ],
-                      );
-                    } else {
-                      return Center(child: CircularProgressIndicator());
-                    }
-                  },
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      flex: 9,
+                      child: buildMap(),
+                    ),
+                  ],
                 ),
               ),
-            ]),
+            ],
+          )),
+    );
+  }
+
+  Marker createProductMarker(Product product) {
+    final latitude = product.location?.latitude;
+    final longitude = product.location?.longitude;
+
+    return Marker(
+      width: 80.0,
+      height: 80.0,
+      point: LatLng(latitude ?? 41.2833, longitude ?? 1.9667),
+      builder: (ctx) => GestureDetector(
+        onTap: () {
+          if (product.id != null) {
+            Navigator.push(
+              ctx,
+              MaterialPageRoute(
+                builder: (context) =>
+                    ProductDetailScreen(productId: product.id!),
+              ),
+            );
+          }
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            image: DecorationImage(
+              image: product.productImage != null &&
+                      product.productImage!.isNotEmpty
+                  ? NetworkImage(product.productImage!.first)
+                  : AssetImage('assets/images/profile.png')
+                      as ImageProvider, // Use the image URL
+              fit: BoxFit.cover,
+            ),
           ),
-        ],
+        ),
       ),
+    );
+  }
+
+  Widget buildMap() {
+    final currentPosition = controller.currentPosition.value;
+    if (currentPosition == null) {
+      return Center(
+        child: Text('noLocation'.tr),
+      );
+    }
+
+    final markers = controller.listProducts.map((product) {
+      return createProductMarker(product);
+    }).toList();
+
+    markers.add(
+      Marker(
+        width: 30.0,
+        height: 30.0,
+        point: LatLng(currentPosition.latitude, currentPosition.longitude),
+        builder: (ctx) => const Icon(
+          Icons.my_location,
+          size: 30.0,
+          color: Color(0xFF486D28),
+        ),
+      ),
+    );
+
+    return FlutterMap(
+      options: MapOptions(
+        center: LatLng(currentPosition.latitude, currentPosition.longitude),
+        zoom: 12,
+      ),
+      children: [
+        TileLayer(
+          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+          userAgentPackageName: 'com.example.app',
+        ),
+        MarkerLayer(
+          markers: markers,
+        )
+      ],
     );
   }
 }
