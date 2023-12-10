@@ -13,8 +13,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late List<Product> productList = [];
+  late List<Product> filteredList = [];
   late ScrollController _scrollController;
   bool _loading = false;
+  TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
@@ -28,6 +30,8 @@ class _HomePageState extends State<HomePage> {
     List<Product> products = await ProductService.getProducts(page);
     setState(() {
       productList = products;
+      filteredList =
+          products; // Inicializa la lista filtrada con todos los productos
     });
   }
 
@@ -44,15 +48,32 @@ class _HomePageState extends State<HomePage> {
         _loading = true;
       });
 
-      int nextPage = (productList.length / 8).ceil() + 1;
+      int nextPage = (filteredList.length / 50).ceil() + 1;
       List<Product> nextPageProducts =
           await ProductService.getProducts(nextPage);
 
       setState(() {
         productList.addAll(nextPageProducts);
+        filteredList = productList
+            .where((product) =>
+                product.name
+                    ?.toLowerCase()
+                    .contains(_searchController.text.toLowerCase()) ??
+                false)
+            .toList();
         _loading = false;
       });
     }
+  }
+
+  void _filterProducts(String searchTerm) {
+    setState(() {
+      filteredList = productList
+          .where((product) =>
+              product.name?.toLowerCase().contains(searchTerm.toLowerCase()) ??
+              false)
+          .toList();
+    });
   }
 
   @override
@@ -71,7 +92,12 @@ class _HomePageState extends State<HomePage> {
           SliverList(
             delegate: SliverChildListDelegate([
               SizedBox(height: 30),
-              Container(child: SearchBar()),
+              Container(
+                child: SearchBar(
+                  onSearch: _filterProducts,
+                  searchController: _searchController,
+                ),
+              ),
             ]),
           ),
           SliverList(
@@ -106,13 +132,13 @@ class _HomePageState extends State<HomePage> {
             ),
             delegate: SliverChildBuilderDelegate(
               (context, index) {
-                if (index < productList.length) {
-                  return ProductsVerticalItem(product: productList[index]);
+                if (index < filteredList.length) {
+                  return ProductsVerticalItem(product: filteredList[index]);
                 } else {
                   return _loading ? CircularProgressIndicator() : Container();
                 }
               },
-              childCount: productList.length + 1,
+              childCount: filteredList.length + 1,
             ),
           )
         ],
@@ -122,7 +148,12 @@ class _HomePageState extends State<HomePage> {
 }
 
 class SearchBar extends StatelessWidget {
-  const SearchBar({Key? key}) : super(key: key);
+  final Function(String) onSearch;
+  final TextEditingController searchController;
+
+  const SearchBar(
+      {Key? key, required this.onSearch, required this.searchController})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -131,6 +162,7 @@ class SearchBar extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(),
         child: TextField(
+          controller: searchController,
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w400,
@@ -159,6 +191,7 @@ class SearchBar extends StatelessWidget {
               borderRadius: BorderRadius.circular(100),
             ),
           ),
+          onChanged: onSearch,
         ),
       ),
     );
