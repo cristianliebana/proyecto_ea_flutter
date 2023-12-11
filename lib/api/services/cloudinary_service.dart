@@ -29,7 +29,7 @@ class CloudinaryServices {
   ) async {
     try {
       // print('111111111');
-      await parseStringToMap(assetsFileName: '.env');
+      // await parseStringToMap(assetsFileName: '.env');
       // print('22222222222222');
       final cloudinary = Cloudinary.signedConfig(
         apiKey: '992747211431623',
