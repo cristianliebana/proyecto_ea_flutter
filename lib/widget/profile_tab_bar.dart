@@ -12,6 +12,7 @@ import 'package:get/get.dart';
 import 'package:proyecto_flutter/screens/review.dart';
 import 'package:proyecto_flutter/screens/user_products.dart';
 import 'package:proyecto_flutter/screens/user_profile.dart';
+import 'package:proyecto_flutter/screens/user_profile_reviews.dart';
 
 
 class ProfileTabBarController extends GetxController {
@@ -24,7 +25,7 @@ class ProfileTabBarController extends GetxController {
         Get.to(UserProfileScreen(), transition: Transition.noTransition);
         break;
       case 1:
-        Get.to(ReviewScreen(userId2: userId2));
+        Get.to(UserProfileReviewsScreen(),transition: Transition.noTransition);
         break;
       default:
         break;
