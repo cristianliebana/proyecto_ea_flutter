@@ -1,5 +1,8 @@
 import 'package:proyecto_flutter/api/utils/http_api.dart';
 
+import '../models/rating_model.dart';
+
+
 class RatingService {
   static Future<ApiResponse> createRating(Map<String, dynamic> rating) async {
     ApiResponse response = ApiResponse(data: {}, statusCode: 404);
@@ -46,5 +49,22 @@ class RatingService {
       return response;
     }
   }
-}
 
+ static Future<List<Rating>> getUserRatings(String userId) async {
+    ApiResponse response = ApiResponse(data: {}, statusCode: 404);
+    response = await Api().get('/ratings/readuserratings/$userId');
+
+    if (response.statusCode == 200) {
+      List<Rating> ratingList = [];
+      List<dynamic> ratingsData = response.data['docs'];
+      for (var ratingData in ratingsData) {
+        Rating rating = Rating.fromJson(ratingData);
+        ratingList.add(rating);
+      }
+      return ratingList;
+    } else {
+      print('Error en la solicitud: ${response.statusCode}');
+      return [];
+    }
+  }
+}

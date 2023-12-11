@@ -200,7 +200,7 @@ class AnimationFarmer extends StatelessWidget {
       width: double.infinity,
       height: 200,
       child: Lottie.asset(
-        "assets/json/animationGranjero.json",
+        "assets/json/AnimationGranjero.json",
       ),
     );
   }
