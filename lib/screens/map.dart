@@ -152,4 +152,3 @@ class _MapPageViewState extends State<MapPageView> {
     );
   }
 }
-

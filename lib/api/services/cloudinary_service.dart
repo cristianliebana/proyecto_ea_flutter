@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_type_check, prefer_typing_uninitialized_variables
+
 import 'package:cloudinary/cloudinary.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';

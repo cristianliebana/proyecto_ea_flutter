@@ -11,6 +11,7 @@ import 'package:proyecto_flutter/utils/constants.dart';
 import 'package:proyecto_flutter/utils/theme_provider.dart';
 import 'package:proyecto_flutter/widget/rep_textfiled.dart';
 import 'package:proyecto_flutter/widget/socket_manager.dart';
+import 'package:proyecto_flutter/widget/version.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
@@ -29,9 +30,9 @@ class LoginScreen extends StatelessWidget {
               children: [
                 TopImage(),
                 //LoginText(),
-                SizedBox(height: 10),
+                SizedBox(height: 5),
                 EmailTextFiled(loginController: loginController),
-                SizedBox(height: 20),
+                SizedBox(height: 15),
                 PasswordTextFiled(loginController: loginController),
                 ForgotText(),
                 SizedBox(height: 15),
@@ -39,7 +40,9 @@ class LoginScreen extends StatelessWidget {
                 SizedBox(height: 20),
                 OrText(),
                 GoogleLoginButton(),
-                RegisterText()
+                RegisterText(),
+                SizedBox(height: 5),
+                const AppVersionText(),
               ],
             ),
           ),

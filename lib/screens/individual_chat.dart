@@ -5,7 +5,7 @@ import 'package:proyecto_flutter/api/utils/http_api.dart';
 import 'package:proyecto_flutter/screens/chat.dart';
 import 'package:proyecto_flutter/screens/chat_message_item.dart';
 import 'package:proyecto_flutter/widget/socket_manager.dart';
-import 'package:socket_io_client/socket_io_client.dart' as io;
+//import 'package:socket_io_client/socket_io_client.dart' as io;
 
 class ChatMessage {
   final bool isMeChatting;

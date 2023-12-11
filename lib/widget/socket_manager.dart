@@ -9,6 +9,7 @@ class SocketManager {
 
   SocketManager._internal() {
     connect('http://localhost:9090');
+    /* connect('http://147.83.7.157:9090'); Production */
   }
 
   late io.Socket _socket;
@@ -22,7 +23,7 @@ class SocketManager {
       'transports': ['websocket'],
     });
 
-        _socket.on('chat message', (data) {
+    _socket.on('chat message', (data) {
       if (_messageHandler != null) {
         _messageHandler!(data);
       }
@@ -34,12 +35,14 @@ class SocketManager {
     _socket.connect();
   }
 
-    void setMessageHandler(void Function(dynamic) handler) {
+  void setMessageHandler(void Function(dynamic) handler) {
     _messageHandler = handler;
   }
-    void joinRoom(String userId, String roomId) {
+
+  void joinRoom(String userId, String roomId) {
     _socket.emit('join room', {'userId': userId, 'roomId': roomId});
   }
+
   void leaveRoom(String userId, String roomId) {
     _socket.emit('leave room', {'userId': userId, 'roomId': roomId});
   }
