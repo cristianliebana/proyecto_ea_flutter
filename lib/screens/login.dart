@@ -164,7 +164,7 @@ class OrText extends StatelessWidget {
               Container(
                   width: 75, height: 0.5, color: Theme.of(context).canvasColor),
               Text(
-                " Otros métodos de autenticación ",
+                " Otros métodos de autenticación",
                 style: TextStyle(
                     color: Theme.of(context).canvasColor,
                     fontSize: 20,
