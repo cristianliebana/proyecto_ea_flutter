@@ -63,6 +63,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             style: TextStyle(color: Theme.of(context).colorScheme.primary)),
         backgroundColor: Theme.of(context).colorScheme.onPrimary,
         centerTitle: true,
+        automaticallyImplyLeading: false,
         iconTheme: IconThemeData(
           color: Theme.of(context).colorScheme.primary,
         ),

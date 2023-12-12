@@ -26,7 +26,7 @@ class LoginScreen extends StatelessWidget {
             margin: EdgeInsets.all(15),
             width: gWidth,
             height: gHeight,
-            child: Column(
+            child: Wrap(
               children: [
                 TopImage(),
                 //LoginText(),
