@@ -118,10 +118,14 @@ class _MapPageViewState extends State<MapPageView> {
 
   Widget buildMap() {
     final currentPosition = controller.currentPosition.value;
-    if (currentPosition == null) {
-      return Center(
-        child: Text('noLocation'.tr),
-      );
+
+    final fallbackPosition =
+        LatLng(41.2833, 1.9667);
+    LatLng mapCenter;
+    if (currentPosition != null) {
+      mapCenter = LatLng(currentPosition.latitude, currentPosition.longitude);
+    } else {
+      mapCenter = fallbackPosition;
     }
 
     final markers = controller.listProducts.map((product) {
@@ -132,7 +136,7 @@ class _MapPageViewState extends State<MapPageView> {
       Marker(
         width: 80.0,
         height: 80.0,
-        point: LatLng(currentPosition.latitude, currentPosition.longitude),
+        point: mapCenter,
         builder: (ctx) => const Icon(
           Icons.my_location,
           size: 30.0,
@@ -143,7 +147,7 @@ class _MapPageViewState extends State<MapPageView> {
 
     return FlutterMap(
       options: MapOptions(
-        center: LatLng(currentPosition.latitude, currentPosition.longitude),
+        center: mapCenter,
         zoom: 12,
       ),
       children: [
@@ -153,7 +157,7 @@ class _MapPageViewState extends State<MapPageView> {
         ),
         MarkerLayer(
           markers: markers,
-        )
+        ),
       ],
     );
   }

@@ -15,27 +15,27 @@ class ConcentricTransitionPage extends StatefulWidget {
 class _ConcentricTransitionPageState extends State<ConcentricTransitionPage> {
   List<ConcentricModel> concentrics = [
     ConcentricModel(
-      lottie: "assets/onboard/hello.json",
+      lottie: "assets/assets/onboard/hello.json",
       text: "¡Bienvenido a\nKM.0 Market!",
     ),
     ConcentricModel(
-      lottie: "assets/onboard/productos.json",
+      lottie: "assets/assets/onboard/productos.json",
       text: "Aquí podrás publicar\ny encontrar productos frescos de proximidad",
     ),
     ConcentricModel(
-      lottie: "assets/onboard/like.json",
+      lottie: "assets/assets/onboard/like.json",
       text: "Guarda tus productos\nfavoritos y contacta\ncon el vendedor",
     ),
     ConcentricModel(
-      lottie: "assets/onboard/opiniones.json",
+      lottie: "assets/assets/onboard/opiniones.json",
       text: "Tienes la opción de compartir opiniones mediante reseñas 🚀",
     ),
     ConcentricModel(
-      lottie: "assets/onboard/mapa.json",
+      lottie: "assets/assets/onboard/mapa.json",
       text: "¡Explora nuevos productos con el mapa!",
     ),
     ConcentricModel(
-      lottie: "assets/onboard/mundo.json",
+      lottie: "assets/assets/onboard/mundo.json",
       text:
           "¡Dale vida a los productos próximos a caducar!\n¡Juntos, ayudaremos al mundo!",
     ),

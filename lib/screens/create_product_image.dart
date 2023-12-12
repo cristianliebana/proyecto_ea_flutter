@@ -10,7 +10,6 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:lottie/lottie.dart';
-
 import 'package:proyecto_flutter/api/services/cloudinary_service.dart';
 import 'package:proyecto_flutter/api/services/product_service.dart';
 import 'package:proyecto_flutter/api/services/token_service.dart';

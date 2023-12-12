@@ -4,10 +4,12 @@ import 'package:get/get.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:proyecto_flutter/bindings/map_Bindings.dart';
 import 'package:proyecto_flutter/screens/login.dart';
+import 'package:proyecto_flutter/screens/map.dart';
 import 'package:proyecto_flutter/utils/theme_provider.dart';
 
 void main() async {
   Get.put(ThemeProvider());
+  Get.put(MapPageController());
   await Get.find<ThemeProvider>().loadTheme();
   runApp(const MyApp());
 }
