@@ -65,7 +65,6 @@ class _UserProductsScreenState extends State<UserProductsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: CustomBottomNavigationBar(currentIndex: 0),
       appBar: AppBar(
         title: Text('Mis productos publicados',
             style: TextStyle(color: Theme.of(context).colorScheme.primary)),
