@@ -3,6 +3,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:proyecto_flutter/api/services/token_service.dart';
 import 'package:proyecto_flutter/screens/product_detail.dart';
 import 'package:proyecto_flutter/widget/nav_bar.dart';
 import 'package:proyecto_flutter/api/services/product_service.dart';
@@ -15,7 +16,12 @@ class MapPageController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    checkAuthAndNavigate();
     loadProducts();
+  }
+
+  Future<void> checkAuthAndNavigate() async {
+    await TokenService.loggedIn();
   }
 
   Future<void> loadProducts() async {

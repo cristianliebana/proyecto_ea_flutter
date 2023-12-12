@@ -12,7 +12,7 @@ import 'package:get/get.dart';
 
 class CustomBottomNavigationBarController extends GetxController {
   String userId = '';
-   final MapPageController mapPageController = Get.find<MapPageController>();
+  final MapPageController mapPageController = Get.find<MapPageController>();
 
   void updateIndex(int index) {
     switch (index) {
@@ -21,6 +21,7 @@ class CustomBottomNavigationBarController extends GetxController {
         break;
       case 1:
         Get.to(const MapPageView(), transition: Transition.noTransition);
+        mapPageController.checkAuthAndNavigate();
         mapPageController.loadProducts();
         break;
       case 2:

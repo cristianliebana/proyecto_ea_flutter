@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:proyecto_flutter/api/models/product_model.dart';
 import 'package:proyecto_flutter/api/services/product_service.dart';
+import 'package:proyecto_flutter/api/services/token_service.dart';
 import 'package:proyecto_flutter/screens/product_detail.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
 import 'package:proyecto_flutter/widget/nav_bar.dart';
@@ -21,8 +22,13 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    checkAuthAndNavigate();
     _scrollController = ScrollController()..addListener(_scrollListener);
     fetchProducts();
+  }
+
+  Future<void> checkAuthAndNavigate() async {
+    await TokenService.loggedIn();
   }
 
   Future<void> fetchProducts() async {

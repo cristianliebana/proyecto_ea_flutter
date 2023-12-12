@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:lottie/lottie.dart';
+import 'package:proyecto_flutter/api/services/token_service.dart';
 import 'package:proyecto_flutter/screens/create_product_detail.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
 import 'package:proyecto_flutter/widget/nav_bar.dart';
@@ -9,6 +10,16 @@ import 'package:get/get.dart';
 
 class TitleTextFiledController extends GetxController {
   late String productName = '';
+
+  @override
+  void onInit() {
+    super.onInit();
+    checkAuthAndNavigate();
+  }
+
+  Future<void> checkAuthAndNavigate() async {
+    await TokenService.loggedIn();
+  }
 
   void setProductName(String name) {
     productName = name;
