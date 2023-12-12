@@ -7,6 +7,7 @@ import 'package:proyecto_flutter/api/services/token_service.dart';
 import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
 import 'package:get/get.dart';
+import 'package:proyecto_flutter/screens/login.dart';
 import 'package:proyecto_flutter/screens/on_boarding.dart';
 import 'package:proyecto_flutter/screens/update_user.dart';
 import 'package:proyecto_flutter/screens/user_products.dart';
@@ -52,6 +53,7 @@ class _ProfilePageState extends State<ProfilePage> {
       elevation: 0,
       backgroundColor: Colors.transparent,
       centerTitle: true,
+      automaticallyImplyLeading: false,
       actions: [
         _buildAppBarThemeButton(),
       ],
@@ -106,7 +108,11 @@ class _ProfilePageState extends State<ProfilePage> {
               color: Theme.of(context).shadowColor,
             ),
             ProfileMenuWidget(
-                title: "Ajustes", icon: LineAwesomeIcons.cog, onPress: () {}),
+                title: "Ajustes",
+                icon: LineAwesomeIcons.cog,
+                onPress: () {
+                  _onRemoveTokenPressed();
+                }),
             ProfileMenuWidget(
                 title: "Perfil",
                 icon: LineAwesomeIcons.user,

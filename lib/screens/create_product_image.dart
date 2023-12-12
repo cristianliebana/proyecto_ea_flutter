@@ -13,6 +13,7 @@ import 'package:lottie/lottie.dart';
 
 import 'package:proyecto_flutter/api/services/cloudinary_service.dart';
 import 'package:proyecto_flutter/api/services/product_service.dart';
+import 'package:proyecto_flutter/api/services/token_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
 import 'package:proyecto_flutter/screens/create_product_detail.dart';
 import 'package:proyecto_flutter/screens/user_products.dart';
@@ -35,10 +36,15 @@ class _CreateProductImageState extends State<CreateProductImage> {
   @override
   void initState() {
     super.initState();
+    checkAuthAndNavigate();
     productController = CreateProductController(
       productData: widget.productData,
       state: this,
     );
+  }
+
+  Future<void> checkAuthAndNavigate() async {
+    await TokenService.loggedIn();
   }
 
   Future<void> _pickImages() async {
@@ -219,11 +225,11 @@ class CreateProductController extends GetxController {
     required this.productData,
     required _CreateProductImageState state,
   }) : _state = state {
-    if (productData.containsKey('location') && productData['location'] != null) {
+    if (productData.containsKey('location') &&
+        productData['location'] != null) {
       var location = productData['location'];
       chosenLocation = LatLng(location['latitude'], location['longitude']);
-    } else {
-    }
+    } else {}
   }
 
   Future<void> _uploadImagesAndCreateProduct(BuildContext context) async {
@@ -246,12 +252,12 @@ class CreateProductController extends GetxController {
       'units': units,
       'user': userId,
       'productImage': productImage,
-      'location': chosenLocation != null 
-        ? {
-            'latitude': chosenLocation!.latitude, 
-            'longitude': chosenLocation!.longitude
-          } 
-        : null,
+      'location': chosenLocation != null
+          ? {
+              'latitude': chosenLocation!.latitude,
+              'longitude': chosenLocation!.longitude
+            }
+          : null,
     };
 
     try {

@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:proyecto_flutter/api/services/token_service.dart';
 import 'package:proyecto_flutter/screens/create_product_detail.dart';
 import 'package:proyecto_flutter/screens/create_product_image.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
@@ -26,8 +27,13 @@ class _CreateProductLocationState extends State<CreateProductLocation> {
   @override
   void initState() {
     super.initState();
+    checkAuthAndNavigate();
     _mapController = MapController();
     _getCurrentUserLocation();
+  }
+
+  Future<void> checkAuthAndNavigate() async {
+    await TokenService.loggedIn();
   }
 
   Future<void> _getCurrentUserLocation() async {
