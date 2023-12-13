@@ -1,16 +1,13 @@
-# proyecto_flutter
+# Km.0 Market
 
-A new Flutter project.
+## Nuestras redes
 
-## Getting Started
+[Twitter](https://twitter.com/Km0MarketEA)
+[Blog](https://km0project.blogspot.com/)
 
-This project is a starting point for a Flutter application.
+## Nuestros perfiles
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+[Omar Fallouk](https://github.com/omarferrer30) 
+[Toni Boté](https://github.com/antonibote) 
+[Cristian Liebana](https://github.com/cristianliebana) 
+[Jose Mª Larrinzal](https://github.com/Jlarrinzal)
