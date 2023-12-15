@@ -9,6 +9,7 @@ import 'package:proyecto_flutter/screens/home.dart';
 import 'package:proyecto_flutter/screens/map.dart';
 import 'package:proyecto_flutter/screens/profile.dart';
 import 'package:get/get.dart';
+import 'package:proyecto_flutter/screens/dall_e.dart';
 
 class CustomBottomNavigationBarController extends GetxController {
   String userId = '';
@@ -35,6 +36,9 @@ class CustomBottomNavigationBarController extends GetxController {
         break;
       case 5:
         Get.to(ProfilePage(), transition: Transition.noTransition);
+        break;
+      case 6:
+        Get.to(DallEPage(), transition: Transition.noTransition);
         break;
       default:
         break;
@@ -98,6 +102,10 @@ class CustomBottomNavigationBar extends StatelessWidget {
                 GButton(
                   icon: LineIcons.user,
                   text: "Perfil",
+                ),
+                  GButton(
+                  icon: LineIcons.robot,
+                  text: "Dall-e",
                 ),
               ],
               selectedIndex: currentIndex,
