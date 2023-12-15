@@ -16,6 +16,44 @@ class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
   final LoginController loginController = LoginController();
 
+   final List locale =[
+    {'name': 'Español', 'locale': Locale('es')},
+    {'name': 'English', 'locale': Locale('en')},
+  ];
+  updateLanguage(Locale locale){
+    Get.back();
+    Get.updateLocale(locale);
+  }
+
+  buildLanguageDialog(BuildContext context){
+    showDialog(context: context,
+        builder: (builder){
+           return AlertDialog(
+             title: Text('Choose Your Language'),
+             content: Container(
+               width: double.maxFinite,
+               child: ListView.separated(
+                 shrinkWrap: true,
+                   itemBuilder: (context,index){
+                     return Padding(
+                       padding: const EdgeInsets.all(8.0),
+                       child: GestureDetector(child: Text(locale[index]['name']),onTap: (){
+                         print(locale[index]['name']);
+                         updateLanguage(locale[index]['locale']);
+                       },),
+                     );
+                   }, separatorBuilder: (context,index){
+                     return Divider(
+                       color: Colors.blue,
+                     );
+               }, itemCount: locale.length
+               ),
+             ),
+           );
+        }
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -39,7 +77,11 @@ class LoginScreen extends StatelessWidget {
                 SizedBox(height: 20),
                 OrText(),
                 GoogleLoginButton(),
-                RegisterText()
+                RegisterText(),
+                SizedBox(height: 20),
+                ElevatedButton(onPressed: (){
+                  buildLanguageDialog(context);
+               }, child: Text('changelang'.tr)),
               ],
             ),
           ),
@@ -161,7 +203,7 @@ class OrText extends StatelessWidget {
               Container(
                   width: 75, height: 0.5, color: Theme.of(context).canvasColor),
               Text(
-                " Otros métodos de autenticación ",
+                'authMethods'.tr,
                 style: TextStyle(
                     color: Theme.of(context).canvasColor,
                     fontSize: 20,
@@ -197,7 +239,7 @@ class LoginButton extends StatelessWidget {
             loginController.login(context);
           },
           child: Text(
-            "Iniciar Sesión",
+            'login'.tr,
             style: TextStyle(
                 fontSize: 25, color: Theme.of(context).colorScheme.primary),
           ),
@@ -231,7 +273,7 @@ class ForgotText extends StatelessWidget {
             width: gWidth,
             height: gHeight / 20,
             child: Center(
-                child: Text("¿Has olvidado tu contraseña?",
+                child: Text('forgetPassword'.tr,
                     style: TextStyle(
                         color: Theme.of(context).colorScheme.onPrimary,
                         fontSize: 15)))),
@@ -267,7 +309,7 @@ class _PasswordTextFiledState extends State<PasswordTextFiled> {
       child: RepTextFiled(
         controller: loginController.passwordController,
         icon: LineIcons.alternateUnlock,
-        text: "Contraseña",
+        text: 'contraseña'.tr,
         suficon: Icon(obscureText
             ? LineIcons.eyeSlash
             : LineIcons.eye), // Cambia el icono según la visibilidad
@@ -296,7 +338,7 @@ class EmailTextFiled extends StatelessWidget {
         delay: Duration(milliseconds: 225),
         child: RepTextFiled(
             icon: LineIcons.at,
-            text: "Correo electrónico",
+            text: 'correo'.tr,
             controller: loginController.emailController));
   }
 }
