@@ -8,8 +8,8 @@ class SocketManager {
   }
 
   SocketManager._internal() {
-    //connect('http://localhost:9090');
-    connect('http://147.83.7.157:9090'); /*Production */
+    connect('http://localhost:9090');
+    //connect('http://147.83.7.157:9090'); /*Production */
   }
 
   late io.Socket _socket;
