@@ -26,13 +26,13 @@ class LoginScreen extends StatelessWidget {
             margin: EdgeInsets.all(15),
             width: gWidth,
             height: gHeight,
-            child: Wrap(
+            child: Column(
               children: [
                 TopImage(),
                 //LoginText(),
-                SizedBox(height: 5),
+                SizedBox(height: 10),
                 EmailTextFiled(loginController: loginController),
-                SizedBox(height: 15),
+                SizedBox(height: 20),
                 PasswordTextFiled(loginController: loginController),
                 ForgotText(),
                 SizedBox(height: 15),
@@ -164,7 +164,7 @@ class OrText extends StatelessWidget {
               Container(
                   width: 75, height: 0.5, color: Theme.of(context).canvasColor),
               Text(
-                " Otros métodos de autenticación",
+                " Otros métodos de autenticación ",
                 style: TextStyle(
                     color: Theme.of(context).canvasColor,
                     fontSize: 20,
