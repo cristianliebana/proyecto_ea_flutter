@@ -15,6 +15,44 @@ class _HomePageState extends State<HomePage> {
   late List<Product> productList = [];
   late ScrollController _scrollController;
   bool _loading = false;
+  
+     final List locale =[
+    {'name': 'Español', 'locale': Locale('es')},
+    {'name': 'English', 'locale': Locale('en')},
+  ];
+  updateLanguage(Locale locale){
+    Get.back();
+    Get.updateLocale(locale);
+  }
+
+  buildLanguageDialog(BuildContext context){
+    showDialog(context: context,
+        builder: (builder){
+           return AlertDialog(
+             title: Text('Choose Your Language'),
+             content: Container(
+               width: double.maxFinite,
+               child: ListView.separated(
+                 shrinkWrap: true,
+                   itemBuilder: (context,index){
+                     return Padding(
+                       padding: const EdgeInsets.all(8.0),
+                       child: GestureDetector(child: Text(locale[index]['name']),onTap: (){
+                         print(locale[index]['name']);
+                         updateLanguage(locale[index]['locale']);
+                       },),
+                     );
+                   }, separatorBuilder: (context,index){
+                     return Divider(
+                       color: Colors.blue,
+                     );
+               }, itemCount: locale.length
+               ),
+             ),
+           );
+        }
+    );
+  }
 
   @override
   void initState() {
@@ -65,6 +103,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: CustomBottomNavigationBar(currentIndex: 0),
+      
       body: CustomScrollView(
         controller: _scrollController,
         slivers: [
@@ -88,12 +127,14 @@ class _HomePageState extends State<HomePage> {
                 productList: productList,
               )),
               SizedBox(height: 10),
+              
             ]),
           ),
           SliverList(
             delegate: SliverChildListDelegate([
               Container(child: MidText()),
               SizedBox(height: 5),
+              
             ]),
           ),
           SliverGrid(
@@ -153,7 +194,7 @@ class SearchBar extends StatelessWidget {
               fontWeight: FontWeight.w400,
               color: Theme.of(context).colorScheme.primary,
             ),
-            hintText: "Busca en Km0 Market",
+            hintText: 'buscaKm0'.tr,
             border: OutlineInputBorder(
               borderSide: BorderSide.none,
               borderRadius: BorderRadius.circular(100),
@@ -258,7 +299,7 @@ class MidText extends StatelessWidget {
           width: gWidth,
           height: gHeight / 25,
           child: SizedBox(
-            child: Text("Todos los productos",
+            child: Text('todosProductos'.tr,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 30,
@@ -382,7 +423,7 @@ class TopText extends StatelessWidget {
           width: gWidth,
           height: gHeight / 25,
           child: SizedBox(
-            child: Text("Productos en oferta",
+            child: Text('oferta'.tr,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 30,

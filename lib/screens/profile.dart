@@ -12,6 +12,7 @@ import 'package:proyecto_flutter/screens/user_products.dart';
 import 'package:proyecto_flutter/screens/user_profile.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
 import 'package:proyecto_flutter/utils/theme_provider.dart';
+import 'package:proyecto_flutter/widget/language_controller.dart';
 import 'package:proyecto_flutter/widget/nav_bar.dart';
 import 'package:proyecto_flutter/widget/socket_manager.dart';
 
@@ -29,6 +30,15 @@ class _ProfilePageState extends State<ProfilePage> {
     obtenerDatosUsuario();
     CloudinaryContext.cloudinary =
         Cloudinary.fromCloudName(cloudName: "dfwsx27vx");
+  }
+  
+  final List locale = [
+    {'name': 'Español', 'locale': Locale('es')},
+    {'name': 'English', 'locale': Locale('en')},
+  ];
+  updateLanguage(Locale locale) {
+    Get.back();
+    Get.updateLocale(locale);
   }
 
   Future<void> obtenerDatosUsuario() async {
@@ -54,6 +64,7 @@ class _ProfilePageState extends State<ProfilePage> {
       centerTitle: true,
       actions: [
         _buildAppBarThemeButton(),
+        _buildAppBarLanguageButton()
       ],
     );
   }
@@ -78,6 +89,56 @@ class _ProfilePageState extends State<ProfilePage> {
         },
       ),
     );
+  }
+
+  Widget _buildAppBarLanguageButton() {
+  return Container(
+    margin: EdgeInsets.all(8.0),
+    decoration: BoxDecoration(
+      color: Theme.of(context).colorScheme.onPrimary,
+      shape: BoxShape.circle,
+    ),
+    child: IconButton(
+      icon: Icon(Icons.language, color: Theme.of(context).colorScheme.primary),
+      onPressed: () {
+        buildLanguageDialog(context)
+        ();
+      },
+    ),
+  );
+}
+
+ buildLanguageDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (builder) {
+          return AlertDialog(
+            title: Text('Choose Your Language'),
+            content: Container(
+              width: double.maxFinite,
+              child: ListView.separated(
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GestureDetector(
+                        child: Text(locale[index]['name']),
+                        onTap: () {
+                          print(locale[index]['name']);
+                          updateLanguage(locale[index]['locale']);
+                        },
+                      ),
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return Divider(
+                      color: Colors.blue,
+                    );
+                  },
+                  itemCount: locale.length),
+            ),
+          );
+        });
   }
 
   @override
@@ -106,15 +167,15 @@ class _ProfilePageState extends State<ProfilePage> {
               color: Theme.of(context).shadowColor,
             ),
             ProfileMenuWidget(
-                title: "Ajustes", icon: LineAwesomeIcons.cog, onPress: () {}),
+                title: 'ajustes'.tr, icon: LineAwesomeIcons.cog, onPress: () {}),
             ProfileMenuWidget(
-                title: "Perfil",
+                title: 'perfil'.tr,
                 icon: LineAwesomeIcons.user,
                 onPress: () {
                   Get.to(UserProfileScreen());
                 }),
             ProfileMenuWidget(
-                title: "Mis Productos",
+                title: 'misProductos'.tr,
                 icon: LineAwesomeIcons.fruit_apple,
                 onPress: () {
                   Get.to(UserProductsScreen());
@@ -124,11 +185,11 @@ class _ProfilePageState extends State<ProfilePage> {
               color: Theme.of(context).shadowColor,
             ),
             ProfileMenuWidget(
-                title: "Información",
+                title: 'informacion'.tr,
                 icon: LineAwesomeIcons.info,
                 onPress: () {}),
             ProfileMenuWidget(
-                title: "Cerrar sesión",
+                title: 'logout'.tr,
                 icon: LineAwesomeIcons.alternate_sign_out,
                 onPress: () {
                   _onRemoveTokenPressed();
@@ -234,7 +295,7 @@ class EditProfileButton extends StatelessWidget {
           Get.to(UpdateScreen());
         },
         child: Text(
-          "Editar Perfil",
+          'editarPerfil'.tr,
           style: TextStyle(
               fontSize: 25, color: Theme.of(context).colorScheme.primary),
         ),

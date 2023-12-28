@@ -16,42 +16,46 @@ class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
   final LoginController loginController = LoginController();
 
-   final List locale =[
+  final List locale = [
     {'name': 'Español', 'locale': Locale('es')},
     {'name': 'English', 'locale': Locale('en')},
   ];
-  updateLanguage(Locale locale){
+  updateLanguage(Locale locale) {
     Get.back();
     Get.updateLocale(locale);
   }
 
-  buildLanguageDialog(BuildContext context){
-    showDialog(context: context,
-        builder: (builder){
-           return AlertDialog(
-             title: Text('Choose Your Language'),
-             content: Container(
-               width: double.maxFinite,
-               child: ListView.separated(
-                 shrinkWrap: true,
-                   itemBuilder: (context,index){
-                     return Padding(
-                       padding: const EdgeInsets.all(8.0),
-                       child: GestureDetector(child: Text(locale[index]['name']),onTap: (){
-                         print(locale[index]['name']);
-                         updateLanguage(locale[index]['locale']);
-                       },),
-                     );
-                   }, separatorBuilder: (context,index){
-                     return Divider(
-                       color: Colors.blue,
-                     );
-               }, itemCount: locale.length
-               ),
-             ),
-           );
-        }
-    );
+  buildLanguageDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (builder) {
+          return AlertDialog(
+            title: Text('Choose Your Language'),
+            content: Container(
+              width: double.maxFinite,
+              child: ListView.separated(
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GestureDetector(
+                        child: Text(locale[index]['name']),
+                        onTap: () {
+                          print(locale[index]['name']);
+                          updateLanguage(locale[index]['locale']);
+                        },
+                      ),
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return Divider(
+                      color: Colors.blue,
+                    );
+                  },
+                  itemCount: locale.length),
+            ),
+          );
+        });
   }
 
   @override
@@ -79,9 +83,13 @@ class LoginScreen extends StatelessWidget {
                 GoogleLoginButton(),
                 RegisterText(),
                 SizedBox(height: 20),
-                ElevatedButton(onPressed: (){
-                  buildLanguageDialog(context);
-               }, child: Text('changelang'.tr)),
+                IconButton(
+                  icon: Icon(Icons
+                      .language), // Aquí puedes usar cualquier icono que desees
+                  onPressed: () {
+                    buildLanguageDialog(context);
+                  },
+                ),
               ],
             ),
           ),
@@ -135,7 +143,7 @@ class RegisterText extends StatelessWidget {
         child: Center(
           child: RichText(
             text: TextSpan(
-              text: "¿No tienes una cuenta? ",
+              text: 'sin_cuenta'.tr,
               style:
                   TextStyle(color: Theme.of(context).canvasColor, fontSize: 18),
               children: [
@@ -145,7 +153,7 @@ class RegisterText extends StatelessWidget {
                       Get.off(() => SignUpScreen());
                     },
                     child: Text(
-                      "Regístrate",
+                      'register'.tr,
                       style: TextStyle(
                         decoration: TextDecoration.underline,
                         color: Theme.of(context).colorScheme.onPrimary,

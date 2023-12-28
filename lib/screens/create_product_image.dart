@@ -241,7 +241,7 @@ class CreateProductController extends GetxController {
     try {
       ApiResponse response = await ProductService.addProduct(productImageData);
       Get.defaultDialog(
-        title: "¡Felicidades!",
+        title: 'felicidades'.tr,
         titleStyle: TextStyle(color: Theme.of(context).primaryColor),
         backgroundColor: Theme.of(context).colorScheme.primary,
         content: ClipRect(
@@ -266,7 +266,7 @@ class CreateProductController extends GetxController {
                     ),
                     SizedBox(height: 20),
                     Text(
-                      "¡Acabas de publicar tu producto!",
+                      'publicado'.tr,
                       style: TextStyle(color: Theme.of(context).primaryColor),
                     ),
                   ],
@@ -298,7 +298,7 @@ class CreateProductController extends GetxController {
     } catch (e) {
       Get.snackbar(
         "Error",
-        "Algo falló al intentar publicar el producto",
+        'falloProducto'.tr,
         snackPosition: SnackPosition.BOTTOM,
       );
     }
@@ -325,7 +325,7 @@ class SubmitButton extends StatelessWidget {
             await productController._uploadImagesAndCreateProduct(context);
           },
           child: Text(
-            "Añadir Producto",
+            'añadirProducto'.tr,
             style: TextStyle(
                 fontSize: 25, color: Theme.of(context).colorScheme.primary),
           ),
@@ -355,7 +355,7 @@ class ImageText extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.only(top: 10, left: 10),
         child: Text(
-          "¡Escoge fotos para tu producto!",
+          'fotos'.tr,
           style: TextStyle(
               color: Theme.of(context).colorScheme.primary,
               fontSize: 30,

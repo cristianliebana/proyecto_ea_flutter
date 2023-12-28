@@ -6,6 +6,7 @@ import 'package:proyecto_flutter/LocaleString.dart';
 import 'package:proyecto_flutter/bindings/map_Bindings.dart';
 import 'package:proyecto_flutter/screens/login.dart';
 import 'package:proyecto_flutter/utils/theme_provider.dart';
+import 'package:proyecto_flutter/widget/language_controller.dart';
 
 void main() async {
   Get.put(ThemeProvider());
@@ -27,7 +28,8 @@ class MyApp extends StatelessWidget {
         home:  SplashScreen(),
         initialBinding: MapPageBinding(),
         translations: LocaleString(),
-        locale: const Locale('es')
+        locale: const Locale('es'),
+
       );
     });
   }
