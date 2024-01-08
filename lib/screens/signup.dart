@@ -87,7 +87,7 @@ class SignUpController extends GetxController {
     };
 
     if (username == "" || fullname == "" || email == "") {
-      Get.snackbar('Error', 'Tienes que rellenar todos los campos',
+      Get.snackbar('Error', 'rellenar'.tr,
           snackPosition: SnackPosition.BOTTOM);
     } else {
       ApiResponse response = await UserService.usernameExists(username);
@@ -97,13 +97,13 @@ class SignUpController extends GetxController {
       bool emailExists = response2.data['emailExists'];
 
       if (usernameExists && emailExists) {
-        Get.snackbar('Error', 'El nombre de usuario y el email no existen',
+        Get.snackbar('Error', 'noExisten'.tr,
             snackPosition: SnackPosition.BOTTOM);
       } else if (usernameExists) {
-        Get.snackbar('Error', 'El nombre de usuario ya existe',
+        Get.snackbar('Error', 'yaExiste1'.tr,
             snackPosition: SnackPosition.BOTTOM);
       } else if (emailExists) {
-        Get.snackbar('Error', 'El email ya existe',
+        Get.snackbar('Error', 'yaExiste2'.tr,
             snackPosition: SnackPosition.BOTTOM);
       } else {
         Get.to(SignUpPasswordScreen(userData: userData));
@@ -133,7 +133,7 @@ class ContinueButton extends StatelessWidget {
             signUpController.signup(context);
           },
           child: Text(
-            "Continuar",
+            'continuar'.tr,
             style: TextStyle(
                 fontSize: 25, color: Theme.of(context).colorScheme.primary),
           ),
@@ -166,13 +166,13 @@ class BottomText extends StatelessWidget {
           child: Center(
             child: RichText(
               text: TextSpan(
-                  text: "Al registrarte, estas aceptando los",
+                  text: 'aceptarTerms'.tr,
                   style: TextStyle(
                     color: Theme.of(context).canvasColor,
                   ),
                   children: [
                     TextSpan(
-                      text: " Terminos y condiciones",
+                      text: 'terms'.tr,
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.onPrimary,
                       ),
@@ -197,7 +197,7 @@ class UsernameTextFiled extends StatelessWidget {
         delay: Duration(milliseconds: 75),
         child: RepTextFiled(
             icon: LineIcons.userTag,
-            text: "Nombre de usuario",
+            text: 'nombreUsuario'.tr,
             controller: signUpController.usernameController));
   }
 }
@@ -215,7 +215,7 @@ class NameTextFiled extends StatelessWidget {
         delay: Duration(milliseconds: 75),
         child: RepTextFiled(
           icon: LineIcons.user,
-          text: "Nombre completo",
+          text: 'nombreCompleto'.tr,
           controller: signUpController.fullnameController,
         ));
   }
@@ -254,7 +254,7 @@ class SignUpText extends StatelessWidget {
           width: gWidth / 4,
           height: gHeight / 18,
           child: FittedBox(
-            child: Text("Regístrate",
+            child: Text('register'.tr,
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Theme.of(context).primaryColor)),
