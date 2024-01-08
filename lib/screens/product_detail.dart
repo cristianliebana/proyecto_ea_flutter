@@ -8,6 +8,7 @@ import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/services/favorite_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
 import 'package:proyecto_flutter/screens/chat.dart';
+import 'package:proyecto_flutter/screens/edit_product.dart';
 import 'package:proyecto_flutter/screens/home.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
@@ -158,10 +159,36 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       leading: _buildAppBarBackButton(),
       actions: [
         _buildAppBarFavoriteButton(),
+        if (userData['_id'] == creadorData['_id']) _buildAppBarEditButton(),
       ],
     );
   }
+  
+  Widget _buildAppBarEditButton() {
+    return Container(
+      margin: EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.onPrimary,
+        shape: BoxShape.circle,
+      ),
+      child: IconButton(
+        icon: Icon(
+          Icons.edit,
+          color: Theme.of(context).colorScheme.primary,
+        ),
+        onPressed: _handleEditButton,
+      ),
+    );
+  }
 
+  void _handleEditButton() {
+    Navigator.of(context).push(
+        MaterialPageRoute(
+            builder: (context) => EditProductScreen(productId: widget.productId),
+        ),
+    );
+  }
+  
   Widget _buildAppBarFavoriteButton() {
     return _isFavoriteExists
         ? Container(

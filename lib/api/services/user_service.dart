@@ -128,4 +128,21 @@ class UserService {
       return response;
     }
   }
+  static Future<String?> getUserId() async {
+    try {
+      bool isLoggedIn = await TokenService.loggedIn();
+      if (isLoggedIn) {
+        String? token = await TokenService.getToken();
+        if (token != null) {
+          Map<String, dynamic> payload = JwtDecoder.decode(token);
+          String userId = payload['id'];
+          return userId;
+        }
+      }
+    } catch (error) {
+      print('Error getting user ID: $error');
+      return null;
+    }
+    return null;
+  }
 }

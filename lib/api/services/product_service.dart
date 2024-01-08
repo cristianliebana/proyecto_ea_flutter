@@ -1,6 +1,4 @@
-//import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:proyecto_flutter/api/models/product_model.dart';
-//import 'package:proyecto_flutter/api/services/token_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
 
 class ProductService {
@@ -52,6 +50,17 @@ class ProductService {
       '/products/createproduct',
       data: product,
     );
+    return response;
+  }
+  static Future<ApiResponse> updateProduct(String productId, Map<String, dynamic> product) async {
+    ApiResponse response = ApiResponse(data: {}, statusCode: 404);
+    response = await Api().putWithoutToken('/products/updateproduct/$productId', data: product);
+
+    if (response.statusCode == 200) {
+      print('Product updated successfully');
+    } else {
+      print('Error in update request: ${response.statusCode}');
+    }
     return response;
   }
 }
