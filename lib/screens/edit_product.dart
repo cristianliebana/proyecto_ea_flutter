@@ -62,7 +62,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
         'description': _descriptionController.text,
         'price': int.parse(_priceController.text),
         'units': int.parse(_unitsController.text),
-        'user': userId,
+        'user': userId,      
       };
 
       ApiResponse response =
@@ -70,7 +70,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
       setState(() => _isLoading = false);
 
       if (response.statusCode == 201) {
-        Get.snackbar('Success', 'Product updated');
+        showUpdateSuccessDialog(context);
       } else {
         Get.snackbar('Error', 'Failed to update product');
       }
@@ -93,7 +93,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
             child: Column(
               children: [
                 Lottie.asset(
-                  "assets/json/check3.json",
+                  "assets/json/check3.json", 
                   width: 100,
                   height: 100,
                   repeat: false,
@@ -174,7 +174,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     child: Column(
                       children: <Widget>[
                         RepTextFiled(
-                          icon: Icons.edit,
+                          icon: Icons.edit, 
                           text: 'Product Name',
                           controller: _nameController,
                           obscureText: false,
