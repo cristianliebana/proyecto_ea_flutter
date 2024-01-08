@@ -35,6 +35,7 @@ class ThemeProvider extends GetxController {
     canvasColor: const Color(0xFF737373),
     focusColor: Colors.green.shade700,
     disabledColor: Colors.red,
+    cardColor: const Color(0xFF486D28),
   );
 
   static final ThemeData _darkTheme = ThemeData(
@@ -52,5 +53,6 @@ class ThemeProvider extends GetxController {
     canvasColor: Colors.grey[300],
     focusColor: const Color(0xFFFFFCEA),
     disabledColor: const Color.fromARGB(255, 85, 13, 8),
+    cardColor: Color.fromARGB(255, 52, 78, 29),
   );
 }

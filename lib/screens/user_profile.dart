@@ -22,7 +22,6 @@ import 'package:proyecto_flutter/utils/theme_provider.dart';
 import 'package:proyecto_flutter/widget/nav_bar.dart';
 import 'package:proyecto_flutter/widget/profile_tab_bar.dart';
 
-
 class UserProfileScreen extends StatefulWidget {
   @override
   _UserProfileScreenState createState() => _UserProfileScreenState();
@@ -31,7 +30,7 @@ class UserProfileScreen extends StatefulWidget {
 class _UserProfileScreenState extends State<UserProfileScreen> {
   List<Product> products = [];
   Map<String, dynamic> userData = {};
-  
+
   late ScrollController _scrollController;
   bool _loading = false;
 
@@ -77,6 +76,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     _scrollController.dispose();
     super.dispose();
   }
+
   AppBar _buildAppBar() {
     return AppBar(
       elevation: 0,
@@ -114,7 +114,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppBar(),
-      bottomNavigationBar: CustomBottomNavigationBar(currentIndex: 5),
       body: Column(
         children: [
           // Sección de información del usuario (arriba)
@@ -153,7 +152,7 @@ class SearchBar extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
         children: [
-          const SizedBox(height: 10), 
+          const SizedBox(height: 10),
           Padding(
             padding: const EdgeInsets.only(),
             child: TextField(
@@ -346,5 +345,3 @@ class ProfileImage extends StatelessWidget {
     );
   }
 }
-
-

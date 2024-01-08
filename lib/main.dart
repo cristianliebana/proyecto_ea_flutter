@@ -7,6 +7,7 @@ import 'package:proyecto_flutter/LocaleString.dart';
 import 'package:proyecto_flutter/bindings/map_Bindings.dart';
 import 'package:proyecto_flutter/firebase_options.dart';
 import 'package:proyecto_flutter/screens/login.dart';
+import 'package:proyecto_flutter/screens/map.dart';
 import 'package:proyecto_flutter/utils/theme_provider.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:html' as html;
@@ -16,6 +17,7 @@ import 'package:proyecto_flutter/widget/language_controller.dart';
 
 void main() async {
   Get.put(ThemeProvider());
+  Get.put(MapPageController());
   await Get.find<ThemeProvider>().loadTheme();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);

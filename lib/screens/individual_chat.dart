@@ -5,7 +5,7 @@ import 'package:proyecto_flutter/api/utils/http_api.dart';
 import 'package:proyecto_flutter/screens/chat.dart';
 import 'package:proyecto_flutter/screens/chat_message_item.dart';
 import 'package:proyecto_flutter/widget/socket_manager.dart';
-import 'package:socket_io_client/socket_io_client.dart' as io;
+//import 'package:socket_io_client/socket_io_client.dart' as io;
 
 class ChatMessage {
   final bool isMeChatting;
@@ -13,25 +13,22 @@ class ChatMessage {
   final bool isReviewLink;
   final String userId2;
 
-  ChatMessage({
-    required this.isMeChatting,
-    required this.messageBody,
-    required this.isReviewLink,
-    required this.userId2
-  });
+  ChatMessage(
+      {required this.isMeChatting,
+      required this.messageBody,
+      required this.isReviewLink,
+      required this.userId2});
 }
 
 class IndividualChat extends StatefulWidget {
   final String roomId;
   final String userId2;
 
-
   const IndividualChat({
     Key? key,
     required this.roomId,
     required this.userId2,
   }) : super(key: key);
-
 
   @override
   _IndividualChatState createState() => _IndividualChatState();
@@ -53,15 +50,14 @@ class _IndividualChatState extends State<IndividualChat> {
       String message = data['message'];
       bool isMe = senderId == userData['_id'];
 
-       print("isReviewLink value received: ${data['isReviewLink']}");
+      print("isReviewLink value received: ${data['isReviewLink']}");
 
       setState(() {
         messages.add(ChatMessage(
-          isMeChatting: isMe,
-          messageBody: message,
-          isReviewLink: data['isReviewLink'] ?? false,
-          userId2: userData2['_id']
-        ));
+            isMeChatting: isMe,
+            messageBody: message,
+            isReviewLink: data['isReviewLink'] ?? false,
+            userId2: userData2['_id']));
       });
     });
   }
@@ -91,7 +87,6 @@ class _IndividualChatState extends State<IndividualChat> {
   Future<void> obtenerDatosUsuario2(String userId2) async {
     ApiResponse response = await UserService.getCreadorById(userId2);
     setState(() {
-
       userData2 = response.data ?? {};
     });
   }
@@ -115,9 +110,9 @@ class _IndividualChatState extends State<IndividualChat> {
     }
   }
 
-
   void sendReviewLink() {
-    String reviewMessage = 'Hola, me gustaría que me dejaras una valoración. ¡Puedes dejarmela haciendo click en este mensaje!';
+    String reviewMessage =
+        'Hola, me gustaría que me dejaras una valoración. ¡Puedes dejarmela haciendo click en este mensaje!';
 
     Map<String, dynamic> reviewMessageData = {
       'message': reviewMessage,
@@ -146,12 +141,12 @@ class _IndividualChatState extends State<IndividualChat> {
             Container(
               padding: EdgeInsets.all(8),
               height: 85,
-              color: Color(0xFF486D28),
+              color: Theme.of(context).colorScheme.onPrimary,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   BackButton(
-                    color: Color(0xFFFFFCEA),
+                    color: Theme.of(context).colorScheme.primary,
                     onPressed: () {
                       Get.to(ChatPage());
                     },
@@ -175,14 +170,17 @@ class _IndividualChatState extends State<IndividualChat> {
                         style: TextStyle(
                           fontSize: 19,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFFFFFCEA),
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                       ),
                       Text(
                         widget.roomId,
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
-                          color: Color(0xFFFFFCEA).withOpacity(0.7),
+                          color: Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withOpacity(0.7),
                         ),
                       ),
                     ],
@@ -194,7 +192,7 @@ class _IndividualChatState extends State<IndividualChat> {
                     },
                     icon: Icon(
                       Icons.reviews,
-                      color: Color(0xFFFFFCEA),
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                 ],
@@ -202,7 +200,7 @@ class _IndividualChatState extends State<IndividualChat> {
             ),
             Expanded(
               child: Container(
-                color: Color(0xFFFFFCEA),
+                color: Theme.of(context).colorScheme.primary,
                 child: ListView(
                   padding: EdgeInsets.all(15),
                   scrollDirection: Axis.vertical,
@@ -214,7 +212,7 @@ class _IndividualChatState extends State<IndividualChat> {
                         "Today",
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
-                          color: Colors.grey,
+                          color: Theme.of(context).secondaryHeaderColor,
                         ),
                       ),
                     ),
@@ -243,9 +241,10 @@ class _IndividualChatState extends State<IndividualChat> {
         padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
         margin: EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Color(0xFFFFFCEA),
+          color: Theme.of(context).colorScheme.primary,
           borderRadius: BorderRadius.circular(13),
-          border: Border.all(color: Color(0xFF486D28), width: 3.0),
+          border: Border.all(
+              color: Theme.of(context).colorScheme.onPrimary, width: 3.0),
         ),
         child: Container(
           child: Row(
@@ -259,7 +258,7 @@ class _IndividualChatState extends State<IndividualChat> {
                     hintStyle: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
-                      color: Color(0xFF486D28),
+                      color: Theme.of(context).colorScheme.onPrimary,
                     ),
                   ),
                   maxLines: 10,
@@ -276,12 +275,12 @@ class _IndividualChatState extends State<IndividualChat> {
                   width: 50,
                   height: 50,
                   decoration: BoxDecoration(
-                    color: Color(0xFF486D28),
+                    color: Theme.of(context).colorScheme.onPrimary,
                     borderRadius: BorderRadius.circular(13),
                   ),
                   alignment: Alignment.center,
-                  child: Icon(Icons.send_rounded, color: Color(0xFFFFFCEA), size: 25),
-
+                  child: Icon(Icons.send_rounded,
+                      color: Theme.of(context).colorScheme.primary, size: 25),
                 ),
               ),
             ],

@@ -13,6 +13,7 @@ import 'package:proyecto_flutter/utils/constants.dart';
 import 'package:proyecto_flutter/utils/theme_provider.dart';
 import 'package:proyecto_flutter/widget/rep_textfiled.dart';
 import 'package:proyecto_flutter/widget/socket_manager.dart';
+import 'package:proyecto_flutter/widget/version.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
@@ -92,6 +93,8 @@ class LoginScreen extends StatelessWidget {
                     buildLanguageDialog(context);
                   },
                 ),
+                SizedBox(height: 5),
+                const AppVersionText(),
               ],
             ),
           ),

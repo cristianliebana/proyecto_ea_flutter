@@ -533,7 +533,7 @@ class _ImagesCarouselState extends State<ImagesCarousel> {
 
     // Agrega 'assets/images/profile.png' si la lista de imágenes está vacía
     if (imageUrls.isEmpty) {
-      imageUrls.add('assets/images/profile.png');
+      imageUrls.add('assets/assets/images/profile.png');
     }
 
     return Column(
@@ -559,7 +559,7 @@ class _ImagesCarouselState extends State<ImagesCarousel> {
                       (imageUrl) => Container(
                         width: MediaQuery.of(context).size.width,
                         child: Image.network(
-                          imageUrl ?? 'assets/images/profile.png',
+                          imageUrl ?? 'assets/assets/images/profile.png',
                           fit: BoxFit.cover,
                         ),
                       ),

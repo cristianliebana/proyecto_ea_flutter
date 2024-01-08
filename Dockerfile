@@ -17,8 +17,8 @@ RUN /usr/local/flutter/bin/flutter --version
 # Run flutter doctor
 RUN /usr/local/flutter/bin/flutter doctor -v
 
-RUN /usr/local/flutter/bin/flutter channel master
-RUN /usr/local/flutter/bin/flutter upgrade 3.13.0
+RUN /usr/local/flutter/bin/flutter channel stable
+RUN /usr/local/flutter/bin/flutter upgrade 4.0.0
 RUN /usr/local/flutter/bin/flutter config --enable-web
 
 # Copy files to container and build

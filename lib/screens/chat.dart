@@ -1,7 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:proyecto_flutter/api/models/room_model.dart';
+//import 'package:proyecto_flutter/api/models/room_model.dart';
 import 'package:proyecto_flutter/api/services/room_service.dart';
 import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
@@ -18,7 +18,8 @@ class _ChatPageState extends State<ChatPage> {
   Map<String, dynamic> userData = {};
   Map<String, dynamic> roomData = {};
   List<Map<String, dynamic>> usersWithRoomIds = [];
-  List<Map<String, dynamic>> usersDataList = []; // List to store userData2 for each user
+  List<Map<String, dynamic>> usersDataList =
+      []; // List to store userData2 for each user
 
   @override
   void initState() {
@@ -52,7 +53,8 @@ class _ChatPageState extends State<ChatPage> {
   Future<void> _obtenerDatosUsuario2(String userid) async {
     ApiResponse response = await UserService.getCreadorById(userid);
     setState(() {
-      Map<String, dynamic> userData2 = response.data; // Separate userData2 for each user
+      Map<String, dynamic> userData2 =
+          response.data; // Separate userData2 for each user
       usersDataList.add(userData2);
       print(userData2);
     });
@@ -89,68 +91,79 @@ class _ChatPageState extends State<ChatPage> {
     return usersWithRoomIds;
   }
 
-@override
-Widget build(BuildContext context) {
-  return Scaffold(
-    bottomNavigationBar: CustomBottomNavigationBar(currentIndex: 3),
-    body: Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          SizedBox(height: 20.0),
-          ChatText(),
-          SizedBox(height: 10.0),
-          Divider(), 
-          Expanded(
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: usersWithRoomIds.length,
-              itemBuilder: (BuildContext context, int index) {
-                // Verificar si el índice es válido
-                if (index >= 0 && index < usersDataList.length) {
-                  return Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Get.to(
-                            IndividualChat(
-                              roomId: usersWithRoomIds[index]['roomId'],
-                              userId2: usersWithRoomIds[index]['userId'],
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      bottomNavigationBar: CustomBottomNavigationBar(currentIndex: 3),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(height: 20.0),
+            ChatText(),
+            SizedBox(height: 10.0),
+            Divider(color: Theme.of(context).colorScheme.onPrimary),
+            Expanded(
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: usersWithRoomIds.length,
+                itemBuilder: (BuildContext context, int index) {
+                  // Verificar si el índice es válido
+                  if (index >= 0 && index < usersDataList.length) {
+                    return Column(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Get.to(
+                              IndividualChat(
+                                roomId: usersWithRoomIds[index]['roomId'],
+                                userId2: usersWithRoomIds[index]['userId'],
+                              ),
+                            );
+                          },
+                          child: ListTile(
+                            leading: CircleAvatar(
+                              backgroundImage:
+                                  usersDataList[index]['profileImage'] != null
+                                      ? NetworkImage(
+                                          usersDataList[index]['profileImage']!)
+                                      : AssetImage('assets/images/profile.png')
+                                          as ImageProvider<Object>,
+                              maxRadius: 28,
                             ),
-                          );
-                        },
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            backgroundImage: usersDataList[index]['profileImage'] != null
-                                ? NetworkImage(usersDataList[index]['profileImage']!)
-                                : AssetImage('assets/images/profile.png') as ImageProvider<Object>,
-                            maxRadius: 28,
-                          ),
-                          title: Text(
-                            '${usersDataList[index]['username']}',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18, // Tamaño del texto
+                            title: Text(
+                              '${usersDataList[index]['username']}',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                  color: Theme.of(context).primaryColor),
+                            ),
+                            subtitle: Text(
+                              'Sala ID: ${usersWithRoomIds[index]['roomId']}',
+                              style: TextStyle(
+                                  color: Theme.of(context).shadowColor),
                             ),
                           ),
-                          subtitle: Text('Sala ID: ${usersWithRoomIds[index]['roomId']}'),
                         ),
-                      ),
-                      Divider(), // Divisor entre usuarios
-                    ],
-                  );
-                } else {
-                  // Manejar el caso donde el índice está fuera de rango
-                  return SizedBox.shrink(); // o cualquier otro widget que desees mostrar
-                }
-              },
+                        Divider(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onPrimary), // Divisor entre usuarios
+                      ],
+                    );
+                  } else {
+                    // Manejar el caso donde el índice está fuera de rango
+                    return SizedBox
+                        .shrink(); // o cualquier otro widget que desees mostrar
+                  }
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 }
 
 class ChatText extends StatelessWidget {
@@ -171,6 +184,7 @@ class ChatText extends StatelessWidget {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 30,
+                  color: Theme.of(context).primaryColor,
                 )),
           )),
     );

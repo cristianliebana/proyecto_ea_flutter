@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
@@ -8,8 +7,6 @@ import 'package:proyecto_flutter/api/services/rating_service.dart';
 import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
 import 'package:proyecto_flutter/screens/chat.dart';
-import 'package:proyecto_flutter/screens/profile.dart';
-import 'package:proyecto_flutter/utils/constants.dart';
 
 class ReviewScreen extends StatefulWidget {
   final String userId2;
@@ -73,11 +70,11 @@ class _ReviewScreenState extends State<ReviewScreen> {
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10.0),
-                color: Color(0xFFFFFCEA),
+                color: Theme.of(context).colorScheme.primary,
               ),
               child: Container(
                 decoration: BoxDecoration(
-                  color: Color(0xFFFFFCEA),
+                  color: Theme.of(context).colorScheme.primary,
                 ),
                 child: Column(
                   children: [
@@ -107,7 +104,8 @@ class _ReviewScreenState extends State<ReviewScreen> {
                 borderRadius: BorderRadius.circular(15),
               ),
             ),
-            backgroundColor: MaterialStateProperty.all(buttonColor),
+            backgroundColor: MaterialStateProperty.all(
+                Theme.of(context).colorScheme.onPrimary),
           ),
         ),
       );
@@ -133,13 +131,13 @@ class _ReviewScreenState extends State<ReviewScreen> {
     return Container(
       margin: EdgeInsets.all(8.0),
       decoration: BoxDecoration(
-        color: Color(0xFF486D28),
+        color: Theme.of(context).colorScheme.onPrimary,
         shape: BoxShape.circle,
       ),
       child: IconButton(
         icon: Icon(
           Icons.arrow_back,
-          color: Color(0xFFFFFCEA),
+          color: Theme.of(context).colorScheme.primary,
         ),
         onPressed: () {
           Get.back();
@@ -230,6 +228,7 @@ class CommentBox extends StatelessWidget {
           controller: commentController,
           maxLines: 8,
           decoration: InputDecoration(
+
             labelText: 'comentario'.tr,
             labelStyle:
                 TextStyle(color: Color(0xFF486D28)), // Color del labelText
@@ -298,9 +297,9 @@ class CommentText extends StatelessWidget {
     return Text(
       'comentario'.tr,
       style: TextStyle(
-        fontSize: 18,
-        fontWeight: FontWeight.bold,
-      ),
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: Theme.of(context).primaryColor),
     );
   }
 }
@@ -315,9 +314,9 @@ class InfoText extends StatelessWidget {
     return Text(
       'rating'.tr,
       style: TextStyle(
-        fontSize: 18,
-        fontWeight: FontWeight.bold,
-      ),
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: Theme.of(context).primaryColor),
     );
   }
 }
@@ -350,6 +349,7 @@ class UserInfo extends StatelessWidget {
             style: TextStyle(
               fontSize: 30,
               fontWeight: FontWeight.normal,
+              color: Theme.of(context).primaryColor,
             ),
           ),
         ],
@@ -370,7 +370,7 @@ class TitleText extends StatelessWidget {
         child: Text(
           'preguntaRating'.tr,
           style: TextStyle(
-            color: Colors.black,
+            color: Theme.of(context).primaryColor,
             fontSize: 35,
             fontWeight: FontWeight.bold,
           ),

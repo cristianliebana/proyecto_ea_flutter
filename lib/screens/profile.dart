@@ -7,6 +7,8 @@ import 'package:proyecto_flutter/api/services/token_service.dart';
 import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
 import 'package:get/get.dart';
+import 'package:proyecto_flutter/screens/login.dart';
+import 'package:proyecto_flutter/screens/on_boarding.dart';
 import 'package:proyecto_flutter/screens/update_user.dart';
 import 'package:proyecto_flutter/screens/user_products.dart';
 import 'package:proyecto_flutter/screens/user_profile.dart';
@@ -185,7 +187,9 @@ class _ProfilePageState extends State<ProfilePage> {
             ProfileMenuWidget(
                 title: 'informacion'.tr,
                 icon: LineAwesomeIcons.info,
-                onPress: () {}),
+                onPress: () {
+                  Get.to(ConcentricTransitionPage());
+                }),
             ProfileMenuWidget(
                 title: 'logout'.tr,
                 icon: LineAwesomeIcons.alternate_sign_out,
