@@ -1,9 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 //import 'package:proyecto_flutter/api/models/user_model.dart';
 import 'package:proyecto_flutter/api/services/token_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
 
 class UserService {
+
+  static User? user = FirebaseAuth.instance.currentUser;
+  
   static Future<ApiResponse> registerUser(Map<String, dynamic> user) async {
     ApiResponse response = ApiResponse(data: {}, statusCode: 404);
     try {
@@ -16,6 +21,26 @@ class UserService {
       return response;
     }
   }
+    /*static Future<User?> loginWithGoogle() async {
+    final googleAccount = await GoogleSignIn().signIn();
+
+    final googleAuth = await googleAccount?.authentication;
+
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    final userCredential = await FirebaseAuth.instance.signInWithCredential(
+      credential,
+    );
+    return userCredential.user;
+  }
+
+  static Future<void> signOut() async {
+    await FirebaseAuth.instance.signOut();
+    await GoogleSignIn().signOut();
+  } */
 
   static Future<ApiResponse> loginUser(Map<String, dynamic> user) async {
     ApiResponse response = ApiResponse(data: {}, statusCode: 404);

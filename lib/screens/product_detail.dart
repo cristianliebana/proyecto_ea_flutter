@@ -78,15 +78,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   Future<void> _handleFavoriteButton() async {
     if (userData['_id'] == creadorData['_id']) {
-      Get.snackbar('Error', 'No puedes darle a favorito a un producto tuyo');
+      Get.snackbar('Error', 'favoritoTuyo'.tr);
     } else {
       try {
         if (_isFavoriteExists) {
           await borrarFavorito(userData['_id'], widget.productId);
-          Get.snackbar('Éxito', 'Producto eliminado de favoritos');
+          Get.snackbar('success'.tr, 'favoritoEliminado'.tr);
         } else {
           await crearFavorito(userData['_id'], widget.productId);
-          Get.snackbar('Éxito', 'Producto agregado a favoritos');
+          Get.snackbar('succes'.tr, 'favoritoAgregado'.tr);
         }
 
         setState(() {
@@ -415,7 +415,7 @@ class DescText extends StatelessWidget {
           width: gWidth,
           height: gHeight / 25,
           child: SizedBox(
-            child: Text("Descripción",
+            child: Text('descripcion'.tr,
                 style: TextStyle(
                   color: Theme.of(context).primaryColor,
                   fontWeight: FontWeight.bold,

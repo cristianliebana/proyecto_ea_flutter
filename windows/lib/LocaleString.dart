@@ -59,7 +59,31 @@ class LocaleString extends Translations{
       'perfil': 'Perfil',
       'inico': 'Inicio',
       'mapa': 'Mapa',
-      
+      'token': 'No se recibió un token en la respuesta',
+      'incorrecto': 'Correo o contraseña incorrectos.',
+      'success': 'Éxito',
+      'favoritoTuyo': 'No puedes darle a favorito a un producto tuyo.',
+      'favoritoEliminado': 'Producto eliminado de favoritos',
+      'favoritoAgregado': 'Producto agregado a favoritos.',
+      'salaCreada': 'Error al crear la sala',
+      'salaVerificada': 'Error al verificar la sala',
+      'contacta': 'Contacta',
+      'requisitos': 'No cumples con los requisitos.',
+      'atLeast' : 'Al menos - caracteres',
+      'uppercaseLetters' : '- Letras mayúsculas',
+      'numericCharacters' : '- Números',
+      'specialCharacters' : '- Caracteres especiales',
+      'lowercaseLetters' : '- Letras minúsculas',
+      'normalLetters' : '- Letras normales',
+      'noCoinciden': 'Las contraseñas no coinciden.',
+      'registroFallido': 'Ocurrió un error al registrar el usuario.',
+      'confirmaContraseña': 'Confirma tu contraseña.',
+      'noExisten': 'El nombre de usuario y el email no existen',
+      'yaExiste1': 'El nombre de usuario ya existe.',
+      'yaExiste2': 'El email ya existe.',
+      'rellenar': 'Tienes que rellenar todos los campos.',
+      'terms': ' Términos y condiciones.',
+      'aceptarTerms': 'Al registrarte, estás aceptando los'
     },
     //K
      //ENGLISH LANGUAGE
@@ -117,11 +141,32 @@ class LocaleString extends Translations{
       'perfil': 'Profile',
       'inico': 'Home',
       'mapa': 'Map',
-      
-      
-      
+      'token': 'No token was received in the response.',
+      'incorrecto': 'Email or password incorrects.',
+      'success': 'Success',
+      'favoritoTuyo': 'You cannot add your own product to favorites.',
+      'favoritoEliminado': 'Product deleted from favorites.',
+      'favoritoAgregado': 'Product added to favorites.',
+      'salaCreada': 'Error creating the room.',
+      'salaVerificada': 'Error verifying the room.',
+      'contacta': 'Contact',
+      'requisitos': 'You do not meet the requirements',
+      'atLeast' : 'At least - characters',
+      'uppercaseLetters' :'- Uppercase letters',
+      'numericCharacters' : '- Numbers',
+      'specialCharacters' : '- Special characters',
+      'lowercaseLetters' : '- Lowercase letters',
+      'normalLetters' : '- Normal letters',
+      'noCoinciden':'Passwords do not match.',
+      'registroFallido':'Failed to register the user. An error occurred.',
+      'confirmaContraseña': 'Confirm your password.', 
+      'noExisten': 'Username and email do not exist',
+      'yaExiste1': 'Username already exists.',
+      'yaExiste2': 'Email already exists',
+      'rellenar': 'All fields must be filled in.',
+      'terms': ' Terms & conditions.',
+      'aceptarTerms': 'By registering, you are accepting the '
 
     }
   };
-
 }

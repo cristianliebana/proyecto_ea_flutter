@@ -1,16 +1,27 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:proyecto_flutter/LocaleString.dart';
 import 'package:proyecto_flutter/bindings/map_Bindings.dart';
+import 'package:proyecto_flutter/firebase_options.dart';
 import 'package:proyecto_flutter/screens/login.dart';
 import 'package:proyecto_flutter/utils/theme_provider.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'dart:html' as html;
+
+// ignore: unused_import
 import 'package:proyecto_flutter/widget/language_controller.dart';
 
 void main() async {
   Get.put(ThemeProvider());
   await Get.find<ThemeProvider>().loadTheme();
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+   final GoogleSignIn _googleSignIn = GoogleSignIn(
+    clientId: '237252769614-0cloeot1ejqj1viu44ceneheerpm4df8.apps.googleusercontent.com',
+  );
   runApp(const MyApp());
 }
 

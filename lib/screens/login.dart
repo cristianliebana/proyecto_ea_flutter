@@ -1,7 +1,9 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:proyecto_flutter/api/services/auth_service.dart';
 import 'package:proyecto_flutter/api/services/token_service.dart';
 import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
@@ -120,10 +122,10 @@ class LoginController extends GetxController {
         SocketManager();
         Get.offAll(() => HomePage());
       } else {
-        print('No se recibió un token en la respuesta');
+        print('token'.tr);
       }
     } else {
-      Get.snackbar('Error', 'Correo o contraseña incorrectos',
+      Get.snackbar('Error', 'incorrecto'.tr,
           snackPosition: SnackPosition.BOTTOM);
     }
   }
@@ -186,7 +188,27 @@ class GoogleLoginButton extends StatelessWidget {
         child: IconButton(
           icon: Image.asset('assets/images/google3.png'),
           iconSize: gHeight / 10,
-          onPressed: () {},
+          onPressed: () async {
+            try {
+              final user = await AuthService.signInWithGoogle();
+              if (user != null) {
+                Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => HomePage()));
+              }
+            } on FirebaseAuthException catch (error) {
+              print(error.message);
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(
+                error.message ?? "Something went wrong",
+              )));
+            } catch (error) {
+              print(error);
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(
+                error.toString(),
+              )));
+            }
+          },
         ),
       ),
     );

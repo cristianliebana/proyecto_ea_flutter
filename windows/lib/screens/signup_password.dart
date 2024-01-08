@@ -147,14 +147,14 @@ class SignUpPasswordController extends GetxController {
     print(password1);
 
     if (password != password1) {
-      Get.snackbar('Error', 'Las contraseñas no coinciden',
+      Get.snackbar('Error', 'noCoinciden'.tr,
           snackPosition: SnackPosition.BOTTOM);
       return;
     } else {
       try {
         Get.to(SignUpImageScreen(registrationData: registrationData));
       } catch (error) {
-        Get.snackbar('Error', 'Ocurrió un error al registrar el usuario',
+        Get.snackbar('Error', 'registroFallido'.tr,
             snackPosition: SnackPosition.BOTTOM);
       }
     }
@@ -163,17 +163,17 @@ class SignUpPasswordController extends GetxController {
 
 class SpanishStrings implements FlutterPwValidatorStrings {
   @override
-  final String atLeast = 'Al menos - caracteres';
+  final String atLeast = 'atLeast'.tr;
   @override
-  final String uppercaseLetters = '- Letras mayúsculas';
+  final String uppercaseLetters = 'uppercaseLetters'.tr;
   @override
-  final String numericCharacters = '- Números';
+  final String numericCharacters = 'numericCharacters'.tr;
   @override
-  final String specialCharacters = '- Caracteres especiales';
+  final String specialCharacters = 'specialCharacters'.tr;
   @override
-  final String lowercaseLetters = '- Letras minúsculas';
+  final String lowercaseLetters = 'lowercaseLetters'.tr;
   @override
-  final String normalLetters = '- Letras normales';
+  final String normalLetters = 'normalLetters'.tr;
 }
 
 class ContinueButton extends StatelessWidget {
@@ -193,14 +193,14 @@ class ContinueButton extends StatelessWidget {
         child: ElevatedButton(
           onPressed: () {
             if (success == false) {
-              Get.snackbar('Error', 'No cumples con los requisitos',
+              Get.snackbar('Error', 'requisitos'.tr,
                   snackPosition: SnackPosition.BOTTOM);
             } else {
               signUpController.signUp(context);
             }
           },
           child: Text(
-            "Continuar",
+            'continuar'.tr,
             style: TextStyle(
                 fontSize: 25, color: Theme.of(context).colorScheme.primary),
           ),
@@ -247,7 +247,7 @@ class _ConfirmPasswordTextFiledState extends State<ConfirmPasswordTextFiled> {
       child: RepTextFiled(
         controller: signUpController.passwordController,
         icon: LineIcons.alternateUnlock,
-        text: "Confirma tu contraseña",
+        text: 'confirmaCoontraseña'.tr,
         suficon: Icon(obscureText ? LineIcons.eyeSlash : LineIcons.eye),
         obscureText: obscureText,
         onToggleVisibility: () {
@@ -292,7 +292,7 @@ class _PasswordTextFiledState extends State<PasswordTextFiled> {
           controller2: signUpController.password1Controller,
           controller: widget.controller,
           icon: LineIcons.alternateUnlock,
-          text: "Contraseña",
+          text: 'contraseña'.tr,
           suficon: Icon(obscureText ? LineIcons.eyeSlash : LineIcons.eye),
           obscureText: obscureText,
           onToggleVisibility: () {
@@ -320,7 +320,7 @@ class PasswordText extends StatelessWidget {
           width: gWidth / 4,
           height: gHeight / 18,
           child: FittedBox(
-            child: Text("Regístrate",
+            child: Text('register'.tr,
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Theme.of(context).primaryColor)),

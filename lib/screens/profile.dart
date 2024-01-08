@@ -31,7 +31,7 @@ class _ProfilePageState extends State<ProfilePage> {
     CloudinaryContext.cloudinary =
         Cloudinary.fromCloudName(cloudName: "dfwsx27vx");
   }
-  
+
   final List locale = [
     {'name': 'Español', 'locale': Locale('es')},
     {'name': 'English', 'locale': Locale('en')},
@@ -53,7 +53,6 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _onRemoveTokenPressed() {
-    
     TokenService.removeToken();
   }
 
@@ -62,10 +61,7 @@ class _ProfilePageState extends State<ProfilePage> {
       elevation: 0,
       backgroundColor: Colors.transparent,
       centerTitle: true,
-      actions: [
-        _buildAppBarThemeButton(),
-        _buildAppBarLanguageButton()
-      ],
+      actions: [_buildAppBarThemeButton(), _buildAppBarLanguageButton()],
     );
   }
 
@@ -92,23 +88,23 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _buildAppBarLanguageButton() {
-  return Container(
-    margin: EdgeInsets.all(8.0),
-    decoration: BoxDecoration(
-      color: Theme.of(context).colorScheme.onPrimary,
-      shape: BoxShape.circle,
-    ),
-    child: IconButton(
-      icon: Icon(Icons.language, color: Theme.of(context).colorScheme.primary),
-      onPressed: () {
-        buildLanguageDialog(context)
-        ();
-      },
-    ),
-  );
-}
+    return Container(
+      margin: EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.onPrimary,
+        shape: BoxShape.circle,
+      ),
+      child: IconButton(
+        icon:
+            Icon(Icons.language, color: Theme.of(context).colorScheme.primary),
+        onPressed: () {
+          buildLanguageDialog(context)();
+        },
+      ),
+    );
+  }
 
- buildLanguageDialog(BuildContext context) {
+  buildLanguageDialog(BuildContext context) {
     showDialog(
         context: context,
         builder: (builder) {
@@ -167,7 +163,9 @@ class _ProfilePageState extends State<ProfilePage> {
               color: Theme.of(context).shadowColor,
             ),
             ProfileMenuWidget(
-                title: 'ajustes'.tr, icon: LineAwesomeIcons.cog, onPress: () {}),
+                title: 'ajustes'.tr,
+                icon: LineAwesomeIcons.cog,
+                onPress: () {}),
             ProfileMenuWidget(
                 title: 'perfil'.tr,
                 icon: LineAwesomeIcons.user,

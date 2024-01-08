@@ -191,10 +191,6 @@ class SendButton extends StatelessWidget {
           vertical: 10), // Ajusta el margen horizontal y vertical
       child: ElevatedButton(
         onPressed: onPressed,
-        child: Text(
-          'enviarReview'.tr,
-          style: TextStyle(fontSize: 20), // Tamaño del texto
-        ),
         style: ButtonStyle(
           padding: MaterialStateProperty.all(
               EdgeInsets.all(20)), // Ajusta el relleno del botón
@@ -203,7 +199,13 @@ class SendButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(100),
             ),
           ),
-          backgroundColor: MaterialStateProperty.all(buttonColor),
+          backgroundColor: MaterialStateProperty.all(
+              Theme.of(context).colorScheme.onPrimary),
+        ),
+        child: Text(
+          'enviarReview'.tr,
+          style: TextStyle(
+              fontSize: 20, color: Theme.of(context).colorScheme.primary),
         ),
       ),
     );
@@ -366,7 +368,7 @@ class TitleText extends StatelessWidget {
     return Container(
       child: Center(
         child: Text(
-          'ratingPregunta'.tr,
+          'preguntaRating'.tr,
           style: TextStyle(
             color: Colors.black,
             fontSize: 35,

@@ -112,10 +112,10 @@ class LoginController extends GetxController {
         SocketManager();
         Get.offAll(() => HomePage());
       } else {
-        print('No se recibió un token en la respuesta');
+        print('token'.tr);
       }
     } else {
-      Get.snackbar('Error', 'Correo o contraseña incorrectos',
+      Get.snackbar('Error', 'incorrecto'.tr,
           snackPosition: SnackPosition.BOTTOM);
     }
   }

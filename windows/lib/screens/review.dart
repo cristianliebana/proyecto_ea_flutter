@@ -33,13 +33,12 @@ class _ReviewScreenState extends State<ReviewScreen> {
     obtenerDatosUsuario2(widget.userId2);
   }
 
-    Future<void> obtenerDatosUsuario() async {
+  Future<void> obtenerDatosUsuario() async {
     ApiResponse response = await UserService.getUserById();
     setState(() {
       userData = response.data;
     });
   }
-
 
   Future<void> obtenerDatosUsuario2(String userId) async {
     ApiResponse response = await UserService.getCreadorById(userId);
@@ -48,8 +47,8 @@ class _ReviewScreenState extends State<ReviewScreen> {
     });
   }
 
-void enviarValoracion() async {
-  print('Enviando valoración...');
+  void enviarValoracion() async {
+    print('Enviando valoración...');
 
     String comentario = commentController.text;
 
@@ -62,8 +61,9 @@ void enviarValoracion() async {
     };
 
     try {
-       ApiResponse response = await RatingService.createRating(ratingData);
-       ApiResponse response2 = await RatingService.updateAverageRating(userData2!['_id']);
+      ApiResponse response = await RatingService.createRating(ratingData);
+      ApiResponse response2 =
+          await RatingService.updateAverageRating(userData2!['_id']);
       Get.defaultDialog(
         title: 'felicidades'.tr,
         backgroundColor: Color(0xFFFFFCEA),
@@ -178,7 +178,6 @@ void enviarValoracion() async {
 }
 
 class SendButton extends StatelessWidget {
-
   final VoidCallback onPressed;
 
   SendButton({required this.onPressed});
@@ -187,28 +186,32 @@ class SendButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 300, // Ocupar todo el ancho disponible
-      margin: EdgeInsets.symmetric(horizontal: 30, vertical: 10), // Ajusta el margen horizontal y vertical
+      margin: EdgeInsets.symmetric(
+          horizontal: 30,
+          vertical: 10), // Ajusta el margen horizontal y vertical
       child: ElevatedButton(
-      onPressed: onPressed,
+        onPressed: onPressed,
         child: Text(
           'enviarReview'.tr,
-          style: TextStyle(fontSize: 20), // Tamaño del texto
+          style: TextStyle(
+              fontSize: 20,
+              color: Theme.of(context).colorScheme.primary),
         ),
         style: ButtonStyle(
-          padding: MaterialStateProperty.all(EdgeInsets.all(20)), // Ajusta el relleno del botón
+          padding: MaterialStateProperty.all(
+              EdgeInsets.all(20)), // Ajusta el relleno del botón
           shape: MaterialStateProperty.all(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(100),
             ),
           ),
-          backgroundColor: MaterialStateProperty.all(buttonColor),
+          backgroundColor: MaterialStateProperty.all(
+              Theme.of(context).colorScheme.onPrimary),
         ),
       ),
     );
   }
 }
-
-
 
 class CommentBox extends StatelessWidget {
   const CommentBox({
@@ -229,12 +232,16 @@ class CommentBox extends StatelessWidget {
           maxLines: 8,
           decoration: InputDecoration(
             labelText: 'comentario'.tr,
-            labelStyle: TextStyle(color: Color(0xFF486D28)), // Color del labelText
+            labelStyle:
+                TextStyle(color: Color(0xFF486D28)), // Color del labelText
             border: OutlineInputBorder(
-              borderSide: BorderSide(color: Color(0xFF486D28)), // Color del borde
+              borderSide:
+                  BorderSide(color: Color(0xFF486D28)), // Color del borde
             ),
             focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Color(0xFF486D28)), // Color del borde cuando está enfocado
+              borderSide: BorderSide(
+                  color: Color(
+                      0xFF486D28)), // Color del borde cuando está enfocado
             ),
           ),
         ),
@@ -244,7 +251,7 @@ class CommentBox extends StatelessWidget {
 }
 
 class Rating extends StatelessWidget {
- const Rating({
+  const Rating({
     Key? key,
     required this.ratingValue,
     required this.onRatingUpdate,
@@ -335,7 +342,8 @@ class UserInfo extends StatelessWidget {
             radius: 35,
             backgroundImage: userData2?['profileImage'] != null
                 ? NetworkImage(userData2!['profileImage']!)
-                : AssetImage('assets/images/profile.png') as ImageProvider<Object>,
+                : AssetImage('assets/images/profile.png')
+                    as ImageProvider<Object>,
           ),
           SizedBox(width: 16),
           Text(
@@ -361,7 +369,7 @@ class TitleText extends StatelessWidget {
     return Container(
       child: Center(
         child: Text(
-          'ratingPregunta'.tr,
+          'preguntaRating'.tr,
           style: TextStyle(
             color: Colors.black,
             fontSize: 35,
