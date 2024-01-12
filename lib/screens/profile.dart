@@ -7,6 +7,7 @@ import 'package:proyecto_flutter/api/services/token_service.dart';
 import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
 import 'package:get/get.dart';
+import 'package:proyecto_flutter/screens/chatbot.dart';
 import 'package:proyecto_flutter/screens/login.dart';
 import 'package:proyecto_flutter/screens/on_boarding.dart';
 import 'package:proyecto_flutter/screens/update_user.dart';
@@ -177,6 +178,12 @@ class _ProfilePageState extends State<ProfilePage> {
             ProfileMenuWidget(
                 title: 'misProductos'.tr,
                 icon: LineAwesomeIcons.fruit_apple,
+                onPress: () {
+                  Get.to(UserProductsScreen());
+                }),
+            ProfileMenuWidget(
+                title: "Mis Recetas",
+                icon: LineAwesomeIcons.receipt,
                 onPress: () {
                   Get.to(UserProductsScreen());
                 }),
