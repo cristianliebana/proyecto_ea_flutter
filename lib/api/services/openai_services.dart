@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-String apiKey = "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";
+String apiKey = "";
 
 Future sendTextCompletionRequest(String message) async {
   String baseUrl = "https://api.openai.com/v1/completions";
@@ -13,7 +13,7 @@ Future sendTextCompletionRequest(String message) async {
   var res = await http.post(Uri.parse(baseUrl),
       headers: headers,
       body: json.encode({
-        "model": "text-davinci-003",
+        "model": "gpt-3.5-turbo-instruct",
         "prompt": message,
         "max_tokens": 200,
         "temperature": 0,
@@ -23,7 +23,9 @@ Future sendTextCompletionRequest(String message) async {
         "logprobs": null,
       }));
   if (res.statusCode == 200) {
-    return jsonDecode(res.body);
+    // return jsonDecode(res.body);
+    String decodedBody = utf8.decode(res.bodyBytes);
+    return jsonDecode(decodedBody);
   } else {
     print("Error: ${res.statusCode}");
     print("Respuesta: ${res.body}");
