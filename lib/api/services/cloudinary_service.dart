@@ -61,4 +61,40 @@ class CloudinaryServices {
       return null;
     }
   }
+
+  Future<String?> uploadImageFromBytes(Uint8List imageBytes) async {
+    try {
+      final cloudinary = Cloudinary.signedConfig(
+        apiKey: '992747211431623',
+        apiSecret: 'UYEH8bjX2XAbyHzmH8R_mqmCLuo',
+        cloudName: 'dfwsx27vx',
+      );
+
+      final response = await cloudinary.upload(
+        fileBytes: imageBytes,
+        resourceType: CloudinaryResourceType.image,
+        folder: 'km0',
+        progressCallback: (count, total) {
+          print('Uploading image with progress: $count/$total');
+        },
+      );
+
+      if (response.isSuccessful) {
+        final secureUrl = response.secureUrl;
+        if (secureUrl != null && secureUrl is String) {
+          print('Get your image with $secureUrl');
+          return secureUrl;
+        } else {
+          print('Error uploading image: secureUrl is not a valid String');
+          return null;
+        }
+      } else {
+        print('Error uploading image: ${response.error}');
+        return null;
+      }
+    } catch (error) {
+      print('Error uploading image: $error');
+      return null;
+    }
+  }
 }

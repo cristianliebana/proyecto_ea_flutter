@@ -1,69 +1,44 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:proyecto_flutter/api/models/recipe_model.dart';
+import 'package:proyecto_flutter/api/utils/http_api.dart';
 
 class RecipeService {
-  static const String baseUrl =
-      "/recipes"; // Reemplaza con la URL de tu backend
-
-  static Future<void> createRecipe(
-      String userId, String product, String recipe) async {
-    final Uri url = Uri.parse('http://localhost:9090/recipes/createrecipe');
-
+  static Future<ApiResponse> createRecipe(String userId, String product,
+      String recipe, String recipeURL, String title) async {
+    ApiResponse response = ApiResponse(data: {}, statusCode: 404);
     try {
-      final response = await http.post(
-        url,
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode(<String, String>{
+      response = await Api().postWithoutToken(
+        '/recipes/createrecipe',
+        data: {
           'userId': userId,
           'product': product,
           'recipe': recipe,
-        }),
+          'recipeURL': recipeURL,
+          'title': title,
+        },
       );
-      print(response);
-      if (response.statusCode == 201) {
-        print('Receta creada exitosamente');
-      } else {
-        print(
-            'Error al crear la receta. Código de estado: ${response.statusCode}');
-      }
+      return response;
     } catch (error) {
-      print('Error: $error');
-    }
-  }
-
-  Future<void> getAllRecipes() async {
-    final Uri url = Uri.parse('$baseUrl/readall');
-
-    try {
-      final response = await http.get(url);
-
-      if (response.statusCode == 200) {
-        final List<dynamic> recipes = jsonDecode(response.body);
-        print('Recetas obtenidas: $recipes');
-      } else {
-        print(
-            'Error al obtener las recetas. Código de estado: ${response.statusCode}');
-      }
-    } catch (error) {
-      print('Error: $error');
+      return response;
     }
   }
 
   static Future<List<Recipe>> getUserRecipes(String userId) async {
-    final response = await http.get(
-      Uri.parse('$baseUrl/recipes/user/$userId'),
-    );
+    ApiResponse response = ApiResponse(data: {}, statusCode: 404);
+    response = await Api().get('/recipes/readuserrecipe/$userId');
 
     if (response.statusCode == 200) {
-      final List<dynamic> data = json.decode(response.body);
-      final List<Recipe> recipes =
-          data.map((recipeData) => Recipe.fromJson(recipeData)).toList();
-      return recipes;
+      List<Recipe> recipesList = [];
+      List<dynamic> recipesData = response.data['docs'];
+      for (var recipeData in recipesData) {
+        Recipe recipe = Recipe.fromJson(recipeData);
+        recipesList.add(recipe);
+      }
+      return recipesList;
     } else {
-      throw Exception('Failed to load recipes');
+      print('Error en la solicitud: ${response.statusCode}');
+      return [];
     }
   }
 }

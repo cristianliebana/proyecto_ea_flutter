@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:proyecto_flutter/screens/chatbot.dart';
 import 'package:proyecto_flutter/screens/login.dart';
 import 'package:proyecto_flutter/screens/on_boarding.dart';
+import 'package:proyecto_flutter/screens/recipe.dart';
 import 'package:proyecto_flutter/screens/update_user.dart';
 import 'package:proyecto_flutter/screens/user_products.dart';
 import 'package:proyecto_flutter/screens/user_profile.dart';
@@ -185,7 +186,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 title: "Mis Recetas",
                 icon: LineAwesomeIcons.receipt,
                 onPress: () {
-                  Get.to(UserProductsScreen());
+                  Get.to(RecipeScreen());
                 }),
             Divider(
               thickness: 0.2,

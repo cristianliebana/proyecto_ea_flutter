@@ -5,12 +5,12 @@ import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
 
-class UserProductsScreen extends StatefulWidget {
+class RecipeScreen extends StatefulWidget {
   @override
-  _UserProductsScreenState createState() => _UserProductsScreenState();
+  _RecipeScreenState createState() => _RecipeScreenState();
 }
 
-class _UserProductsScreenState extends State<UserProductsScreen> {
+class _RecipeScreenState extends State<RecipeScreen> {
   List<Recipe> recipes = [];
   Map<String, dynamic> userData = {};
   late ScrollController _scrollController;
@@ -151,21 +151,21 @@ class RecipesVerticalItem extends StatelessWidget {
         ),
         child: Stack(
           children: [
-            // Container(
-            //   width: double.infinity,
-            //   height: double.infinity,
-            //   decoration: BoxDecoration(
-            //     borderRadius: BorderRadius.circular(30),
-            //     image: DecorationImage(
-            //       image: recipe.recipeImage != null &&
-            //               recipe.recipeImage!.isNotEmpty
-            //           ? NetworkImage(recipe.recipeImage!.first)
-            //           : AssetImage('assets/images/placeholder.png')
-            //               as ImageProvider, // Cambiado a una imagen de marcador de posición
-            //       fit: BoxFit.cover,
-            //     ),
-            //   ),
-            // ),
+            Container(
+              width: double.infinity,
+              height: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+                image: DecorationImage(
+                  image: recipe.recipeURL != null &&
+                          recipe.recipeURL!.isNotEmpty
+                      ? NetworkImage(recipe.recipeURL!)
+                      : AssetImage('assets/images/placeholder.png')
+                          as ImageProvider, // Cambiado a una imagen de marcador de posición
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
             Positioned(
               top: 10,
               left: 20,
@@ -176,7 +176,7 @@ class RecipesVerticalItem extends StatelessWidget {
                   borderRadius: BorderRadius.circular(30),
                 ),
                 child: Text(
-                  recipe.product ?? '',
+                  recipe.title ?? '',
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.primary,
                     fontSize: 18.0,
