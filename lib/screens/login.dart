@@ -1,7 +1,9 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:proyecto_flutter/api/services/auth_service.dart';
 import 'package:proyecto_flutter/api/services/token_service.dart';
 import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
@@ -16,6 +18,48 @@ import 'package:proyecto_flutter/widget/version.dart';
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
   final LoginController loginController = LoginController();
+
+  final List locale = [
+    {'name': 'Español', 'locale': Locale('es')},
+    {'name': 'English', 'locale': Locale('en')},
+  ];
+  updateLanguage(Locale locale) {
+    Get.back();
+    Get.updateLocale(locale);
+  }
+
+  buildLanguageDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (builder) {
+          return AlertDialog(
+            title: Text('Choose Your Language'),
+            content: Container(
+              width: double.maxFinite,
+              child: ListView.separated(
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GestureDetector(
+                        child: Text(locale[index]['name']),
+                        onTap: () {
+                          print(locale[index]['name']);
+                          updateLanguage(locale[index]['locale']);
+                        },
+                      ),
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return Divider(
+                      color: Colors.blue,
+                    );
+                  },
+                  itemCount: locale.length),
+            ),
+          );
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +85,14 @@ class LoginScreen extends StatelessWidget {
                 OrText(),
                 GoogleLoginButton(),
                 RegisterText(),
+                SizedBox(height: 20),
+                IconButton(
+                  icon: Icon(Icons
+                      .language), // Aquí puedes usar cualquier icono que desees
+                  onPressed: () {
+                    buildLanguageDialog(context);
+                  },
+                ),
                 SizedBox(height: 5),
                 const AppVersionText(),
               ],
@@ -73,10 +125,10 @@ class LoginController extends GetxController {
         SocketManager();
         Get.offAll(() => HomePage());
       } else {
-        print('No se recibió un token en la respuesta');
+        print('token'.tr);
       }
     } else {
-      Get.snackbar('Error', 'Correo o contraseña incorrectos',
+      Get.snackbar('Error', 'incorrecto'.tr,
           snackPosition: SnackPosition.BOTTOM);
     }
   }
@@ -96,7 +148,7 @@ class RegisterText extends StatelessWidget {
         child: Center(
           child: RichText(
             text: TextSpan(
-              text: "¿No tienes una cuenta? ",
+              text: 'sin_cuenta'.tr,
               style:
                   TextStyle(color: Theme.of(context).canvasColor, fontSize: 18),
               children: [
@@ -106,7 +158,7 @@ class RegisterText extends StatelessWidget {
                       Get.off(() => SignUpScreen());
                     },
                     child: Text(
-                      "Regístrate",
+                      'register'.tr,
                       style: TextStyle(
                         decoration: TextDecoration.underline,
                         color: Theme.of(context).colorScheme.onPrimary,
@@ -139,7 +191,27 @@ class GoogleLoginButton extends StatelessWidget {
         child: IconButton(
           icon: Image.asset('assets/images/google3.png'),
           iconSize: gHeight / 10,
-          onPressed: () {},
+          onPressed: () async {
+            try {
+              final user = await AuthService.signInWithGoogle();
+              if (user != null) {
+                Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => HomePage()));
+              }
+            } on FirebaseAuthException catch (error) {
+              print(error.message);
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(
+                error.message ?? "Something went wrong",
+              )));
+            } catch (error) {
+              print(error);
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(
+                error.toString(),
+              )));
+            }
+          },
         ),
       ),
     );
@@ -164,7 +236,7 @@ class OrText extends StatelessWidget {
               Container(
                   width: 75, height: 0.5, color: Theme.of(context).canvasColor),
               Text(
-                " Otros métodos de autenticación ",
+                'authMethods'.tr,
                 style: TextStyle(
                     color: Theme.of(context).canvasColor,
                     fontSize: 20,
@@ -200,7 +272,7 @@ class LoginButton extends StatelessWidget {
             loginController.login(context);
           },
           child: Text(
-            "Iniciar Sesión",
+            'login'.tr,
             style: TextStyle(
                 fontSize: 25, color: Theme.of(context).colorScheme.primary),
           ),
@@ -234,7 +306,7 @@ class ForgotText extends StatelessWidget {
             width: gWidth,
             height: gHeight / 20,
             child: Center(
-                child: Text("¿Has olvidado tu contraseña?",
+                child: Text('forgetPassword'.tr,
                     style: TextStyle(
                         color: Theme.of(context).colorScheme.onPrimary,
                         fontSize: 15)))),
@@ -270,7 +342,7 @@ class _PasswordTextFiledState extends State<PasswordTextFiled> {
       child: RepTextFiled(
         controller: loginController.passwordController,
         icon: LineIcons.alternateUnlock,
-        text: "Contraseña",
+        text: 'contraseña'.tr,
         suficon: Icon(obscureText
             ? LineIcons.eyeSlash
             : LineIcons.eye), // Cambia el icono según la visibilidad
@@ -299,7 +371,7 @@ class EmailTextFiled extends StatelessWidget {
         delay: Duration(milliseconds: 225),
         child: RepTextFiled(
             icon: LineIcons.at,
-            text: "Correo electrónico",
+            text: 'correo'.tr,
             controller: loginController.emailController));
   }
 }

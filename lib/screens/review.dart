@@ -62,9 +62,8 @@ class _ReviewScreenState extends State<ReviewScreen> {
       ApiResponse response2 =
           await RatingService.updateAverageRating(userData2!['_id']);
       Get.defaultDialog(
-        title: "¡Felicidades!",
-        titleStyle: TextStyle(color: Theme.of(context).primaryColor),
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        title: 'felicidades'.tr,
+        backgroundColor: Color(0xFFFFFCEA),
         content: ClipRect(
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 50.0, sigmaY: 50.0),
@@ -86,10 +85,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                       repeat: false,
                     ),
                     SizedBox(height: 20),
-                    Text(
-                      "¡Acabas de publicar tu valoración!",
-                      style: TextStyle(color: Theme.of(context).primaryColor),
-                    ),
+                    Text('reviewPublicada'.tr),
                   ],
                 ),
               ),
@@ -101,10 +97,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
           onPressed: () {
             Get.to(ChatPage());
           },
-          child: Text(
-            "Aceptar",
-            style: TextStyle(color: Theme.of(context).colorScheme.primary),
-          ),
+          child: Text('aceptar'.tr),
           style: ButtonStyle(
             shape: MaterialStateProperty.all(
               RoundedRectangleBorder(
@@ -196,12 +189,6 @@ class SendButton extends StatelessWidget {
           vertical: 10), // Ajusta el margen horizontal y vertical
       child: ElevatedButton(
         onPressed: onPressed,
-        child: Text(
-          "Mandar valoración",
-          style: TextStyle(
-              fontSize: 20,
-              color: Theme.of(context).colorScheme.primary), // Tamaño del texto
-        ),
         style: ButtonStyle(
           padding: MaterialStateProperty.all(
               EdgeInsets.all(20)), // Ajusta el relleno del botón
@@ -212,6 +199,11 @@ class SendButton extends StatelessWidget {
           ),
           backgroundColor: MaterialStateProperty.all(
               Theme.of(context).colorScheme.onPrimary),
+        ),
+        child: Text(
+          'enviarReview'.tr,
+          style: TextStyle(
+              fontSize: 20, color: Theme.of(context).colorScheme.primary),
         ),
       ),
     );
@@ -236,22 +228,18 @@ class CommentBox extends StatelessWidget {
           controller: commentController,
           maxLines: 8,
           decoration: InputDecoration(
-            labelText: 'Deja tu comentario',
-            labelStyle: TextStyle(
-                color: Theme.of(context)
-                    .colorScheme
-                    .onPrimary), // Color del labelText
+
+            labelText: 'comentario'.tr,
+            labelStyle:
+                TextStyle(color: Color(0xFF486D28)), // Color del labelText
             border: OutlineInputBorder(
-              borderSide: BorderSide(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onPrimary), // Color del borde
+              borderSide:
+                  BorderSide(color: Color(0xFF486D28)), // Color del borde
             ),
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onPrimary), // Color del borde cuando está enfocado
+                  color: Color(
+                      0xFF486D28)), // Color del borde cuando está enfocado
             ),
           ),
         ),
@@ -307,7 +295,7 @@ class CommentText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      "Deja un comentario:",
+      'comentario'.tr,
       style: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
@@ -324,7 +312,7 @@ class InfoText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      "Puntua del 0 al 5:",
+      'rating'.tr,
       style: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
@@ -380,7 +368,7 @@ class TitleText extends StatelessWidget {
     return Container(
       child: Center(
         child: Text(
-          "¿Cómo puntuarías a..?",
+          'preguntaRating'.tr,
           style: TextStyle(
             color: Theme.of(context).primaryColor,
             fontSize: 35,

@@ -60,7 +60,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     return Scaffold(
       bottomNavigationBar: CustomBottomNavigationBar(currentIndex: 4),
       appBar: AppBar(
-        title: Text('Productos favoritos',
+        title: Text('favProductos'.tr,
             style: TextStyle(color: Theme.of(context).colorScheme.primary)),
         backgroundColor: Theme.of(context).colorScheme.onPrimary,
         centerTitle: true,
@@ -128,7 +128,7 @@ class SearchBar extends StatelessWidget {
                   fontWeight: FontWeight.w400,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                hintText: "Busca en tus productos favoritos",
+                hintText: 'buscaProductosFav'.tr,
                 border: OutlineInputBorder(
                   borderSide: BorderSide.none,
                   borderRadius: BorderRadius.circular(100),

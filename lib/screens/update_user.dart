@@ -117,7 +117,7 @@ class UpdateController extends GetxController {
     ApiResponse response = await UserService.updateUser(userData);
     //print(userData);
     Get.defaultDialog(
-      title: "¡Felicidades!",
+      title: 'felicidades'.tr,
       titleStyle: TextStyle(color: Theme.of(context).primaryColor),
       backgroundColor: Theme.of(context).colorScheme.primary,
       content: ClipRect(
@@ -142,7 +142,7 @@ class UpdateController extends GetxController {
                   ),
                   SizedBox(height: 20),
                   Text(
-                    "¡Has actualizado tu perfil!",
+                    'perfilActualizado'.tr,
                     style: TextStyle(color: Theme.of(context).primaryColor),
                   ),
                 ],
@@ -157,7 +157,7 @@ class UpdateController extends GetxController {
           Get.offAll(ProfilePage());
         },
         child: Text(
-          "Aceptar",
+          'aceptar'.tr,
           style: TextStyle(color: Theme.of(context).colorScheme.primary),
         ),
         style: ButtonStyle(
@@ -194,7 +194,7 @@ class UpdateButton extends StatelessWidget {
             updateController.updateUser(context);
           },
           child: Text(
-            "Guardar cambios",
+            'guardarCambios'.tr,
             style: TextStyle(
                 fontSize: 25, color: Theme.of(context).colorScheme.primary),
           ),
@@ -225,7 +225,7 @@ class UsernameTextFiled extends StatelessWidget {
         delay: Duration(milliseconds: 225),
         child: RepTextFiled(
             icon: LineIcons.userTag,
-            text: "Nombre de usuario",
+            text: 'nombreUsuario'.tr,
             controller: updateController.usernameController));
   }
 }
@@ -243,7 +243,7 @@ class FullnameTextFiled extends StatelessWidget {
         delay: Duration(milliseconds: 225),
         child: RepTextFiled(
             icon: LineIcons.user,
-            text: "Nombre completo",
+            text: 'nombreCompleto'.tr,
             controller: updateController.fullnameController));
   }
 }
@@ -262,7 +262,7 @@ class UpdateText extends StatelessWidget {
           width: gWidth,
           height: gHeight / 25,
           child: SizedBox(
-            child: Text("Actualizar perfil",
+            child: Text('actualizarPerfil'.tr,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 30,
