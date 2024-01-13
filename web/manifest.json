@@ -1,11 +1,11 @@
 {
-    "name": "proyecto_flutter",
-    "short_name": "proyecto_flutter",
+    "name": "Km0Market",
+    "short_name": "Km0Market",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Welcome to Km0Market, the community-centric app where local flavors meet digital convenience! Imagine a virtual farmers' market bustling with the freshest, homegrown produce from your own neighborhood. Km0Market bridges the gap between local growers and health-conscious consumers, offering an easy, eco-friendly way to buy and sell locally grown fruits, vegetables, and more.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

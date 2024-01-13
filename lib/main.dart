@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
       final ThemeProvider themeProvider = Get.find<ThemeProvider>();
       return GetMaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'KM0 MARKET',
+        title: 'Km0Market',
         theme: themeProvider.getTheme(),
         home:  SplashScreen(),
         initialBinding: MapPageBinding(),
