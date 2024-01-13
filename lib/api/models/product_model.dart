@@ -6,6 +6,7 @@ class Product {
   int? units;
   List<String>? productImage;
   Location? location;
+  DateTime? date;
 
   Product({
     this.id,
@@ -15,6 +16,7 @@ class Product {
     this.units,
     this.productImage,
     this.location,
+    this.date,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
@@ -25,7 +27,9 @@ class Product {
       price: (json['price'] ?? 0).toDouble(),
       units: json['units'] ?? 0,
       productImage: (json['productImage'] as List<dynamic>).cast<String>(),
-      location: json['location'] != null ? Location.fromJson(json['location']) : null,
+      location:
+          json['location'] != null ? Location.fromJson(json['location']) : null,
+      date: json['date'] != null ? DateTime.parse(json['date']) : null,
     );
   }
 
@@ -38,9 +42,11 @@ class Product {
       'units': units,
       'productImage': productImage,
       'location': location?.toJson(),
+      'date': date,
     };
   }
 }
+
 class Location {
   double? latitude;
   double? longitude;

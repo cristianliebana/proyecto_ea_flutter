@@ -27,6 +27,7 @@ class CreateProductDetail extends StatefulWidget {
 
 class _CreateProductDetailState extends State<CreateProductDetail> {
   late Future<CreateProductController?> _controllerFuture;
+  DateTime selectedDate = DateTime.now();
 
   @override
   void initState() {
@@ -113,6 +114,60 @@ class _CreateProductDetailState extends State<CreateProductDetail> {
                   UnitsTextField(
                       createProductController: createProductController),
                   SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        child: const Text("¿Cuándo caduca?"),
+                        onPressed: () async {
+                          final DateTime? dateTime = await showDatePicker(
+                            context: context,
+                            initialDate:
+                                createProductController.selectedDate.value,
+                            firstDate: DateTime(2024),
+                            lastDate: DateTime(2025),
+                            builder: (context, child) {
+                              return Theme(
+                                data: Theme.of(context).copyWith(
+                                  colorScheme: ColorScheme.light(
+                                    primary:
+                                        Theme.of(context).colorScheme.onPrimary,
+                                    onPrimary:
+                                        Theme.of(context).colorScheme.primary,
+                                    onSurface: Theme.of(context).primaryColor,
+                                  ),
+                                  textButtonTheme: TextButtonThemeData(
+                                    style: TextButton.styleFrom(
+                                      foregroundColor: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary,
+                                    ),
+                                  ),
+                                ),
+                                child: child!,
+                              );
+                            },
+                          );
+
+                          if (dateTime != null &&
+                              dateTime !=
+                                  createProductController.selectedDate.value) {
+                            createProductController.selectedDate.value =
+                                dateTime;
+                          }
+                        },
+                      ),
+                      SizedBox(width: 20),
+                      Obx(() => Text(
+                            'Fecha seleccionada: ${createProductController.selectedDate.value.toLocal()}',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          )),
+                    ],
+                  ),
+                  SizedBox(height: 20),
                   SaveButton(createProductController: createProductController),
                 ],
               ),
@@ -129,6 +184,8 @@ class CreateProductController extends GetxController {
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController unitsController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
+  Rx<DateTime> selectedDate = DateTime.now().obs;
+
   Map<String, dynamic> userData;
   CreateProductController({required this.userData});
 
@@ -138,6 +195,7 @@ class CreateProductController extends GetxController {
     int? units = int.tryParse(unitsController.text);
     double? price = double.tryParse(priceController.text);
     String? userId = userData['_id'] ?? '';
+    DateTime date = selectedDate.value;
 
     if (name.isEmpty || units == null || price == null) {
       Get.snackbar(
@@ -154,6 +212,7 @@ class CreateProductController extends GetxController {
       'price': price,
       'units': units,
       'user': userId,
+      'date': date,
     };
 
     try {
