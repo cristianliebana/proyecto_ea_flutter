@@ -372,8 +372,7 @@ class ProductsHorizontal extends StatelessWidget {
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: () {
-                    Get.to(ProductDetailScreen(
-                        productId: productList[index].id ?? ''));
+                    Get.to(ProductDetailScreen(productId: productList[index].id ?? ''));
                   },
                   child: Container(
                     margin: EdgeInsets.all(gHeight * 0.01),
