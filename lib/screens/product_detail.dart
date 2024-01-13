@@ -14,8 +14,6 @@ import 'package:proyecto_flutter/screens/edit_product.dart';
 import 'package:proyecto_flutter/screens/home.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
-import 'package:share_plus/share_plus.dart';
-import 'dart:html' as html;
 
 class ProductDetailScreen extends StatefulWidget {
   final String productId;
@@ -128,14 +126,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   void _onRemoveTokenPressed() {
     TokenService.removeToken();
   }
-  
-  void _shareProductDetails() {
-    String productName = productData['name'] ?? 'Product Name';  
-    String currentUrl = html.window.location.href;
-    String shareMessage = 'Mira este $productName en km0Market! $currentUrl';
-
-    Share.share(shareMessage);
-  }
 
   IconButton _buildAppBarIconButton(
       {required IconData icon, required VoidCallback onPressed}) {
@@ -183,25 +173,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         _buildAppBarShareButton(),
         if (userData['_id'] == creadorData['_id']) _buildAppBarEditButton(),
       ],
-    );
-  }
-
-  Widget _buildAppBarShareButton() {
-    return Container(
-      margin: EdgeInsets.all(8.0),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.onPrimary,
-        shape: BoxShape.circle,
-      ),
-      child: IconButton(
-        icon: Icon(
-          Icons.share,
-          color: Theme.of(context).colorScheme.primary,
-        ),
-        onPressed: () {
-          _shareProductDetails();
-        },
-      ),
     );
   }
   
