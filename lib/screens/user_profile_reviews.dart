@@ -49,24 +49,10 @@ class _UserProfileReviewsScreenState extends State<UserProfileReviewsScreen> {
     ApiResponse response = await UserService.getUserById();
     setState(() {
       userData = response.data;
-      loadUserProducts(userData['_id']);
       loadUserRatings(userData['_id']);
     });
   }
 
-
-  Future<void> loadUserProducts(String? userId) async {
-    if (userId != null) {
-      final List<Product> userproducts =
-          await ProductService.getUserProducts(userId);
-      setState(() {
-        products = userproducts;
-        print(products);
-      });
-    } else {
-      print('UserId is null.');
-    }
-  }
 
   Future<void> loadUserRatings(String? userId) async {
   if (userId != null) {
@@ -168,54 +154,7 @@ Future<void> obtenerDatosCreadorReview (List<Rating> ratings) async{
   }
 }
 
-class SearchBar extends StatelessWidget {
-  const SearchBar({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Column(
-        children: [
-          const SizedBox(height: 10), 
-          Padding(
-            padding: const EdgeInsets.only(),
-            child: TextField(
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              decoration: InputDecoration(
-                contentPadding:
-                    const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
-                filled: true,
-                fillColor: Theme.of(context).colorScheme.onPrimary,
-                prefixIcon: IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.search,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                ),
-                hintStyle: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                hintText: "Busca en productos",
-                border: OutlineInputBorder(
-                  borderSide: BorderSide.none,
-                  borderRadius: BorderRadius.circular(100),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 class EmailText extends StatelessWidget {
   const EmailText({
@@ -346,7 +285,7 @@ Widget build(BuildContext context) {
                     onRatingUpdate: (rating) {},
                   ),
                   Text(
-                    userData2['username'] ?? '',
+                    userData2['username']?? '',
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.primary,
                       fontSize: 16.0,

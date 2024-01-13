@@ -1,5 +1,8 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:proyecto_flutter/api/models/product_model.dart';
 import 'package:proyecto_flutter/api/services/product_service.dart';
 import 'package:proyecto_flutter/api/services/token_service.dart';
@@ -8,6 +11,8 @@ import 'package:proyecto_flutter/utils/constants.dart';
 import 'package:proyecto_flutter/widget/nav_bar.dart';
 
 class HomePage extends StatefulWidget {
+  String selectedFilter = 'Nombre'.tr; // Puedes establecer un valor predeterminado
+  double maxDistance = 100.0;
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -16,8 +21,13 @@ class _HomePageState extends State<HomePage> {
   late List<Product> productList = [];
   late List<Product> filteredList = [];
   late ScrollController _scrollController;
+  late List<Product> productListbyDistance = [];
+  late List<Product> filteredByDistanceList = [];
   bool _loading = false;
-     final List locale =[
+  TextEditingController _searchController = TextEditingController();
+  LatLng _currentLocation = LatLng(41.2731, 1.9865);
+  
+  final List locale =[
     {'name': 'Español', 'locale': Locale('es')},
     {'name': 'English', 'locale': Locale('en')},
   ];
@@ -54,7 +64,6 @@ class _HomePageState extends State<HomePage> {
         }
     );
   }
-  TextEditingController _searchController = TextEditingController();
   
   @override
   void initState() {
@@ -85,38 +94,138 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Future<void> _loadMoreProducts() async {
-    if (!_loading) {
-      setState(() {
-        _loading = true;
-      });
-
-      int nextPage = (filteredList.length / 50).ceil() + 1;
-      List<Product> nextPageProducts =
-          await ProductService.getProducts(nextPage);
-
-      setState(() {
-        productList.addAll(nextPageProducts);
-        filteredList = productList
-            .where((product) =>
-                product.name
-                    ?.toLowerCase()
-                    .contains(_searchController.text.toLowerCase()) ??
-                false)
-            .toList();
-        _loading = false;
-      });
-    }
-  }
-
-  void _filterProducts(String searchTerm) {
+Future<void> _loadMoreProducts() async {
+  if (!_loading) {
     setState(() {
+      _loading = true;
+    });
+
+    int nextPage = (productList.length / 50).ceil() + 1;
+    List<Product> nextPageProducts =
+        await ProductService.getProducts(nextPage);
+
+    setState(() {
+      productList.addAll(nextPageProducts);
+      _applyFilter();  // Aplicar el filtro actual
+      _loading = false;
+    });
+  }
+}
+
+void _applyFilter() {
+  setState(() {
+    if (widget.selectedFilter == 'Nombre'.tr) {
+      filteredList = productList
+          .where((product) =>
+              product.name
+                  ?.toLowerCase()
+                  .contains(_searchController.text.toLowerCase()) ??
+              false)
+          .toList();
+    } else if (widget.selectedFilter == 'Precio'.tr) {
+      _filterProductsByPrice(_searchController.text);
+    } else if (widget.selectedFilter == 'Distancia'.tr) {
+      double? maxDistance = double.tryParse(_searchController.text);
+      _filterProductsbyDistance(maxDistance!);
+    }
+  });
+}
+
+
+void _filterProducts(String searchTerm) {
+  setState(() {
+    if (widget.selectedFilter == 'Nombre'.tr) {
       filteredList = productList
           .where((product) =>
               product.name?.toLowerCase().contains(searchTerm.toLowerCase()) ??
               false)
           .toList();
+    } else if (widget.selectedFilter == 'Precio'.tr) {
+      _resetFilteredList();
+      _filterProductsByPrice(searchTerm);
+    } else if (widget.selectedFilter == 'Distancia'.tr) {
+      _resetFilteredList();
+      double? maxDistance = double.tryParse(searchTerm);
+        _filterProductsbyDistance(maxDistance!); 
+    }
+  });
+}
+
+void _resetFilteredList() {
+  setState(() {
+    filteredList = productList;
+  });
+}
+
+void _filterProductsbyDistance(double maxDistance) {
+  setState(() {
+    filteredList = productList
+        .where((product) => _calculateDistance(product) <= maxDistance)
+        .toList();
+  });
+}
+
+void _filterProductsByPrice(String searchTerm) {
+  double? maxPrice = double.tryParse(searchTerm);
+  if (maxPrice != null) {
+    filteredList = productList
+        .where((product) =>
+            product.price != null && product.price! <= maxPrice)
+        .toList();
+  }
+}
+
+
+  double calculateDistance(double lat1, double lon1, double? lat2, double? lon2) {
+      const R = 6371.0; // Radio de la Tierra en kilómetros
+      final dLat = _toRadians(lat2! - lat1);
+      final dLon = _toRadians(lon2! - lon1);
+
+      final a = sin(dLat / 2) * sin(dLat / 2) +
+          cos(_toRadians(lat1)) * cos(_toRadians(lat2!)) * sin(dLon / 2) * sin(dLon / 2);
+
+      final c = 2 * asin(sqrt(a));
+
+      return R * c;
+  }
+
+  double _toRadians(double degree) {
+  return degree * (pi / 180);
+}
+   double _calculateDistance(Product product) {
+      final productLatitude = product.location?.latitude ?? 0.0;
+      final productLongitude = product.location?.longitude ?? 0.0;
+      
+      return calculateDistance(
+        _currentLocation.latitude,
+        _currentLocation.longitude,
+        productLatitude,
+        productLongitude,
+      );
+  }
+
+ void _handleFilterChanged(String newFilter) {
+    setState(() {
+      widget.selectedFilter = newFilter;
     });
+  }
+
+
+  Future<void> _getCurrentUserLocation() async {
+    LatLng location = await _getUserLocation();
+    setState(() {
+      _currentLocation = location;
+    });
+  }
+    Future<LatLng> _getUserLocation() async {
+    LocationPermission permission = await Geolocator.requestPermission();
+
+    if (permission == LocationPermission.denied) {
+      return LatLng(0.0, 0.0);
+    }
+
+    Position position = await Geolocator.getCurrentPosition();
+    return LatLng(position.latitude, position.longitude);
   }
 
   @override
@@ -125,11 +234,10 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  @override
+ @override
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: CustomBottomNavigationBar(currentIndex: 0),
-      
       body: CustomScrollView(
         controller: _scrollController,
         slivers: [
@@ -140,6 +248,8 @@ class _HomePageState extends State<HomePage> {
                 child: SearchBar(
                   onSearch: _filterProducts,
                   searchController: _searchController,
+                  selectedFilter: 'Nombre'.tr,
+                  onFilterChanged: _handleFilterChanged,
                 ),
               ),
             ]),
@@ -156,16 +266,15 @@ class _HomePageState extends State<HomePage> {
               Container(
                   child: ProductsHorizontal(
                 productList: productList,
+                userLocation: _currentLocation,
               )),
               SizedBox(height: 10),
-              
             ]),
           ),
           SliverList(
             delegate: SliverChildListDelegate([
               Container(child: MidText()),
               SizedBox(height: 5),
-              
             ]),
           ),
           SliverGrid(
@@ -179,7 +288,10 @@ class _HomePageState extends State<HomePage> {
             delegate: SliverChildBuilderDelegate(
               (context, index) {
                 if (index < filteredList.length) {
-                  return ProductsVerticalItem(product: filteredList[index]);
+                  return ProductsVerticalItem(
+                product: filteredList[index],
+                userLocation: _currentLocation,
+              );
                 } else {
                   return _loading ? CircularProgressIndicator() : Container();
                 }
@@ -196,58 +308,71 @@ class _HomePageState extends State<HomePage> {
 class SearchBar extends StatelessWidget {
   final Function(String) onSearch;
   final TextEditingController searchController;
+  final String selectedFilter;
+  final Function(String) onFilterChanged;
 
-  const SearchBar(
-      {Key? key, required this.onSearch, required this.searchController})
-      : super(key: key);
+  const SearchBar({
+    Key? key,
+    required this.onSearch,
+    required this.searchController,
+    required this.selectedFilter,
+    required this.onFilterChanged,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Padding(
-        padding: const EdgeInsets.only(),
-        child: TextField(
-          controller: searchController,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w400,
-            color: Theme.of(context).colorScheme.primary,
-          ),
-          decoration: InputDecoration(
-            contentPadding:
-                const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
-            filled: true,
-            fillColor: Theme.of(context).colorScheme.onPrimary,
-            prefixIcon: IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.search,
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: searchController,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
                 color: Theme.of(context).colorScheme.primary,
               ),
-            ),
-            hintStyle: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            hintText: 'buscaKm0'.tr,
-            border: OutlineInputBorder(
-              borderSide: BorderSide.none,
-              borderRadius: BorderRadius.circular(100),
+              decoration: InputDecoration(
+                contentPadding:
+                    const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+                filled: true,
+                fillColor: Theme.of(context).colorScheme.onPrimary,
+                hintText: 'buscaKm0'.tr,
+                border: OutlineInputBorder(
+                  borderSide: BorderSide.none,
+                  borderRadius: BorderRadius.circular(100),
+                ),
+              ),
+              onChanged: onSearch,
             ),
           ),
-          onChanged: onSearch,
-        ),
+          PopupMenuButton<String>(
+            initialValue: selectedFilter,
+            onSelected: (String value) {
+              onFilterChanged(value);
+            },
+            itemBuilder: (BuildContext context) {
+              return ['Nombre'.tr, 'Precio'.tr, 'Distancia'.tr].map((String choice) {
+                return PopupMenuItem<String>(
+                  value: choice,
+                  child: Text(choice),
+                );
+              }).toList();
+            },
+          ),
+        ],
       ),
     );
   }
 }
 
+
 class ProductsVerticalItem extends StatelessWidget {
   final Product product;
+  final LatLng userLocation;
 
-  const ProductsVerticalItem({Key? key, required this.product})
+  const ProductsVerticalItem({Key? key, required this.product, required this.userLocation})
       : super(key: key);
 
   @override
@@ -299,27 +424,80 @@ class ProductsVerticalItem extends StatelessWidget {
                 ),
               ),
             ),
-            Positioned(
+           Positioned(
               bottom: 10,
               right: 10,
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.onPrimary,
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: Text(
-                  '${product.price} €/Kg', // Agrega el precio del producto
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.primary,
-                    fontSize: 18.0,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: Text(
+                      '${product.price} €/Kg',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontSize: 18.0,
+                      ),
+                    ),
                   ),
-                ),
+                  SizedBox(height: 5), // Espacio entre el precio y la distancia
+                ],
               ),
             ),
+            Positioned(
+              bottom: 10,
+              left: 20,
+              child:Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: Text(
+                      'Distancia: ${_calculateDistance().toStringAsFixed(2)} km',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontSize: 14.0,
+                      ),
+                    ),
+                  ),
+            )
+
           ],
         ),
       ),
+    );
+  }
+  double calculateDistance(double lat1, double lon1, double? lat2, double? lon2) {
+  const R = 6371.0; // Radio de la Tierra en kilómetros
+  final dLat = _toRadians(lat2! - lat1);
+  final dLon = _toRadians(lon2! - lon1);
+
+  final a = sin(dLat / 2) * sin(dLat / 2) +
+      cos(_toRadians(lat1)) * cos(_toRadians(lat2!)) * sin(dLon / 2) * sin(dLon / 2);
+
+  final c = 2 * asin(sqrt(a));
+
+  return R * c;
+}
+
+double _toRadians(double degree) {
+  return degree * (pi / 180);
+}
+
+   double _calculateDistance() {
+    final productlatitude = product.location?.latitude;
+    final productlongitude = product.location?.longitude;
+    return calculateDistance(
+      userLocation.latitude,
+      userLocation.longitude,
+      productlatitude,
+      productlongitude
+     
     );
   }
 }
@@ -337,7 +515,7 @@ class MidText extends StatelessWidget {
           width: gWidth,
           height: gHeight / 25,
           child: SizedBox(
-            child: Text('todosProductos'.tr,
+            child: Text("Todos los productos",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 30,
@@ -350,10 +528,12 @@ class MidText extends StatelessWidget {
 
 class ProductsHorizontal extends StatelessWidget {
   final List<Product> productList;
+  final LatLng userLocation;
 
   const ProductsHorizontal({
     super.key,
     required this.productList,
+    required this.userLocation,
   });
 
   @override
@@ -370,6 +550,12 @@ class ProductsHorizontal extends StatelessWidget {
               itemCount: productList.length,
               physics: const BouncingScrollPhysics(),
               itemBuilder: (context, index) {
+                 double distance = calculateDistance(
+                  userLocation.latitude,
+                  userLocation.longitude,
+                  productList[index].location?.latitude ?? 0.0,
+                  productList[index].location?.longitude ?? 0.0,
+                );
                 return GestureDetector(
                   onTap: () {
                     Get.to(ProductDetailScreen(
@@ -435,6 +621,26 @@ class ProductsHorizontal extends StatelessWidget {
                             ),
                           ),
                         ),
+                        Positioned(
+                           bottom: 10,
+                           left: 20,
+                           child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 8.0),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.onPrimary,
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: Text(
+                              '${distance.toStringAsFixed(2)} km', // Muestra la distancia
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontSize: 14.0,  // Ajusta el tamaño según tus necesidades
+                              ),
+                            ),
+                          ),
+                        )
+                        
                       ],
                     ),
                   ),
@@ -446,6 +652,23 @@ class ProductsHorizontal extends StatelessWidget {
       ],
     );
   }
+
+    double calculateDistance(double lat1, double lon1, double? lat2, double? lon2) {
+  const R = 6371.0; // Radio de la Tierra en kilómetros
+  final dLat = _toRadians(lat2! - lat1);
+  final dLon = _toRadians(lon2! - lon1);
+
+  final a = sin(dLat / 2) * sin(dLat / 2) +
+      cos(_toRadians(lat1)) * cos(_toRadians(lat2!)) * sin(dLon / 2) * sin(dLon / 2);
+
+  final c = 2 * asin(sqrt(a));
+
+  return R * c;
+}
+
+double _toRadians(double degree) {
+  return degree * (pi / 180);
+}
 }
 
 class TopText extends StatelessWidget {
