@@ -77,15 +77,15 @@ class CustomBottomNavigationBar extends StatelessWidget {
               tabs: [
                 GButton(
                   icon: LineIcons.home,
-                  text: "Inicio",
+                  text: 'inicio'.tr,
                 ),
                 GButton(
                   icon: LineIcons.map,
-                  text: "Mapa",
+                  text: 'mapa'.tr,
                 ),
                 GButton(
                   icon: LineIcons.plusCircle,
-                  text: "Publicar",
+                  text: 'publicar'.tr,
                 ),
                 GButton(
                   icon: LineIcons.comment,
@@ -93,11 +93,11 @@ class CustomBottomNavigationBar extends StatelessWidget {
                 ),
                 GButton(
                   icon: LineAwesomeIcons.heart,
-                  text: "Favoritos",
+                  text: 'favoritos'.tr,
                 ),
                 GButton(
                   icon: LineIcons.user,
-                  text: "Perfil",
+                  text: 'perfil'.tr,
                 ),
               ],
               selectedIndex: currentIndex,

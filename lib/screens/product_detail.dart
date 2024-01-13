@@ -10,6 +10,7 @@ import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/services/favorite_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
 import 'package:proyecto_flutter/screens/chat.dart';
+import 'package:proyecto_flutter/screens/edit_product.dart';
 import 'package:proyecto_flutter/screens/home.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
@@ -80,15 +81,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   Future<void> _handleFavoriteButton() async {
     if (userData['_id'] == creadorData['_id']) {
-      Get.snackbar('Error', 'No puedes darle a favorito a un producto tuyo');
+      Get.snackbar('Error', 'favoritoTuyo'.tr);
     } else {
       try {
         if (_isFavoriteExists) {
           await borrarFavorito(userData['_id'], widget.productId);
-          Get.snackbar('Éxito', 'Producto eliminado de favoritos');
+          Get.snackbar('success'.tr, 'favoritoEliminado'.tr);
         } else {
           await crearFavorito(userData['_id'], widget.productId);
-          Get.snackbar('Éxito', 'Producto agregado a favoritos');
+          Get.snackbar('succes'.tr, 'favoritoAgregado'.tr);
         }
 
         setState(() {
@@ -170,7 +171,25 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       actions: [
         _buildAppBarFavoriteButton(),
         _buildAppBarShareButton(),
+        if (userData['_id'] == creadorData['_id']) _buildAppBarEditButton(),
       ],
+    );
+  }
+  
+  Widget _buildAppBarEditButton() {
+    return Container(
+      margin: EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.onPrimary,
+        shape: BoxShape.circle,
+      ),
+      child: IconButton(
+        icon: Icon(
+          Icons.edit,
+          color: Theme.of(context).colorScheme.primary,
+        ),
+        onPressed: _handleEditButton,
+      ),
     );
   }
 
@@ -194,6 +213,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   }
 
 
+  void _handleEditButton() {
+    Navigator.of(context).push(
+        MaterialPageRoute(
+            builder: (context) => EditProductScreen(productId: widget.productId),
+        ),
+    );
+  }
+  
   Widget _buildAppBarFavoriteButton() {
     return _isFavoriteExists
         ? Container(
@@ -447,7 +474,7 @@ class DescText extends StatelessWidget {
           width: gWidth,
           height: gHeight / 25,
           child: SizedBox(
-            child: Text("Descripción",
+            child: Text('descripcion'.tr,
                 style: TextStyle(
                   color: Theme.of(context).primaryColor,
                   fontWeight: FontWeight.bold,

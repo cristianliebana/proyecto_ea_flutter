@@ -1,21 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:proyecto_flutter/api/models/product_model.dart';
-import 'package:proyecto_flutter/api/services/favorite_service.dart';
+import 'package:proyecto_flutter/api/models/recipe_model.dart';
+import 'package:proyecto_flutter/api/services/recipe_service.dart'; // Cambiado para importar el servicio de recetas
 import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
-import 'package:proyecto_flutter/screens/chatbot.dart';
-import 'package:proyecto_flutter/screens/product_detail.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
-import 'package:proyecto_flutter/widget/nav_bar.dart';
 
-class FavoritesScreen extends StatefulWidget {
+class RecipeScreen extends StatefulWidget {
   @override
-  _FavoritesScreenState createState() => _FavoritesScreenState();
+  _RecipeScreenState createState() => _RecipeScreenState();
 }
 
-class _FavoritesScreenState extends State<FavoritesScreen> {
-  List<Product> products = [];
+class _RecipeScreenState extends State<RecipeScreen> {
+  List<Recipe> recipes = [];
   Map<String, dynamic> userData = {};
   late ScrollController _scrollController;
   bool _loading = false;
@@ -31,18 +27,18 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     ApiResponse response = await UserService.getUserById();
     setState(() {
       userData = response.data;
-      loadUserFavorites(userData['_id']);
+      print(userData['_id']);
+      loadUserRecipes(userData['_id']);
     });
   }
 
-  Future<void> loadUserFavorites(String? userId) async {
+  Future<void> loadUserRecipes(String? userId) async {
     if (userId != null) {
-      final FavoriteService favoriteService = FavoriteService();
-      final List<Product> favorites =
-          await favoriteService.getFavorites(userId);
+      final List<Recipe> userRecipes =
+          await RecipeService.getUserRecipes(userId);
       setState(() {
-        products = favorites;
-        print(products);
+        recipes = userRecipes;
+        print(recipes);
       });
     } else {
       print('UserId is null.');
@@ -58,13 +54,11 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: CustomBottomNavigationBar(currentIndex: 4),
       appBar: AppBar(
-        title: Text('favProductos'.tr,
+        title: Text('Mis recetas publicadas',
             style: TextStyle(color: Theme.of(context).colorScheme.primary)),
         backgroundColor: Theme.of(context).colorScheme.onPrimary,
         centerTitle: true,
-        automaticallyImplyLeading: false,
         iconTheme: IconThemeData(
           color: Theme.of(context).colorScheme.primary,
         ),
@@ -78,9 +72,9 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
           SliverList(
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
-                return ProductsVerticalItem(product: products[index]);
+                return RecipesVerticalItem(recipe: recipes[index]);
               },
-              childCount: products.length,
+              childCount: recipes.length,
             ),
           ),
         ],
@@ -113,14 +107,10 @@ class SearchBar extends StatelessWidget {
                 filled: true,
                 fillColor: Theme.of(context).colorScheme.onPrimary,
                 prefixIcon: IconButton(
-                  onPressed: () {
-                    // Acción a realizar cuando se presiona el botón
-                  },
+                  onPressed: () {},
                   icon: Icon(
                     Icons.search,
-                    color: Theme.of(context)
-                        .colorScheme
-                        .primary, // Usando primary definido en el tema
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
                 hintStyle: TextStyle(
@@ -128,7 +118,7 @@ class SearchBar extends StatelessWidget {
                   fontWeight: FontWeight.w400,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                hintText: 'buscaProductosFav'.tr,
+                hintText: "Busca en tus recetas",
                 border: OutlineInputBorder(
                   borderSide: BorderSide.none,
                   borderRadius: BorderRadius.circular(100),
@@ -142,18 +132,15 @@ class SearchBar extends StatelessWidget {
   }
 }
 
-class ProductsVerticalItem extends StatelessWidget {
-  final Product product;
+class RecipesVerticalItem extends StatelessWidget {
+  final Recipe recipe;
 
-  const ProductsVerticalItem({Key? key, required this.product})
-      : super(key: key);
+  const RecipesVerticalItem({Key? key, required this.recipe}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Get.to(ProductDetailScreen(productId: product.id ?? ''));
-      },
+      onTap: () {},
       child: Container(
         margin: EdgeInsets.only(
             left: gWidth * 0.04, top: gHeight * 0.02, right: gWidth * 0.04),
@@ -170,11 +157,11 @@ class ProductsVerticalItem extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30),
                 image: DecorationImage(
-                  image: product.productImage != null &&
-                          product.productImage!.isNotEmpty
-                      ? NetworkImage(product.productImage!.first)
-                      : AssetImage('assets/images/profile.png')
-                          as ImageProvider, // Use the image URL
+                  image: recipe.recipeURL != null &&
+                          recipe.recipeURL!.isNotEmpty
+                      ? NetworkImage(recipe.recipeURL!)
+                      : AssetImage('assets/images/placeholder.png')
+                          as ImageProvider, // Cambiado a una imagen de marcador de posición
                   fit: BoxFit.cover,
                 ),
               ),
@@ -189,49 +176,7 @@ class ProductsVerticalItem extends StatelessWidget {
                   borderRadius: BorderRadius.circular(30),
                 ),
                 child: Text(
-                  product.name ?? '',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.primary,
-                    fontSize: 18.0,
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              top: 10,
-              right: 10,
-              child: GestureDetector(
-                onTap: () {
-                  Get.to(ChatBotPage(productName: product.name ?? ''));
-                },
-                child: Container(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.onPrimary,
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  child: Text(
-                    '¡A cocinar!',
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.primary,
-                      fontSize: 14.0,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: 10,
-              right: 10,
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.onPrimary,
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: Text(
-                  '${product.price} €/Kg', // Agrega el precio del producto
+                  recipe.title ?? '',
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.primary,
                     fontSize: 18.0,

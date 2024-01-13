@@ -84,7 +84,7 @@ class FormButton extends StatelessWidget {
           );
         },
         child: Text(
-          "Continuar",
+          'continuar'.tr,
           style: TextStyle(
             fontSize: 25,
             color: Theme.of(context).colorScheme.primary,
@@ -115,7 +115,7 @@ class SampleText extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.only(left: 78.0),
         child: Text(
-          "Ejemplo: Plátano de Canarias",
+          'ejemplo'.tr,
           style: TextStyle(
             color: Theme.of(context).shadowColor,
             fontSize: 12,
@@ -142,7 +142,7 @@ class TitleTextFiled extends StatelessWidget {
     return Container(
       child: RepTextFiled(
         icon: LineIcons.carrot,
-        text: "Título del producto",
+        text: 'title'.tr,
         controller: textEditingController,
         onChanged: (value) {
           controller
@@ -164,7 +164,7 @@ class DescriptionText extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.all(20.0),
         child: Text(
-          "Los buenos títulos presentan el producto y sus detalles clave en pocas palabras.",
+          'selling_description'.tr,
           style: TextStyle(
             color: Theme.of(context).shadowColor,
             fontSize: 20,
@@ -187,7 +187,7 @@ class TitleText extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.only(top: 10, left: 20.0),
         child: Text(
-          "¿Qué vas a vender?",
+          'selling'.tr,
           style: TextStyle(
             color: Theme.of(context).primaryColor,
             fontSize: 35,

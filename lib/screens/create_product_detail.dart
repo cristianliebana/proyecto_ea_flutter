@@ -255,7 +255,7 @@ class _NameTextFieldState extends State<NameTextField> {
       child: RepTextFiled(
         controller: createProductController.nameController,
         icon: LineIcons.carrot,
-        text: "Producto",
+        text: 'producto'.tr,
       ),
     );
   }
@@ -272,7 +272,7 @@ class DescriptionTextField extends StatelessWidget {
       delay: Duration(milliseconds: 225),
       child: RepTextFiled(
         icon: LineIcons.archive,
-        text: "Descripción",
+        text: 'descripcion'.tr,
         controller: createProductController.descriptionController,
       ),
     );
@@ -290,7 +290,7 @@ class PriceTextField extends StatelessWidget {
       delay: Duration(milliseconds: 225),
       child: RepTextFiled(
         icon: LineIcons.moneyBill,
-        text: "Precio",
+        text: 'precio'.tr,
         controller: createProductController.priceController,
       ),
     );
@@ -308,7 +308,7 @@ class UnitsTextField extends StatelessWidget {
       delay: Duration(milliseconds: 225),
       child: RepTextFiled(
         icon: LineIcons.sortNumericDown,
-        text: "Unidades",
+        text: 'unidades'.tr,
         controller: createProductController.unitsController,
       ),
     );
@@ -333,7 +333,7 @@ class SaveButton extends StatelessWidget {
             createProductController.addProduct(context);
           },
           child: Text(
-            "Continuar",
+            'continuar'.tr,
             style: TextStyle(
                 fontSize: 25, color: Theme.of(context).colorScheme.primary),
           ),
