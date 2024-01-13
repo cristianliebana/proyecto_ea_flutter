@@ -82,6 +82,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       elevation: 0,
       backgroundColor: Colors.transparent,
       centerTitle: true,
+      leading: IconButton(
+        icon: Icon(Icons.arrow_back),
+        onPressed: () {
+          Get.to(ProfilePage());
+        },
+      ),
       actions: [
         _buildAppBarThemeButton(),
       ],
