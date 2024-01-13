@@ -65,6 +65,7 @@ class _ProfilePageState extends State<ProfilePage> {
       elevation: 0,
       backgroundColor: Colors.transparent,
       centerTitle: true,
+      automaticallyImplyLeading: false,
       actions: [_buildAppBarThemeButton(), _buildAppBarLanguageButton()],
     );
   }

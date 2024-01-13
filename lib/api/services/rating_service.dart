@@ -2,7 +2,6 @@ import 'package:proyecto_flutter/api/utils/http_api.dart';
 
 import '../models/rating_model.dart';
 
-
 class RatingService {
   static Future<ApiResponse> createRating(Map<String, dynamic> rating) async {
     ApiResponse response = ApiResponse(data: {}, statusCode: 404);
@@ -38,7 +37,7 @@ class RatingService {
     return response;
   }
 
-    static Future<ApiResponse> updateAverageRating(String userId) async {
+  static Future<ApiResponse> updateAverageRating(String userId) async {
     ApiResponse response = ApiResponse(data: {}, statusCode: 404);
     try {
       response = await Api().putWithoutToken(
@@ -50,7 +49,7 @@ class RatingService {
     }
   }
 
- static Future<List<Rating>> getUserRatings(String userId) async {
+  static Future<List<Rating>> getUserRatings(String userId) async {
     ApiResponse response = ApiResponse(data: {}, statusCode: 404);
     response = await Api().get('/ratings/readuserratings/$userId');
 
