@@ -10,7 +10,7 @@ import 'package:proyecto_flutter/screens/login.dart';
 import 'package:proyecto_flutter/screens/map.dart';
 import 'package:proyecto_flutter/utils/theme_provider.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'dart:html' as html;
+//import 'dart:html' as html;
 
 // ignore: unused_import
 import 'package:proyecto_flutter/widget/language_controller.dart';
