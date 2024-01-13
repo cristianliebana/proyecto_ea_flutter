@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
+import 'package:share_plus/share_plus.dart';
+import 'dart:html' as html;
 import 'package:proyecto_flutter/api/services/product_service.dart';
 import 'package:proyecto_flutter/api/services/room_service.dart';
 import 'package:proyecto_flutter/api/services/token_service.dart';
@@ -143,6 +145,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
   }
 
+  void _shareProductDetails() {
+    String productName = productData['name'] ?? 'Product Name';
+    //String productDescription = productData['description'] ?? 'Product Description';
+    String currentUrl = html.window.location.href;
+    String shareMessage = 'Mira este $productName en km0Market! $currentUrl';
+
+    Share.share(shareMessage);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -210,6 +221,26 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       ),
     );
   }
+
+  Widget _buildAppBarShareButton() {
+    return Container(
+      margin: EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.onPrimary,
+        shape: BoxShape.circle,
+      ),
+      child: IconButton(
+        icon: Icon(
+          Icons.share,
+          color: Theme.of(context).colorScheme.primary,
+        ),
+        onPressed: () {
+          _shareProductDetails();
+        },
+      ),
+    );
+  }
+
 
   void _handleEditButton() {
     Navigator.of(context).push(
