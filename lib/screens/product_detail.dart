@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
+import 'package:proyecto_flutter/screens/user_profile.dart';
+import 'package:proyecto_flutter/widget/userId_controller.dart';
 import 'package:share_plus/share_plus.dart';
 //import 'dart:html' as html;
 import 'package:proyecto_flutter/api/services/product_service.dart';
@@ -330,16 +332,23 @@ class InformationWidget extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        CircleAvatar(
+                         CircleAvatar(
                           radius: 35,
-                          backgroundImage: creadorData['profileImage'] !=
-                                      null &&
+                          backgroundImage: creadorData['profileImage'] != null &&
                                   creadorData['profileImage'].isNotEmpty
                               ? NetworkImage(creadorData['profileImage']!)
                               : Image.asset('assets/images/profile.png').image,
                           backgroundColor: Colors.transparent,
+                          child: GestureDetector(
+                            onTap: () {
+                              print(creadorData['_id'] );
+                              userController.setUserId(creadorData['_id'] ?? '');
+                              // Navegar a la pantalla de perfil del creador con el ID del creador
+                              Get.to(UserProfileScreen( userId: userController.userId.value));
+                            },
+                          ),
                         ),
-                        SizedBox(width: 10),
+                        SizedBox(width: 10), 
                         SizedBox(height: 30),
                         Column(
                             mainAxisAlignment: MainAxisAlignment.start,

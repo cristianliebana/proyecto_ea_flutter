@@ -19,6 +19,7 @@ import 'package:proyecto_flutter/utils/theme_provider.dart';
 import 'package:proyecto_flutter/widget/language_controller.dart';
 import 'package:proyecto_flutter/widget/nav_bar.dart';
 import 'package:proyecto_flutter/widget/socket_manager.dart';
+import 'package:proyecto_flutter/widget/userId_controller.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -175,7 +176,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 title: 'perfil'.tr,
                 icon: LineAwesomeIcons.user,
                 onPress: () {
-                  Get.to(UserProfileScreen());
+                  userController.setUserId(userData['_id'] ?? '');
+                  Get.to(UserProfileScreen(userId: userController.userId.value,));
                 }),
             ProfileMenuWidget(
                 title: 'misProductos'.tr,

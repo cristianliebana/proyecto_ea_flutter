@@ -24,19 +24,22 @@ import 'package:proyecto_flutter/utils/constants.dart';
 import 'package:proyecto_flutter/utils/theme_provider.dart';
 import 'package:proyecto_flutter/widget/nav_bar.dart';
 import 'package:proyecto_flutter/widget/profile_tab_bar.dart';
+import 'package:proyecto_flutter/widget/userId_controller.dart';
 
 class UserProfileReviewsScreen extends StatefulWidget {
   @override
   _UserProfileReviewsScreenState createState() =>
       _UserProfileReviewsScreenState();
+        final String userId;
+   const UserProfileReviewsScreen({Key? key, required this.userId}) : super(key: key);
 }
 
 class _UserProfileReviewsScreenState extends State<UserProfileReviewsScreen> {
   List<Product> products = [];
   List<Rating> ratings = [];
   Map<String, dynamic> userData = {};
-  Map<String, dynamic> userData2 = {};
   List<Map<String, dynamic>> allUserData2 = [];
+  String userId = userController.userId.value;
 
   late ScrollController _scrollController;
   bool _loading = false;
@@ -45,17 +48,16 @@ class _UserProfileReviewsScreenState extends State<UserProfileReviewsScreen> {
   void initState() {
     super.initState();
     _scrollController = ScrollController();
-    obtenerDatosUsuario();
+    obtenerDatosUsuario(userId);
   }
-
-  Future<void> obtenerDatosUsuario() async {
-    ApiResponse response = await UserService.getUserById();
+ Future<void> obtenerDatosUsuario(String userId) async {
+    ApiResponse response = await UserService.getCreadorById(userId);
     setState(() {
       userData = response.data;
-      loadUserProducts(userData['_id']);
       loadUserRatings(userData['_id']);
     });
   }
+
 
   Future<void> loadUserProducts(String? userId) async {
     if (userId != null) {
