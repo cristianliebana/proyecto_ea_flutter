@@ -23,12 +23,13 @@ class LoginScreen extends StatelessWidget {
     {'name': 'Español', 'locale': Locale('es')},
     {'name': 'English', 'locale': Locale('en')},
   ];
-  updateLanguage(Locale locale) {
+
+  void updateLanguage(Locale locale) {
     Get.back();
     Get.updateLocale(locale);
   }
 
-  buildLanguageDialog(BuildContext context) {
+  void buildLanguageDialog(BuildContext context) {
     showDialog(
         context: context,
         builder: (builder) {
@@ -51,9 +52,7 @@ class LoginScreen extends StatelessWidget {
                     );
                   },
                   separatorBuilder: (context, index) {
-                    return Divider(
-                      color: Colors.blue,
-                    );
+                    return Divider(color: Colors.blue);
                   },
                   itemCount: locale.length),
             ),
@@ -63,44 +62,52 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
+    // Use proportions of screen width/height for margins and spacings
+    double verticalSpacing = screenHeight * 0.02; // 2% of screen height for vertical spacing
+    EdgeInsets screenMargin = EdgeInsets.all(screenWidth * 0.04); // 4% of screen width for margin
+
     return GestureDetector(
-        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-        child: Scaffold(
-          body: Container(
-            margin: EdgeInsets.all(15),
-            width: gWidth,
-            height: gHeight,
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        body: Container(
+          margin: screenMargin,
+          width: screenWidth,
+          height: screenHeight,
+          child: SingleChildScrollView( // Added to make the screen scrollable
             child: Column(
               children: [
                 TopImage(),
                 //LoginText(),
-                SizedBox(height: 10),
+                SizedBox(height: verticalSpacing),
                 EmailTextFiled(loginController: loginController),
-                SizedBox(height: 20),
+                SizedBox(height: verticalSpacing * 2),
                 PasswordTextFiled(loginController: loginController),
                 ForgotText(),
-                SizedBox(height: 15),
+                SizedBox(height: verticalSpacing),
                 LoginButton(loginController: loginController),
-                SizedBox(height: 20),
+                SizedBox(height: verticalSpacing * 2),
                 OrText(),
                 GoogleLoginButton(),
                 RegisterText(),
-                SizedBox(height: 20),
+                //SizedBox(height: verticalSpacing * 2),
                 IconButton(
-                  icon: Icon(Icons
-                      .language), // Aquí puedes usar cualquier icono que desees
-                  onPressed: () {
-                    buildLanguageDialog(context);
-                  },
+                  icon: Icon(Icons.language), // Use any icon you wish
+                  onPressed: () => buildLanguageDialog(context),
                 ),
-                SizedBox(height: 5),
+                SizedBox(height: verticalSpacing),
                 const AppVersionText(),
               ],
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
+
 
 class LoginController extends GetxController {
   final TextEditingController emailController = TextEditingController();
@@ -135,22 +142,27 @@ class LoginController extends GetxController {
 }
 
 class RegisterText extends StatelessWidget {
-  const RegisterText({
-    super.key,
-  });
+  const RegisterText({super.key});
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    // Adjusted scale for text sizes
+    double primaryTextSize = screenWidth / 480 * 18; // Smaller scale for primary text
+    double linkTextSize = screenWidth / 480 * 20; // Slightly larger scale for link text
+
     return FadeInDown(
-      child: Container(
-        width: gWidth,
-        height: gHeight / 32,
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 8), // Add some vertical padding
         child: Center(
           child: RichText(
             text: TextSpan(
               text: 'sin_cuenta'.tr,
-              style:
-                  TextStyle(color: Theme.of(context).canvasColor, fontSize: 18),
+              style: TextStyle(
+                color: Theme.of(context).canvasColor,
+                fontSize: primaryTextSize, // Adjusted text size
+              ),
               children: [
                 WidgetSpan(
                   child: GestureDetector(
@@ -163,7 +175,7 @@ class RegisterText extends StatelessWidget {
                         decoration: TextDecoration.underline,
                         color: Theme.of(context).colorScheme.onPrimary,
                         fontWeight: FontWeight.bold,
-                        fontSize: 20,
+                        fontSize: linkTextSize, // Adjusted text size for link
                       ),
                     ),
                   ),
@@ -178,19 +190,24 @@ class RegisterText extends StatelessWidget {
 }
 
 class GoogleLoginButton extends StatelessWidget {
-  const GoogleLoginButton({
-    super.key,
-  });
+  const GoogleLoginButton({super.key});
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
+    // Adjusted size for the button
+    double buttonHeight = screenHeight * 0.16; // 16% of screen height
+    double buttonIconSize = screenHeight * 0.1; // 10% of screen height
+
     return FadeInDown(
       delay: Duration(milliseconds: 100),
       child: Container(
-        height: gHeight / 6,
+        height: buttonHeight,
         child: IconButton(
           icon: Image.asset('assets/images/google3.png'),
-          iconSize: gHeight / 10,
+          iconSize: buttonIconSize,
           onPressed: () async {
             try {
               final user = await AuthService.signInWithGoogle();
@@ -218,32 +235,33 @@ class GoogleLoginButton extends StatelessWidget {
   }
 }
 
+
 class OrText extends StatelessWidget {
-  const OrText({
-    super.key,
-  });
+  const OrText({super.key});
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double textSize = screenWidth / 480 * 20; // Adjusted scale for text size
+    double lineLength = screenWidth * 0.15; // Line length as a percentage of screen width
+
     return FadeInDown(
       delay: Duration(milliseconds: 125),
       child: Container(
-        width: gWidth,
+        width: screenWidth, // Use the full width of the screen
         child: Center(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                  width: 75, height: 0.5, color: Theme.of(context).canvasColor),
+              Container(width: lineLength, height: 0.5, color: Theme.of(context).canvasColor),
               Text(
                 'authMethods'.tr,
                 style: TextStyle(
-                    color: Theme.of(context).canvasColor,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
+                  color: Theme.of(context).canvasColor,
+                  fontSize: textSize, // Adjusted text size
+                  fontWeight: FontWeight.bold),
               ),
-              Container(
-                  width: 75, height: 0.5, color: Theme.of(context).canvasColor),
+              Container(width: lineLength, height: 0.5, color: Theme.of(context).canvasColor),
             ],
           ),
         ),
@@ -251,6 +269,7 @@ class OrText extends StatelessWidget {
     );
   }
 }
+
 
 class LoginButton extends StatelessWidget {
   final LoginController loginController;
@@ -261,12 +280,23 @@ class LoginButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Calculate the width and height of the screen
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
+    // Scale down the button width and text size
+    double buttonWidthScale = screenWidth * 0.6; // 60% of screen width
+    double buttonTextScale = screenWidth / 480; // Smaller base for text size scaling
+
+    // Adjust the button height if necessary
+    double buttonHeight = screenHeight / 20; // Smaller height proportion
+
     return FadeInDown(
       delay: Duration(milliseconds: 150),
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 100),
-        width: gWidth,
-        height: gHeight / 15,
+        margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.1), // 10% of screen width for margin
+        width: buttonWidthScale,
+        height: buttonHeight,
         child: ElevatedButton(
           onPressed: () {
             loginController.login(context);
@@ -274,16 +304,19 @@ class LoginButton extends StatelessWidget {
           child: Text(
             'login'.tr,
             style: TextStyle(
-                fontSize: 25, color: Theme.of(context).colorScheme.primary),
+              fontSize: 20 * buttonTextScale, // Adjusted text size
+              color: Theme.of(context).colorScheme.primary,
+            ),
           ),
           style: ButtonStyle(
-              shape: MaterialStateProperty.all(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(100),
-                ),
+            shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(100),
               ),
-              backgroundColor: MaterialStateProperty.all(
-                  Theme.of(context).colorScheme.onPrimary)),
+            ),
+            backgroundColor: MaterialStateProperty.all(
+                Theme.of(context).colorScheme.onPrimary),
+          ),
         ),
       ),
     );
@@ -291,29 +324,39 @@ class LoginButton extends StatelessWidget {
 }
 
 class ForgotText extends StatelessWidget {
-  const ForgotText({
-    super.key,
-  });
+  const ForgotText({super.key});
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double textSize = screenWidth / 480 * 15; // Adjusted scale for text size
+
+    // Adjust margins to be proportional to screen width
+    double horizontalMargin = screenWidth * 0.2; // 20% of screen width for margin
+
     return FadeInDown(
       delay: Duration(milliseconds: 175),
       child: GestureDetector(
         onTap: () {},
         child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 100),
-            width: gWidth,
-            height: gHeight / 20,
-            child: Center(
-                child: Text('forgetPassword'.tr,
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.onPrimary,
-                        fontSize: 15)))),
+          margin: EdgeInsets.symmetric(horizontal: horizontalMargin), // Adjusted margin
+          width: screenWidth, // Use the full width of the screen
+          height: screenWidth / 20, // Height proportional to screen width
+          child: Center(
+            child: Text(
+              'forgetPassword'.tr,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onPrimary,
+                fontSize: textSize, // Adjusted text size
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
 }
+
 
 class PasswordTextFiled extends StatefulWidget {
   final LoginController loginController;

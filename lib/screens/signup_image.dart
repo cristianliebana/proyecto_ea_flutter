@@ -241,7 +241,7 @@ class SignUpImageController extends GetxController {
     String? email = registrationData['email'];
     String? password = registrationData['password'];
     String? rol = registrationData['rol'];
-    int? rating = registrationData['rating'];
+    double? rating = registrationData['rating'];
     String? profileImage = _state.getImageUrl();
 
     Map<String, dynamic> imageData = {

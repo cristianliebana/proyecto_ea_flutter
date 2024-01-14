@@ -196,7 +196,7 @@ class UpdateButton extends StatelessWidget {
           child: Text(
             'guardarCambios'.tr,
             style: TextStyle(
-                fontSize: 25, color: Theme.of(context).colorScheme.primary),
+                fontSize: 20, color: Theme.of(context).colorScheme.primary),
           ),
           style: ButtonStyle(
               shape: MaterialStateProperty.all(
