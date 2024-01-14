@@ -120,6 +120,11 @@ class LocaleString extends Translations {
           '¡Bienvenido a Km0Market!': '¡Bienvenido a Km0Market!',
           'Escoge tu foto de perfil': 'Escoge tu foto de perfil',
           'productos': 'Productos',
+          'Precio': 'Precio',
+          'Distancia': 'Distancia',
+          'Nombre': 'Nombre',
+          'A: ': 'A ',
+          'km': ' km',
         },
         //K
         //ENGLISH LANGUAGE
@@ -240,7 +245,11 @@ class LocaleString extends Translations {
           '¡Bienvenido a Km0Market!': 'Welcome to Km0Market!',
           'Escoge tu foto de perfil': 'Choose your profile photo',
           'productos': 'Products',
+          'Precio': 'Price',
+          'Distancia': 'Distance',
+          'Nombre': 'Name',
+          'A: ': '',
+          'km': ' km away'
         }
       };
 }
-
