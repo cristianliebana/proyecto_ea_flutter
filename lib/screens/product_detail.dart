@@ -32,13 +32,29 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   Map<String, dynamic> favoriteData = {};
   late String userId;
   late String favoriteId;
+  bool _isLoading = true; // New variable to track loading state
+  String _errorMessage = ''; // New variable to store error messages
 
   @override
   void initState() {
     super.initState();
-    checkAuthAndNavigate();
-    obtenerDatosProducto();
-    obtenerDatosUsuario();
+    _initializeScreen();
+  }
+
+  Future<void> _initializeScreen() async {
+    try {
+      await checkAuthAndNavigate();
+      await obtenerDatosProducto();
+      await obtenerDatosUsuario();
+    } catch (error) {
+      setState(() {
+        _errorMessage = error.toString();
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   Future<void> obtenerDatosProducto() async {
@@ -146,6 +162,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (_errorMessage.isNotEmpty) {
+      return Scaffold(
+        body: Center(child: Text('Error: $_errorMessage')),
+      );
+    }
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: _buildAppBar(),
@@ -278,11 +305,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 }
 
 class InformationWidget extends StatelessWidget {
-  const InformationWidget(
-      {Key? key,
-      required this.productData,
-      required this.creadorData,
-      required this.userData});
+  const InformationWidget({
+    Key? key,
+    required this.productData,
+    required this.creadorData,
+    required this.userData,
+  }) : super(key: key);
 
   final Map<String, dynamic> productData;
   final Map<String, dynamic> userData;
@@ -290,15 +318,22 @@ class InformationWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
+    double initialChildSize = screenHeight > 700 ? 0.70 : 0.60;
+    double minChildSize = screenHeight > 700 ? 0.65 : 0.55;
+    double textSize = screenWidth / 480 * 25;
+
     return Stack(
       children: [
         DraggableScrollableSheet(
-          initialChildSize: 0.70,
+          initialChildSize: initialChildSize,
           maxChildSize: 1.0,
-          minChildSize: 0.65,
+          minChildSize: minChildSize,
           builder: (context, scrollController) {
             return Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: EdgeInsets.symmetric(horizontal: 20),
               clipBehavior: Clip.hardEdge,
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.primary,
@@ -325,30 +360,32 @@ class InformationWidget extends StatelessWidget {
                         ],
                       ),
                     ),
-                    NameText(productData: productData),
+                    NameText(productData: productData, fontSize: textSize),
                     SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         CircleAvatar(
                           radius: 35,
-                          backgroundImage: creadorData['profileImage'] !=
-                                      null &&
-                                  creadorData['profileImage'].isNotEmpty
-                              ? NetworkImage(creadorData['profileImage']!)
-                              : Image.asset('assets/images/profile.png').image,
+                          backgroundImage:
+                              creadorData['profileImage'] != null &&
+                                      creadorData['profileImage'].isNotEmpty
+                                  ? NetworkImage(creadorData['profileImage']!)
+                                  : AssetImage('assets/images/profile.png')
+                                      as ImageProvider<Object>,
                           backgroundColor: Colors.transparent,
                         ),
                         SizedBox(width: 10),
-                        SizedBox(height: 30),
-                        Column(
+                        Expanded(
+                          child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              UserText(creadorData: creadorData),
+                              UserText(
+                                  creadorData: creadorData, fontSize: textSize),
                               Transform.scale(
                                 alignment: Alignment.centerLeft,
-                                scale: 0.7,
+                                scale: screenWidth / 700,
                                 child: RatingBar(
                                   ignoreGestures: true,
                                   initialRating: creadorData['rating'] ?? 3.5,
@@ -356,21 +393,25 @@ class InformationWidget extends StatelessWidget {
                                   allowHalfRating: true,
                                   itemCount: 5,
                                   ratingWidget: RatingWidget(
-                                    full: Image.asset(
-                                        'assets/ratingimages/zanahoriaentera.png'),
-                                    half: Image.asset(
-                                        'assets/ratingimages/mediazanahoria.png'),
-                                    empty: Image.asset(
-                                        'assets/ratingimages/zanahoriavacia.png'),
+                                    full: Image(
+                                        image: AssetImage(
+                                            'assets/ratingimages/zanahoriaentera.png')),
+                                    half: Image(
+                                        image: AssetImage(
+                                            'assets/ratingimages/mediazanahoria.png')),
+                                    empty: Image(
+                                        image: AssetImage(
+                                            'assets/ratingimages/zanahoriavacia.png')),
                                   ),
                                   itemPadding:
                                       EdgeInsets.symmetric(horizontal: 4.0),
                                   onRatingUpdate: (rating) {},
                                 ),
                               ),
-                            ]),
-                        Spacer(),
-                        PriceText(productData: productData),
+                            ],
+                          ),
+                        ),
+                        PriceText(productData: productData, fontSize: textSize),
                       ],
                     ),
                     SizedBox(height: 20),
@@ -378,9 +419,10 @@ class InformationWidget extends StatelessWidget {
                       color: Theme.of(context).colorScheme.onPrimary,
                     ),
                     SizedBox(height: 10),
-                    DescText(),
-                    DescriptionText(productData: productData),
-                    SizedBox(height: 10),
+                    DescText(fontSize: textSize),
+                    DescriptionText(
+                        productData: productData, fontSize: textSize),
+                    SizedBox(height: 70),
                   ],
                 ),
               ),
@@ -391,7 +433,13 @@ class InformationWidget extends StatelessWidget {
           bottom: 20,
           left: 0,
           right: 0,
-          child: ChatButton(userData: userData, creadorData: creadorData),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 10),
+              ChatButton(userData: userData, creadorData: creadorData),
+            ],
+          ),
         ),
       ],
     );
@@ -410,25 +458,31 @@ class ChatButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    // Calculate button width and margin based on screen width
+    double buttonWidth = screenWidth >= 700 ? screenWidth / 4 : screenWidth / 2;
+    double buttonMargin = screenWidth >= 700 ? 170 : 20;
+
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 170),
-      width: gWidth / 4,
-      height: gHeight / 16,
+      margin: EdgeInsets.symmetric(horizontal: buttonMargin),
+      width: buttonWidth,
+      height: 50, // Set your desired height
       child: ElevatedButton(
         onPressed: () async {
-          String userId1 = userData['_id'] ?? '';
-          String userId2 = creadorData['_id'] ?? '';
+          final String userId1 = userData['_id'] ?? '';
+          final String userId2 = creadorData['_id'] ?? '';
 
-          ApiResponse response =
+          final ApiResponse response =
               await RoomService.checkIfRoomExists(userId1, userId2);
 
           if (response.statusCode == 200) {
-            bool roomExists = response.data['exist'];
+            final bool roomExists = response.data['exist'];
 
             if (roomExists) {
               Get.to(ChatPage());
             } else {
-              ApiResponse createResponse =
+              final ApiResponse createResponse =
                   await RoomService.createRoom(userId1, userId2);
 
               if (createResponse.statusCode == 201) {
@@ -444,7 +498,9 @@ class ChatButton extends StatelessWidget {
         child: Text(
           'contacta'.tr,
           style: TextStyle(
-              fontSize: 25, color: Theme.of(context).colorScheme.primary),
+            fontSize: 18,
+            color: Theme.of(context).colorScheme.primary,
+          ),
         ),
         style: ButtonStyle(
           shape: MaterialStateProperty.all(
@@ -453,7 +509,8 @@ class ChatButton extends StatelessWidget {
             ),
           ),
           backgroundColor: MaterialStateProperty.all(
-              Theme.of(context).colorScheme.onPrimary),
+            Theme.of(context).colorScheme.onPrimary,
+          ),
         ),
       ),
     );
@@ -461,108 +518,106 @@ class ChatButton extends StatelessWidget {
 }
 
 class DescText extends StatelessWidget {
-  const DescText({
-    Key? key,
-  });
+  final double fontSize;
+
+  const DescText({Key? key, required this.fontSize}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Container(
-          margin: EdgeInsets.only(top: 10),
-          width: gWidth,
-          height: gHeight / 25,
-          child: SizedBox(
-            child: Text('descripcion'.tr,
-                style: TextStyle(
-                  color: Theme.of(context).primaryColor,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 25,
-                )),
-          )),
+      margin: EdgeInsets.only(top: 10),
+      child: Text(
+        'descripcion'.tr, // Ensure you have translation setup for this
+        style: TextStyle(
+          color: Theme.of(context).primaryColor,
+          fontWeight: FontWeight.bold,
+          fontSize: fontSize,
+        ),
+      ),
     );
   }
 }
 
 class PriceText extends StatelessWidget {
-  const PriceText({
-    Key? key,
-    required this.productData,
-  });
-
   final Map<String, dynamic> productData;
+  final double fontSize;
+
+  const PriceText({Key? key, required this.productData, required this.fontSize})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    int price = productData['price'] ?? 0;
+    dynamic priceValue = productData['price'];
+    double price = priceValue is num ? priceValue.toDouble() : 0.0;
 
-    return Text(price != 0 ? "$price €/Kg" : "",
-        style: TextStyle(color: Theme.of(context).shadowColor, fontSize: 30),
-        textAlign: TextAlign.right);
+    return Text(
+      price != 0.0 ? "$price €/Kg" : "",
+      style: TextStyle(
+        color: Theme.of(context).shadowColor,
+        fontSize: fontSize,
+      ),
+    );
   }
 }
 
 class UserText extends StatelessWidget {
-  const UserText({
-    Key? key,
-    required this.creadorData,
-  });
-
   final Map<String, dynamic> creadorData;
+  final double fontSize;
+
+  const UserText({Key? key, required this.creadorData, required this.fontSize})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     String username = creadorData['username'] ?? "N/A";
-
     return Text(
       username != "N/A" ? "$username" : "",
-      style: TextStyle(fontSize: 25, color: Theme.of(context).primaryColor),
+      style: TextStyle(
+        color: Theme.of(context).primaryColor,
+        fontSize: fontSize,
+      ),
     );
   }
 }
 
 class DescriptionText extends StatelessWidget {
-  const DescriptionText({
-    Key? key,
-    required this.productData,
-  });
-
   final Map<String, dynamic> productData;
+  final double fontSize;
+
+  const DescriptionText(
+      {Key? key, required this.productData, required this.fontSize})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     String description = productData['description'] ?? "N/A";
-
     return Text(
       description != "N/A" ? "$description" : "",
       style: TextStyle(
         color: Theme.of(context).shadowColor,
-        fontSize: 20,
-        fontWeight: FontWeight.w200,
+        fontSize: fontSize,
       ),
-      textAlign: TextAlign.justify,
     );
   }
 }
 
 class NameText extends StatelessWidget {
-  const NameText({
-    Key? key,
-    required this.productData,
-  });
-
   final Map<String, dynamic> productData;
+  final double fontSize;
+
+  const NameText({Key? key, required this.productData, required this.fontSize})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     String name = productData['name'] ?? "N/A";
-
     return Text(
       name != "N/A" ? "$name" : "",
       style: TextStyle(
-          color: Theme.of(context).primaryColor,
-          fontSize: 50,
-          fontWeight: FontWeight.bold),
+        color: Theme.of(context).primaryColor,
+        fontSize: fontSize,
+        fontWeight: FontWeight.bold,
+      ),
     );
   }
 }

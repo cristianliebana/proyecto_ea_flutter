@@ -60,7 +60,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
       Map<String, dynamic> updatedProduct = {
         'name': _nameController.text,
         'description': _descriptionController.text,
-        'price': int.parse(_priceController.text),
+        'price': double.parse(_priceController.text),
         'units': int.parse(_unitsController.text),
         'user': userId,      
       };
