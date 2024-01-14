@@ -45,33 +45,30 @@ class CustomBottomNavigationBarController extends GetxController {
 class CustomBottomNavigationBar extends StatelessWidget {
   final CustomBottomNavigationBarController controller =
       Get.put(CustomBottomNavigationBarController());
-
   final int currentIndex;
 
-  CustomBottomNavigationBar({Key? key, required this.currentIndex})
-      : super(key: key);
+  CustomBottomNavigationBar({Key? key, required this.currentIndex}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double iconScale = screenWidth / 480; // Adjusted scale for icons
+
+    // Calculate padding based on screen width
+    double horizontalPadding = screenWidth * 0.05; // 5% of screen width
+
     return GetBuilder<CustomBottomNavigationBarController>(
       builder: (controller) {
         return SafeArea(
-            child: Column(mainAxisSize: MainAxisSize.min, children: [
-          Container(
-            height: 1,
-            color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.2),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+          child: Container(
+            margin: EdgeInsets.symmetric(horizontal: horizontalPadding), // Adjusted margin
             child: GNav(
-              rippleColor:
-                  Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
-              hoverColor:
-                  Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
+              rippleColor: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
+              hoverColor: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
               gap: 8,
               activeColor: Theme.of(context).colorScheme.primary,
-              iconSize: 24,
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              iconSize: 20 * iconScale, // Adjusted icon size
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               tabBackgroundColor: Theme.of(context).colorScheme.onPrimary,
               color: Theme.of(context).colorScheme.onPrimary,
               tabs: [
@@ -104,8 +101,9 @@ class CustomBottomNavigationBar extends StatelessWidget {
               onTabChange: controller.updateIndex,
             ),
           ),
-        ]));
+        );
       },
     );
   }
 }
+

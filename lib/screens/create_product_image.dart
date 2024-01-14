@@ -240,7 +240,7 @@ class CreateProductController extends GetxController {
     String? name = productData['name'];
     String? description = productData['description'];
     int? units = productData['units'];
-    double? price = productData['price'];
+    double? price = productData['price'].toDouble();
     String? userId = productData['user'];
     List<String> productImage = List<String>.from(_state._imageUrls);
 
