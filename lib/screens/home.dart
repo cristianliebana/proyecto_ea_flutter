@@ -19,6 +19,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late List<Product> productList = [];
+  late List<Product> productListOferta = [];
   late List<Product> filteredList = [];
   late ScrollController _scrollController;
   late List<Product> productListbyDistance = [];
@@ -31,46 +32,50 @@ class _HomePageState extends State<HomePage> {
     {'name': 'Español', 'locale': Locale('es')},
     {'name': 'English', 'locale': Locale('en')},
   ];
-  updateLanguage(Locale locale){
+  updateLanguage(Locale locale) {
     Get.back();
     Get.updateLocale(locale);
   }
 
-  buildLanguageDialog(BuildContext context){
-    showDialog(context: context,
-        builder: (builder){
-           return AlertDialog(
-             title: Text('Choose Your Language'),
-             content: Container(
-               width: double.maxFinite,
-               child: ListView.separated(
-                 shrinkWrap: true,
-                   itemBuilder: (context,index){
-                     return Padding(
-                       padding: const EdgeInsets.all(8.0),
-                       child: GestureDetector(child: Text(locale[index]['name']),onTap: (){
-                         print(locale[index]['name']);
-                         updateLanguage(locale[index]['locale']);
-                       },),
-                     );
-                   }, separatorBuilder: (context,index){
-                     return Divider(
-                       color: Colors.blue,
-                     );
-               }, itemCount: locale.length
-               ),
-             ),
-           );
-        }
-    );
+  buildLanguageDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (builder) {
+          return AlertDialog(
+            title: Text('Choose Your Language'),
+            content: Container(
+              width: double.maxFinite,
+              child: ListView.separated(
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GestureDetector(
+                        child: Text(locale[index]['name']),
+                        onTap: () {
+                          print(locale[index]['name']);
+                          updateLanguage(locale[index]['locale']);
+                        },
+                      ),
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return Divider(
+                      color: Colors.blue,
+                    );
+                  },
+                  itemCount: locale.length),
+            ),
+          );
+        });
   }
-  
   @override
   void initState() {
     super.initState();
     checkAuthAndNavigate();
     _scrollController = ScrollController()..addListener(_scrollListener);
     fetchProducts();
+    fetchProductsOferta();
   }
 
   Future<void> checkAuthAndNavigate() async {
@@ -84,6 +89,13 @@ class _HomePageState extends State<HomePage> {
       productList = products;
       filteredList =
           products; // Inicializa la lista filtrada con todos los productos
+    });
+  }
+
+  Future<void> fetchProductsOferta() async {
+    List<Product> products = await ProductService.getProductsOferta();
+    setState(() {
+      productListOferta = products;
     });
   }
 
@@ -265,8 +277,9 @@ void _filterProductsByPrice(String searchTerm) {
             delegate: SliverChildListDelegate([
               Container(
                   child: ProductsHorizontal(
-                productList: productList,
+                productListOferta: productListOferta,
                 userLocation: _currentLocation,
+
               )),
               SizedBox(height: 10),
             ]),
@@ -527,12 +540,12 @@ class MidText extends StatelessWidget {
 }
 
 class ProductsHorizontal extends StatelessWidget {
-  final List<Product> productList;
+  final List<Product> productListOferta;
   final LatLng userLocation;
 
   const ProductsHorizontal({
     super.key,
-    required this.productList,
+    required this.productListOferta,
     required this.userLocation,
   });
 
@@ -547,7 +560,7 @@ class ProductsHorizontal extends StatelessWidget {
             height: gHeight / 4.5,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: productList.length,
+              itemCount: productListOferta.length,
               physics: const BouncingScrollPhysics(),
               itemBuilder: (context, index) {
                  double distance = calculateDistance(
@@ -558,7 +571,8 @@ class ProductsHorizontal extends StatelessWidget {
                 );
                 return GestureDetector(
                   onTap: () {
-                    Get.to(ProductDetailScreen(productId: productList[index].id ?? ''));
+                    Get.to(ProductDetailScreen(
+                        productId: productListOferta[index].id ?? ''));
                   },
                   child: Container(
                     margin: EdgeInsets.all(gHeight * 0.01),
@@ -570,12 +584,14 @@ class ProductsHorizontal extends StatelessWidget {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(30),
                             image: DecorationImage(
-                              image: productList[index].productImage != null &&
-                                      productList[index]
+                              image: productListOferta[index].productImage !=
+                                          null &&
+                                      productListOferta[index]
                                           .productImage!
                                           .isNotEmpty
-                                  ? NetworkImage(
-                                      productList[index].productImage!.first)
+                                  ? NetworkImage(productListOferta[index]
+                                      .productImage!
+                                      .first)
                                   : AssetImage('assets/images/profile.png')
                                       as ImageProvider, // Use the image URL
                               fit: BoxFit.cover,
@@ -593,7 +609,7 @@ class ProductsHorizontal extends StatelessWidget {
                               borderRadius: BorderRadius.circular(30),
                             ),
                             child: Text(
-                              productList[index].name ?? '',
+                              productListOferta[index].name ?? '',
                               style: TextStyle(
                                 color: Theme.of(context).colorScheme.primary,
                                 fontSize: 18.0,
@@ -612,7 +628,7 @@ class ProductsHorizontal extends StatelessWidget {
                               borderRadius: BorderRadius.circular(30),
                             ),
                             child: Text(
-                              '${productList[index].price} €/Kg', // Agrega el precio del producto
+                              '${productListOferta[index].price} €/Kg', // Agrega el precio del producto
                               style: TextStyle(
                                 color: Theme.of(context).colorScheme.primary,
                                 fontSize: 18.0,
