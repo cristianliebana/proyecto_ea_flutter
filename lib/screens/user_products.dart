@@ -5,6 +5,7 @@ import 'package:proyecto_flutter/api/services/product_service.dart';
 import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
 import 'package:proyecto_flutter/screens/product_detail.dart';
+import 'package:proyecto_flutter/screens/profile.dart';
 import 'package:proyecto_flutter/utils/constants.dart';
 import 'package:proyecto_flutter/widget/nav_bar.dart';
 
@@ -66,12 +67,18 @@ class _UserProductsScreenState extends State<UserProductsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Mis productos publicados',
+        title: Text('Mis productos publicados'.tr,
             style: TextStyle(color: Theme.of(context).colorScheme.primary)),
         backgroundColor: Theme.of(context).colorScheme.onPrimary,
         centerTitle: true,
         iconTheme: IconThemeData(
           color: Theme.of(context).colorScheme.primary,
+        ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Get.to(ProfilePage());
+          },
         ),
       ),
       body: CustomScrollView(
@@ -129,7 +136,7 @@ class SearchBar extends StatelessWidget {
                   fontWeight: FontWeight.w400,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                hintText: "Busca en tus productos",
+                hintText: 'Busca en tus productos'.tr,
                 border: OutlineInputBorder(
                   borderSide: BorderSide.none,
                   borderRadius: BorderRadius.circular(100),

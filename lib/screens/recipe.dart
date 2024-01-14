@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:proyecto_flutter/api/models/recipe_model.dart';
 import 'package:proyecto_flutter/api/services/recipe_service.dart'; // Cambiado para importar el servicio de recetas
 import 'package:proyecto_flutter/api/services/user_service.dart';
@@ -55,7 +56,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Mis recetas publicadas',
+        title: Text('Mis recetas publicadas'.tr,
             style: TextStyle(color: Theme.of(context).colorScheme.primary)),
         backgroundColor: Theme.of(context).colorScheme.onPrimary,
         centerTitle: true,
@@ -118,7 +119,7 @@ class SearchBar extends StatelessWidget {
                   fontWeight: FontWeight.w400,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                hintText: "Busca en tus recetas",
+                hintText: 'Busca en tus recetas'.tr,
                 border: OutlineInputBorder(
                   borderSide: BorderSide.none,
                   borderRadius: BorderRadius.circular(100),

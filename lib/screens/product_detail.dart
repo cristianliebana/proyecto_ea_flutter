@@ -89,7 +89,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           Get.snackbar('success'.tr, 'favoritoEliminado'.tr);
         } else {
           await crearFavorito(userData['_id'], widget.productId);
-          Get.snackbar('succes'.tr, 'favoritoAgregado'.tr);
+          Get.snackbar('success'.tr, 'favoritoAgregado'.tr);
         }
 
         setState(() {
@@ -442,7 +442,7 @@ class ChatButton extends StatelessWidget {
           }
         },
         child: Text(
-          "Contacta",
+          'contacta'.tr,
           style: TextStyle(
               fontSize: 25, color: Theme.of(context).colorScheme.primary),
         ),

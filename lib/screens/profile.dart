@@ -184,7 +184,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   Get.to(UserProductsScreen());
                 }),
             ProfileMenuWidget(
-                title: "Mis Recetas",
+                title: 'Mis Recetas'.tr,
                 icon: LineAwesomeIcons.receipt,
                 onPress: () {
                   Get.to(RecipeScreen());

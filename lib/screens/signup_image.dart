@@ -118,7 +118,7 @@ class _SignUpImageScreenState extends State<SignUpImageScreen> {
                             onPressed: () {
                               _pickImage(ImageSource.camera);
                             },
-                            child: Text('Abre la cámara',
+                            child: Text('Abre la cámara'.tr,
                                 style: TextStyle(
                                     color:
                                         Theme.of(context).colorScheme.primary)),
@@ -141,7 +141,7 @@ class _SignUpImageScreenState extends State<SignUpImageScreen> {
                               _pickImage(ImageSource.gallery);
                             },
                             child: Text(
-                              'Abre la galería',
+                              'galeria'.tr,
                               style: TextStyle(
                                   color: Theme.of(context).colorScheme.primary),
                             ),
@@ -259,7 +259,7 @@ class SignUpImageController extends GetxController {
     print(imageData);
 
     Get.defaultDialog(
-      title: "Cuenta creada",
+      title: 'Cuenta creada'.tr,
       titleStyle: TextStyle(color: Theme.of(context).primaryColor),
       backgroundColor: Theme.of(context).colorScheme.primary,
       content: ClipRect(
@@ -284,7 +284,7 @@ class SignUpImageController extends GetxController {
                   ),
                   SizedBox(height: 20),
                   Text(
-                    "¡Bienvenido a Km0Market!",
+                    '¡Bienvenido a Km0Market!'.tr,
                     style: TextStyle(color: Theme.of(context).primaryColor),
                   ),
                 ],
@@ -299,7 +299,7 @@ class SignUpImageController extends GetxController {
           Get.to(ConcentricTransitionPage());
         },
         child: Text(
-          "Aceptar",
+          'aceptar'.tr,
           style: TextStyle(color: Theme.of(context).colorScheme.primary),
         ),
         style: ButtonStyle(
@@ -339,7 +339,7 @@ class SubmitButton extends StatelessWidget {
           //   signUpController.signUp(context);
           // },
           child: Text(
-            "Regístrate",
+            'register'.tr,
             style: TextStyle(
                 fontSize: 25, color: Theme.of(context).colorScheme.primary),
           ),
@@ -368,7 +368,7 @@ class ImageText extends StatelessWidget {
       child: Container(
           margin: EdgeInsets.only(top: 10, left: 10),
           child: Text(
-            "Escoge tu foto de perfil",
+            'Escoge tu foto de perfil'.tr,
             style: TextStyle(
                 color: Theme.of(context).colorScheme.primary,
                 fontSize: 30,

@@ -87,8 +87,7 @@ class SignUpController extends GetxController {
     };
 
     if (username == "" || fullname == "" || email == "") {
-      Get.snackbar('Error', 'rellenar'.tr,
-          snackPosition: SnackPosition.BOTTOM);
+      Get.snackbar('Error', 'rellenar'.tr, snackPosition: SnackPosition.BOTTOM);
     } else {
       ApiResponse response = await UserService.usernameExists(username);
       bool usernameExists = response.data['usernameExists'];
@@ -234,7 +233,7 @@ class EmailTextFiled extends StatelessWidget {
         delay: Duration(milliseconds: 100),
         child: RepTextFiled(
           icon: LineIcons.at,
-          text: "Correo electrónico",
+          text: 'correo'.tr,
           controller: signUpController.emailController,
         ));
   }

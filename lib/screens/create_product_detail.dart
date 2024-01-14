@@ -200,7 +200,7 @@ class CreateProductController extends GetxController {
     if (name.isEmpty || units == null || price == null) {
       Get.snackbar(
         "Error",
-        "Debes de rellenar todos los campos",
+        'debes de'.tr,
         snackPosition: SnackPosition.BOTTOM,
       );
       return;
@@ -221,7 +221,7 @@ class CreateProductController extends GetxController {
     } catch (e) {
       Get.snackbar(
         "Error",
-        "Algo falló al intentar publicar el producto",
+        'algofallo'.tr,
         snackPosition: SnackPosition.BOTTOM,
       );
     }
@@ -256,7 +256,7 @@ class TitleText extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.only(left: 20.0),
         child: Text(
-          "¡Cuentanos mas!",
+          'cuentanos mas'.tr,
           style: TextStyle(
             color: Theme.of(context).primaryColor,
             fontSize: 35,
@@ -280,7 +280,7 @@ class DescriptionText extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.only(top: 10, left: 20.0, right: 20.0, bottom: 5),
         child: Text(
-          "Queremos que nos cuentes todo para dar a conocer tu producto",
+          'queremos'.tr,
           style: TextStyle(
             color: Theme.of(context).shadowColor,
             fontSize: 20,

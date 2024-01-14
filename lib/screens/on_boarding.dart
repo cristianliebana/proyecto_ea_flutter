@@ -16,28 +16,30 @@ class _ConcentricTransitionPageState extends State<ConcentricTransitionPage> {
   List<ConcentricModel> concentrics = [
     ConcentricModel(
       lottie: "assets/assets/onboard/hello.json",
-      text: "¡Bienvenido a\nKM.0 Market!",
+      text: '¡Bienvenido a\nKM.0 Market!'.tr,
     ),
     ConcentricModel(
       lottie: "assets/assets/onboard/productos.json",
-      text: "Aquí podrás publicar\ny encontrar productos frescos de proximidad",
+      text: 'Aquí podrás publicar\ny encontrar productos frescos de proximidad'
+          .tr,
     ),
     ConcentricModel(
       lottie: "assets/assets/onboard/like.json",
-      text: "Guarda tus productos\nfavoritos y contacta\ncon el vendedor",
+      text: 'Guarda tus productos\nfavoritos y contacta\ncon el vendedor'.tr,
     ),
     ConcentricModel(
       lottie: "assets/assets/onboard/opiniones.json",
-      text: "Tienes la opción de compartir opiniones mediante reseñas 🚀",
+      text: 'Tienes la opción de compartir opiniones mediante reseñas 🚀'.tr,
     ),
     ConcentricModel(
       lottie: "assets/assets/onboard/mapa.json",
-      text: "¡Explora nuevos productos con el mapa!",
+      text: '¡Explora nuevos productos con el mapa!'.tr,
     ),
     ConcentricModel(
       lottie: "assets/assets/onboard/mundo.json",
       text:
-          "¡Dale vida a los productos próximos a caducar!\n¡Juntos, ayudaremos al mundo!",
+          '¡Dale vida a los productos próximos a caducar!\n¡Juntos, ayudaremos al mundo!'
+              .tr,
     ),
   ];
 
@@ -71,7 +73,7 @@ class _ConcentricTransitionPageState extends State<ConcentricTransitionPage> {
                         Get.to(HomePage());
                       },
                       child: Text(
-                        "Saltar",
+                        'Saltar'.tr,
                         style: TextStyle(
                           color: (index == 1 ||
                                   index == 3 ||

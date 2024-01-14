@@ -112,7 +112,8 @@ class _IndividualChatState extends State<IndividualChat> {
 
   void sendReviewLink() {
     String reviewMessage =
-        'Hola, me gustaría que me dejaras una valoración. ¡Puedes dejarmela haciendo click en este mensaje!';
+        'Hola, me gustaría que me dejaras una valoración. ¡Puedes dejarmela haciendo click en este mensaje!'
+            .tr;
 
     Map<String, dynamic> reviewMessageData = {
       'message': reviewMessage,
@@ -254,7 +255,7 @@ class _IndividualChatState extends State<IndividualChat> {
                   controller: messageController,
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    hintText: "Escribe algo...",
+                    hintText: 'Escribe algo...'.tr,
                     hintStyle: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,

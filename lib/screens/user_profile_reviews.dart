@@ -219,7 +219,7 @@ class SearchBar extends StatelessWidget {
                   fontWeight: FontWeight.w400,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                hintText: "Busca en productos",
+                hintText: 'buscarProductos'.tr,
                 border: OutlineInputBorder(
                   borderSide: BorderSide.none,
                   borderRadius: BorderRadius.circular(100),

@@ -97,12 +97,13 @@ class _ReviewScreenState extends State<ReviewScreen> {
           onPressed: () {
             Get.to(ChatPage());
           },
-          child: Text('aceptar'.tr),
+          child: Text(
+            'aceptar'.tr,
+            style: TextStyle(color: Theme.of(context).colorScheme.primary),
+          ),
           style: ButtonStyle(
             shape: MaterialStateProperty.all(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
             ),
             backgroundColor: MaterialStateProperty.all(
                 Theme.of(context).colorScheme.onPrimary),
@@ -228,7 +229,6 @@ class CommentBox extends StatelessWidget {
           controller: commentController,
           maxLines: 8,
           decoration: InputDecoration(
-
             labelText: 'comentario'.tr,
             labelStyle:
                 TextStyle(color: Color(0xFF486D28)), // Color del labelText
