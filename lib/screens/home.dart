@@ -352,6 +352,9 @@ class SearchBar extends StatelessWidget {
                 filled: true,
                 fillColor: Theme.of(context).colorScheme.onPrimary,
                 hintText: 'buscaKm0'.tr,
+                hintStyle: TextStyle(
+                  color: Theme.of(context).colorScheme.primary
+                  ),
                 border: OutlineInputBorder(
                   borderSide: BorderSide.none,
                   borderRadius: BorderRadius.circular(100),
@@ -360,6 +363,7 @@ class SearchBar extends StatelessWidget {
               onChanged: onSearch,
             ),
           ),
+          SizedBox(width: 10),
           PopupMenuButton<String>(
             initialValue: selectedFilter,
             onSelected: (String value) {
@@ -369,10 +373,16 @@ class SearchBar extends StatelessWidget {
               return ['Nombre'.tr, 'Precio'.tr, 'Distancia'.tr].map((String choice) {
                 return PopupMenuItem<String>(
                   value: choice,
-                  child: Text(choice),
+                  child: Text(
+                    choice,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary
+                    ),
+                    ),
                 );
               }).toList();
             },
+            icon: Icon(Icons.filter_alt, color: Theme.of(context).colorScheme.onPrimary),
           ),
         ],
       ),
