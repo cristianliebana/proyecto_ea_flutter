@@ -341,6 +341,12 @@ class RatingsListItem extends StatelessWidget {
                   ? NetworkImage(alluserData2[index]['profileImage']!)
                   : Image.asset('assets/images/profile.png').image,
               backgroundColor: Colors.transparent,
+              child: GestureDetector(
+              onTap: () {
+                        userController.setUserId(alluserData2[index]['_id'] ?? '');
+                        Get.to(UserProfileScreen( userId: userController.userId.value));
+                        },
+              ),
             ),
             SizedBox(width: 16.0),
             Expanded(
