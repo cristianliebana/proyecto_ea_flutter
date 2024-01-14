@@ -83,7 +83,10 @@ class LocaleString extends Translations{
       'yaExiste2': 'El email ya existe.',
       'rellenar': 'Tienes que rellenar todos los campos.',
       'terms': ' Términos y condiciones.',
-      'aceptarTerms': 'Al registrarte, estás aceptando los'
+      'aceptarTerms': 'Al registrarte, estás aceptando los',
+      'Nombre': 'Nombre',
+      'Precio': 'Precio',
+      'Distancia': 'Distancia'
     },
     //K
      //ENGLISH LANGUAGE
@@ -165,7 +168,10 @@ class LocaleString extends Translations{
       'yaExiste2': 'Email already exists',
       'rellenar': 'All fields must be filled in.',
       'terms': ' Terms & conditions.',
-      'aceptarTerms': 'By registering, you are accepting the '
+      'aceptarTerms': 'By registering, you are accepting the ',
+      'Nombre': 'Name',
+      'Precio': 'Price',
+      'Distancia': 'Distance'
 
     }
   };

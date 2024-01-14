@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
-import 'dart:html' as html;
+//import 'dart:html' as html;
 import 'package:proyecto_flutter/api/services/product_service.dart';
 import 'package:proyecto_flutter/api/services/room_service.dart';
 import 'package:proyecto_flutter/api/services/token_service.dart';
@@ -138,8 +138,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   void _shareProductDetails() {
     String productName = productData['name'] ?? 'Product Name';
     //String productDescription = productData['description'] ?? 'Product Description';
-    String currentUrl = html.window.location.href;
-    String shareMessage = 'Mira este $productName en km0Market! $currentUrl';
+    //String currentUrl = html.window.location.href;
+    String shareMessage = 'Mira este $productName en km0Market!';
 
     Share.share(shareMessage);
   }
@@ -175,7 +175,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       ],
     );
   }
-  
+
   Widget _buildAppBarEditButton() {
     return Container(
       margin: EdgeInsets.all(8.0),
@@ -212,15 +212,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
   }
 
-
   void _handleEditButton() {
     Navigator.of(context).push(
-        MaterialPageRoute(
-            builder: (context) => EditProductScreen(productId: widget.productId),
-        ),
+      MaterialPageRoute(
+        builder: (context) => EditProductScreen(productId: widget.productId),
+      ),
     );
   }
-  
+
   Widget _buildAppBarFavoriteButton() {
     return _isFavoriteExists
         ? Container(
