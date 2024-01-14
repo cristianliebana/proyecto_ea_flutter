@@ -89,7 +89,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           Get.snackbar('success'.tr, 'favoritoEliminado'.tr);
         } else {
           await crearFavorito(userData['_id'], widget.productId);
-          Get.snackbar('succes'.tr, 'favoritoAgregado'.tr);
+          Get.snackbar('success'.tr, 'favoritoAgregado'.tr);
         }
 
         setState(() {
@@ -175,7 +175,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       ],
     );
   }
-  
+
   Widget _buildAppBarEditButton() {
     return Container(
       margin: EdgeInsets.all(8.0),
@@ -212,15 +212,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
   }
 
-
   void _handleEditButton() {
     Navigator.of(context).push(
-        MaterialPageRoute(
-            builder: (context) => EditProductScreen(productId: widget.productId),
-        ),
+      MaterialPageRoute(
+        builder: (context) => EditProductScreen(productId: widget.productId),
+      ),
     );
   }
-  
+
   Widget _buildAppBarFavoriteButton() {
     return _isFavoriteExists
         ? Container(
@@ -443,7 +442,7 @@ class ChatButton extends StatelessWidget {
           }
         },
         child: Text(
-          "Contacta",
+          'contacta'.tr,
           style: TextStyle(
               fontSize: 25, color: Theme.of(context).colorScheme.primary),
         ),

@@ -116,7 +116,7 @@ class _CreateProductImageState extends State<CreateProductImage> {
                     ElevatedButton(
                       onPressed: _pickImages,
                       child: Text(
-                        'Abre la galería',
+                        'abre la galeria'.tr,
                         style: TextStyle(
                             color: Theme.of(context).colorScheme.primary,
                             fontSize: 20),
@@ -136,7 +136,9 @@ class _CreateProductImageState extends State<CreateProductImage> {
                     ),
                     SizedBox(height: 5),
                     Text(
-                      'Fotos seleccionadas: ${_selectedImages.length} de 8',
+                      'fotos seleccionadas'.tr +
+                          '${_selectedImages.length}' +
+                          'de 8'.tr,
                       style: TextStyle(color: Theme.of(context).primaryColor),
                     ),
                     Expanded(
@@ -302,7 +304,7 @@ class CreateProductController extends GetxController {
             Get.offAll(UserProductsScreen());
           },
           child: Text(
-            "Aceptar",
+            'aceptar'.tr,
             style: TextStyle(color: Theme.of(context).colorScheme.primary),
           ),
           style: ButtonStyle(

@@ -144,7 +144,7 @@ class _CreateProductLocationState extends State<CreateProductLocation> {
                 padding: EdgeInsets.all(
                     8.0), // Ajusta el padding según sea necesario
                 child: Text(
-                  '¿Dónde vas a vender el producto?',
+                  'donde vas'.tr,
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.primary,
                     fontSize: 18.0,
@@ -199,7 +199,7 @@ class _CreateProductLocationState extends State<CreateProductLocation> {
             padding: EdgeInsets.symmetric(
                 vertical: 16), // Ajusta la altura del botón aquí
             child: Text(
-              "Guardar Ubicación",
+              'guardar ubi'.tr,
               style: TextStyle(
                   fontSize: 20, color: Theme.of(context).colorScheme.primary),
             ),

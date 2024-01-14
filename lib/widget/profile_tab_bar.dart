@@ -14,7 +14,6 @@ import 'package:proyecto_flutter/screens/user_products.dart';
 import 'package:proyecto_flutter/screens/user_profile.dart';
 import 'package:proyecto_flutter/screens/user_profile_reviews.dart';
 
-
 class ProfileTabBarController extends GetxController {
   String userId = '';
   String userId2 = '';
@@ -25,7 +24,7 @@ class ProfileTabBarController extends GetxController {
         Get.to(UserProfileScreen(), transition: Transition.noTransition);
         break;
       case 1:
-        Get.to(UserProfileReviewsScreen(),transition: Transition.noTransition);
+        Get.to(UserProfileReviewsScreen(), transition: Transition.noTransition);
         break;
       default:
         break;
@@ -33,15 +32,12 @@ class ProfileTabBarController extends GetxController {
   }
 }
 
-
 class ProfileTabBar extends StatelessWidget {
-  final ProfileTabBarController controller =
-      Get.put(ProfileTabBarController());
+  final ProfileTabBarController controller = Get.put(ProfileTabBarController());
 
   final int currentIndex;
 
-  ProfileTabBar({Key? key, required this.currentIndex})
-      : super(key: key);
+  ProfileTabBar({Key? key, required this.currentIndex}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +65,7 @@ class ProfileTabBar extends StatelessWidget {
               tabs: [
                 GButton(
                   icon: LineIcons.fruitApple,
-                  text: "Productos",
+                  text: 'productos'.tr,
                 ),
                 GButton(
                   icon: LineIcons.star,
