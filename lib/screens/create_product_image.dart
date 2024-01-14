@@ -245,6 +245,7 @@ class CreateProductController extends GetxController {
     double? price = productData['price'];
     String? userId = productData['user'];
     List<String> productImage = List<String>.from(_state._imageUrls);
+    DateTime date = productData['date'];
 
     Map<String, dynamic> productImageData = {
       'name': name,
@@ -259,9 +260,11 @@ class CreateProductController extends GetxController {
               'longitude': chosenLocation!.longitude
             }
           : null,
+      'date': date.toIso8601String(),
     };
 
     try {
+      print(productImageData);
       ApiResponse response = await ProductService.addProduct(productImageData);
       Get.defaultDialog(
         title: 'felicidades'.tr,

@@ -395,3 +395,4 @@ class RatingsListItem extends StatelessWidget {
     }
   }
 }
+
