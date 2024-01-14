@@ -340,12 +340,20 @@ class SubmitButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
+    // Adjust the button size and margin based on the screen size
+    double buttonWidth = screenWidth * 0.8; // 80% of screen width
+    double buttonHeight = screenHeight * 0.06; // 6% of screen height
+    double horizontalMargin = screenWidth * 0.1; // 10% of screen width for both sides
+
     return FadeInDown(
       delay: Duration(milliseconds: 25),
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 100),
-        width: gWidth,
-        height: gHeight / 15,
+        margin: EdgeInsets.symmetric(horizontal: horizontalMargin),
+        width: buttonWidth,
+        height: buttonHeight,
         child: ElevatedButton(
           onPressed: () async {
             await productController._uploadImagesAndCreateProduct(context);
@@ -353,7 +361,9 @@ class SubmitButton extends StatelessWidget {
           child: Text(
             'añadirProducto'.tr,
             style: TextStyle(
-                fontSize: 25, color: Theme.of(context).colorScheme.primary),
+              fontSize: 20, // Consider making font size responsive if needed
+              color: Theme.of(context).colorScheme.primary,
+            ),
           ),
           style: ButtonStyle(
             shape: MaterialStateProperty.all(
@@ -362,13 +372,15 @@ class SubmitButton extends StatelessWidget {
               ),
             ),
             backgroundColor: MaterialStateProperty.all(
-                Theme.of(context).colorScheme.onPrimary),
+              Theme.of(context).colorScheme.onPrimary,
+            ),
           ),
         ),
       ),
     );
   }
 }
+
 
 class ImageText extends StatelessWidget {
   const ImageText({
