@@ -21,16 +21,18 @@ import 'package:proyecto_flutter/utils/constants.dart';
 import 'package:proyecto_flutter/utils/theme_provider.dart';
 import 'package:proyecto_flutter/widget/nav_bar.dart';
 import 'package:proyecto_flutter/widget/profile_tab_bar.dart';
+import 'package:proyecto_flutter/widget/userId_controller.dart';
 
 class UserProfileScreen extends StatefulWidget {
-  @override
+  final String userId;
   _UserProfileScreenState createState() => _UserProfileScreenState();
+  const UserProfileScreen({Key? key, required this.userId}) : super(key: key);
 }
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
   List<Product> products = [];
   Map<String, dynamic> userData = {};
-
+  String userId = userController.userId.value;
   late ScrollController _scrollController;
   bool _loading = false;
 
@@ -38,11 +40,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   void initState() {
     super.initState();
     _scrollController = ScrollController();
-    obtenerDatosUsuario();
+    obtenerDatosUsuario(userId);
   }
 
-  Future<void> obtenerDatosUsuario() async {
-    ApiResponse response = await UserService.getUserById();
+
+    Future<void> obtenerDatosUsuario(String userId) async {
+    ApiResponse response = await UserService.getCreadorById(userId);
     setState(() {
       userData = response.data;
       print(userData);

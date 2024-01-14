@@ -13,18 +13,17 @@ import 'package:proyecto_flutter/screens/review.dart';
 import 'package:proyecto_flutter/screens/user_products.dart';
 import 'package:proyecto_flutter/screens/user_profile.dart';
 import 'package:proyecto_flutter/screens/user_profile_reviews.dart';
+import 'package:proyecto_flutter/widget/userId_controller.dart';
 
 class ProfileTabBarController extends GetxController {
-  String userId = '';
-  String userId2 = '';
-
+String userId = userController.userId.value;
   void updateIndex(int index) {
     switch (index) {
       case 0:
-        Get.to(UserProfileScreen(), transition: Transition.noTransition);
+        Get.to(UserProfileScreen(userId: userId), transition: Transition.noTransition);
         break;
       case 1:
-        Get.to(UserProfileReviewsScreen(), transition: Transition.noTransition);
+        Get.to(UserProfileReviewsScreen(userId: userId), transition: Transition.noTransition);
         break;
       default:
         break;
