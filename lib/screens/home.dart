@@ -566,8 +566,8 @@ class ProductsHorizontal extends StatelessWidget {
                  double distance = calculateDistance(
                   userLocation.latitude,
                   userLocation.longitude,
-                  productList[index].location?.latitude ?? 0.0,
-                  productList[index].location?.longitude ?? 0.0,
+                  productListOferta[index].location?.latitude ?? 0.0,
+                  productListOferta[index].location?.longitude ?? 0.0,
                 );
                 return GestureDetector(
                   onTap: () {
