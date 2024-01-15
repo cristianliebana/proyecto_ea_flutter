@@ -40,7 +40,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   void initState() {
     super.initState();
-    _initializeScreen();
+    checkAuthAndNavigate();
+    obtenerDatosProducto();
+    obtenerDatosUsuario();
+    // _initializeScreen();
   }
 
   Future<void> _initializeScreen() async {
@@ -164,17 +167,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
-      return Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
-    }
-
-    if (_errorMessage.isNotEmpty) {
-      return Scaffold(
-        body: Center(child: Text('Error: $_errorMessage')),
-      );
-    }
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: _buildAppBar(),
@@ -190,6 +182,35 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       ),
     );
   }
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   if (_isLoading) {
+  //     return Scaffold(
+  //       body: Center(child: CircularProgressIndicator()),
+  //     );
+  //   }
+
+  //   if (_errorMessage.isNotEmpty) {
+  //     return Scaffold(
+  //       body: Center(child: Text('Error: $_errorMessage')),
+  //     );
+  //   }
+  //   return Scaffold(
+  //     extendBodyBehindAppBar: true,
+  //     appBar: _buildAppBar(),
+  //     body: Stack(
+  //       children: [
+  //         ImagesCarousel(productData: productData, buildAppBar: _buildAppBar),
+  //         InformationWidget(
+  //           productData: productData,
+  //           creadorData: creadorData,
+  //           userData: userData,
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   AppBar _buildAppBar() {
     return AppBar(
@@ -367,7 +388,7 @@ class InformationWidget extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                         CircleAvatar(
+                        CircleAvatar(
                           radius: 35,
                           backgroundImage:
                               creadorData['profileImage'] != null &&
@@ -378,14 +399,16 @@ class InformationWidget extends StatelessWidget {
                           backgroundColor: Colors.transparent,
                           child: GestureDetector(
                             onTap: () {
-                              print(creadorData['_id'] );
-                              userController.setUserId(creadorData['_id'] ?? '');
+                              print(creadorData['_id']);
+                              userController
+                                  .setUserId(creadorData['_id'] ?? '');
                               // Navegar a la pantalla de perfil del creador con el ID del creador
-                              Get.to(UserProfileScreen( userId: userController.userId.value));
+                              Get.to(UserProfileScreen(
+                                  userId: userController.userId.value));
                             },
                           ),
                         ),
-                        SizedBox(width: 10), 
+                        SizedBox(width: 10),
                         Expanded(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
