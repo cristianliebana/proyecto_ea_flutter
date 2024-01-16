@@ -20,6 +20,7 @@ class EditProductScreen extends StatefulWidget {
 class _EditProductScreenState extends State<EditProductScreen> {
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
+  bool? _isSold;
   TextEditingController _nameController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
   TextEditingController _priceController = TextEditingController();
@@ -41,7 +42,17 @@ class _EditProductScreenState extends State<EditProductScreen> {
       _descriptionController.text = productData['description'] ?? '';
       _priceController.text = productData['price'].toString();
       _unitsController.text = productData['units'].toString();
+       if (productData.containsKey('sold')) {
+      setState(() {
+        _isSold = productData['sold'];
+      });
     } else {
+      // Si 'sold' no está presente, deja _isSold como null
+      setState(() {
+        _isSold = null;
+      });
+    }
+  }  else {
       Get.snackbar('Error', 'Failed to fetch product details');
     }
     setState(() => _isLoading = false);
@@ -62,6 +73,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
         'description': _descriptionController.text,
         'price': double.parse(_priceController.text),
         'units': int.parse(_unitsController.text),
+        'sold': _isSold,
         'user': userId,      
       };
 
@@ -201,6 +213,15 @@ class _EditProductScreenState extends State<EditProductScreen> {
                           obscureText: false,
                         ),
                         SizedBox(height: 20),
+                        CheckboxListTile(
+                        title: Text('Sold'),
+                        value: _isSold,
+                        onChanged: (value) {
+                          setState(() {
+                            _isSold = value ?? false;
+                          });
+                        },
+                      ),
                         ElevatedButton(
                           onPressed: _updateProductDetails,
                           child: Text('Update Product'),

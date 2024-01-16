@@ -221,6 +221,7 @@ class CreateProductController extends GetxController {
   final TextEditingController productImageController = TextEditingController();
   final _CreateProductImageState _state;
   LatLng? chosenLocation;
+  final bool sold = false;
 
   CreateProductController({
     required this.productData,
@@ -246,6 +247,7 @@ class CreateProductController extends GetxController {
     String? userId = productData['user'];
     List<String> productImage = List<String>.from(_state._imageUrls);
     DateTime date = productData['date'];
+    bool sold = false;
 
     Map<String, dynamic> productImageData = {
       'name': name,
@@ -261,6 +263,7 @@ class CreateProductController extends GetxController {
             }
           : null,
       'date': date.toIso8601String(),
+      'sold': sold,
     };
 
     try {
