@@ -128,6 +128,8 @@ class LocaleString extends Translations {
           'Expira': 'Caduca en ',
           'Producto caducado': 'Producto caducado',
           'Fecha no disponible': 'Fecha no disponible',
+          'nombreProducto': 'Nombre del producto',
+          'updateProduct': 'Actualizar producto'
         },
         //K
         //ENGLISH LANGUAGE
@@ -256,6 +258,8 @@ class LocaleString extends Translations {
           'Expira': 'Expires in ',
           'Producto caducado': 'Expired product',
           'Fecha no disponible': 'Date not available',
+          'nombreProducto': 'Product Name',
+          'updateProduct': 'Update product'
         }
       };
 }

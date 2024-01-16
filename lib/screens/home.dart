@@ -583,7 +583,7 @@ class MidText extends StatelessWidget {
           width: gWidth,
           height: gHeight / 25,
           child: SizedBox(
-            child: Text("Todos los productos",
+            child: Text('todosProductos'.tr,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 30,
