@@ -73,19 +73,22 @@ class _CreateProductDetailState extends State<CreateProductDetail> {
 
   @override
   Widget build(BuildContext context) {
+    // Get screen dimensions
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return FutureBuilder<CreateProductController?>(
       future: _controllerFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
+          return Center(child: Text('Error: ${snapshot.error}'));
         } else if (!snapshot.hasData || snapshot.data == null) {
-          return Text('Data is null');
+          return Center(child: Text('Data is null'));
         }
 
         CreateProductController createProductController = snapshot.data!;
-
         createProductController.nameController.text = widget.productName;
 
         return GestureDetector(
@@ -93,83 +96,37 @@ class _CreateProductDetailState extends State<CreateProductDetail> {
           child: Scaffold(
             appBar: _buildAppBar(),
             body: Container(
-              margin: EdgeInsets.all(15),
-              width: gWidth,
-              height: gHeight,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  AnimationFarmer(),
-                  TitleText(),
-                  DescriptionText(),
-                  NameTextField(
-                      createProductController: createProductController),
-                  SizedBox(height: 10),
-                  DescriptionTextField(
-                      createProductController: createProductController),
-                  SizedBox(height: 10),
-                  PriceTextField(
-                      createProductController: createProductController),
-                  SizedBox(height: 10),
-                  UnitsTextField(
-                      createProductController: createProductController),
-                  SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        child: const Text("¿Cuándo caduca?"),
-                        onPressed: () async {
-                          final DateTime? dateTime = await showDatePicker(
-                            context: context,
-                            initialDate:
-                                createProductController.selectedDate.value,
-                            firstDate: DateTime(2024),
-                            lastDate: DateTime(2025),
-                            builder: (context, child) {
-                              return Theme(
-                                data: Theme.of(context).copyWith(
-                                  colorScheme: ColorScheme.light(
-                                    primary:
-                                        Theme.of(context).colorScheme.onPrimary,
-                                    onPrimary:
-                                        Theme.of(context).colorScheme.primary,
-                                    onSurface: Theme.of(context).primaryColor,
-                                  ),
-                                  textButtonTheme: TextButtonThemeData(
-                                    style: TextButton.styleFrom(
-                                      foregroundColor: Theme.of(context)
-                                          .colorScheme
-                                          .onPrimary,
-                                    ),
-                                  ),
-                                ),
-                                child: child!,
-                              );
-                            },
-                          );
-
-                          if (dateTime != null &&
-                              dateTime !=
-                                  createProductController.selectedDate.value) {
-                            createProductController.selectedDate.value =
-                                dateTime;
-                          }
-                        },
-                      ),
-                      SizedBox(width: 20),
-                      Obx(() => Text(
-                            'Fecha seleccionada: ${createProductController.selectedDate.value.toLocal()}',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                          )),
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  SaveButton(createProductController: createProductController),
-                ],
+              margin: EdgeInsets.all(screenWidth * 0.03), // Responsive margin
+              width: screenWidth,
+              height: screenHeight,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AnimationFarmer(),
+                    TitleText(),
+                    DescriptionText(),
+                    NameTextField(
+                      createProductController: createProductController,
+                    ),
+                    SizedBox(height: 10),
+                    DescriptionTextField(
+                      createProductController: createProductController,
+                    ),
+                    SizedBox(height: 10),
+                    PriceTextField(
+                      createProductController: createProductController,
+                    ),
+                    SizedBox(height: 10),
+                    UnitsTextField(
+                      createProductController: createProductController,
+                    ),
+                    SizedBox(height: 20),
+                    _buildDatePicker(createProductController),
+                    SizedBox(height: 20),
+                    SaveButton(createProductController: createProductController),
+                  ],
+                ),
               ),
             ),
           ),
@@ -177,6 +134,66 @@ class _CreateProductDetailState extends State<CreateProductDetail> {
       },
     );
   }
+
+  Widget _buildDatePicker(CreateProductController createProductController) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ElevatedButton(
+          child: const Text("¿Cuándo caduca?"),
+          onPressed: () async {
+            final DateTime? dateTime = await showDatePicker(
+              context: context,
+              initialDate:
+                  createProductController.selectedDate.value,
+              firstDate: DateTime(2024),
+              lastDate: DateTime(2025),
+              builder: (context, child) {
+                return Theme(
+                  data: Theme.of(context).copyWith(
+                    colorScheme: ColorScheme.light(
+                      primary:
+                          Theme.of(context).colorScheme.onPrimary,
+                      onPrimary:
+                          Theme.of(context).colorScheme.primary,
+                      onSurface: Theme.of(context).primaryColor,
+                    ),
+                    textButtonTheme: TextButtonThemeData(
+                      style: TextButton.styleFrom(
+                        foregroundColor: Theme.of(context)
+                            .colorScheme
+                            .onPrimary,
+                      ),
+                    ),
+                  ),
+                  child: child!,
+                );
+              },
+            );
+            if (dateTime != null &&
+                dateTime !=
+                    createProductController.selectedDate.value) {
+              createProductController.selectedDate.value =
+                  dateTime;
+            }
+          },
+          style: ElevatedButton.styleFrom(
+            primary: Theme.of(context).colorScheme.onPrimary, // Background color of the button
+            onPrimary: Theme.of(context).colorScheme.primary, // Text color of the button
+          ),
+        ),
+        SizedBox(width: 20),
+        Obx(() => Text(
+              'Fecha seleccionada: ${createProductController.selectedDate.value.toLocal()}',
+              style: TextStyle(
+                fontSize: 12,
+                color: Theme.of(context).primaryColor,
+              ),
+            )),
+      ],
+    );
+  }
+
 }
 
 class CreateProductController extends GetxController {
@@ -248,22 +265,23 @@ class AnimationFarmer extends StatelessWidget {
 class TitleText extends StatelessWidget {
   const TitleText({
     Key? key,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // Get screen width
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Container(
-      child: Container(
-        margin: EdgeInsets.only(left: 20.0),
-        child: Text(
-          'cuentanos mas'.tr,
-          style: TextStyle(
-            color: Theme.of(context).primaryColor,
-            fontSize: 35,
-            fontWeight: FontWeight.bold,
-          ),
-          textAlign: TextAlign.left,
+      margin: EdgeInsets.only(left: screenWidth * 0.05), // Adjusted margin
+      child: Text(
+        'cuentanos mas'.tr,
+        style: TextStyle(
+          color: Theme.of(context).primaryColor,
+          fontSize: screenWidth * 0.08, // Responsive font size
+          fontWeight: FontWeight.bold,
         ),
+        textAlign: TextAlign.left,
       ),
     );
   }
@@ -272,25 +290,32 @@ class TitleText extends StatelessWidget {
 class DescriptionText extends StatelessWidget {
   const DescriptionText({
     Key? key,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // Get screen dimensions
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Container(
-      child: Container(
-        margin: EdgeInsets.only(top: 10, left: 20.0, right: 20.0, bottom: 5),
-        child: Text(
-          'queremos'.tr,
-          style: TextStyle(
-            color: Theme.of(context).shadowColor,
-            fontSize: 20,
-          ),
-          textAlign: TextAlign.justify,
+      margin: EdgeInsets.only(
+        top: screenWidth * 0.02,
+        left: screenWidth * 0.05,
+        right: screenWidth * 0.05,
+        bottom: screenWidth * 0.01,
+      ), // Adjusted margins relative to screen width
+      child: Text(
+        'queremos'.tr,
+        style: TextStyle(
+          color: Theme.of(context).shadowColor,
+          fontSize: screenWidth * 0.045, // Responsive font size
         ),
+        textAlign: TextAlign.justify,
       ),
     );
   }
 }
+
 
 class NameTextField extends StatefulWidget {
   final CreateProductController createProductController;
@@ -301,7 +326,6 @@ class NameTextField extends StatefulWidget {
   _NameTextFieldState createState() =>
       _NameTextFieldState(createProductController: createProductController);
 }
-
 class _NameTextFieldState extends State<NameTextField> {
   final CreateProductController createProductController;
 
@@ -309,16 +333,23 @@ class _NameTextFieldState extends State<NameTextField> {
 
   @override
   Widget build(BuildContext context) {
+    // Get screen dimensions for responsive design
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return FadeInDown(
       delay: Duration(milliseconds: 200),
       child: RepTextFiled(
         controller: createProductController.nameController,
         icon: LineIcons.carrot,
         text: 'producto'.tr,
+        // Add properties related to sizing, padding, etc., that scale with screenWidth
+        // Example: fontSize: screenWidth * 0.04
+        // Other properties like padding, margin, or text field size can also be adjusted similarly
       ),
     );
   }
 }
+
 
 class DescriptionTextField extends StatelessWidget {
   final CreateProductController createProductController;
@@ -381,12 +412,15 @@ class SaveButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return FadeInDown(
       delay: Duration(milliseconds: 150),
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 100),
-        width: gWidth,
-        height: gHeight / 15,
+        margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.2), // Responsive margin
+        width: double.infinity, // Full width of the parent container
+        height: screenHeight * 0.07, // Responsive height
         child: ElevatedButton(
           onPressed: () {
             createProductController.addProduct(context);
@@ -394,7 +428,9 @@ class SaveButton extends StatelessWidget {
           child: Text(
             'continuar'.tr,
             style: TextStyle(
-                fontSize: 25, color: Theme.of(context).colorScheme.primary),
+              fontSize: screenWidth * 0.05, // Responsive font size
+              color: Theme.of(context).colorScheme.primary,
+            ),
           ),
           style: ButtonStyle(
             shape: MaterialStateProperty.all(
@@ -403,7 +439,8 @@ class SaveButton extends StatelessWidget {
               ),
             ),
             backgroundColor: MaterialStateProperty.all(
-                Theme.of(context).colorScheme.onPrimary),
+              Theme.of(context).colorScheme.onPrimary,
+            ),
           ),
         ),
       ),

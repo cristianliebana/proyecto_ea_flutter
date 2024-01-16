@@ -43,18 +43,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   void initState() {
     super.initState();
-    checkAuthAndNavigate();
-    obtenerDatosProducto();
-    obtenerDatosUsuario();
+    _initializeScreen();
     countFavorito(widget.productId);
-    // _initializeScreen();
   }
 
-  Future<void> _initializeScreen() async {
+  void _initializeScreen() {
     try {
-      await checkAuthAndNavigate();
-      await obtenerDatosProducto();
-      await obtenerDatosUsuario();
+      checkAuthAndNavigate();
+      obtenerDatosProducto();
+      obtenerDatosUsuario();
     } catch (error) {
       setState(() {
         _errorMessage = error.toString();
@@ -423,7 +420,7 @@ class InformationWidget extends StatelessWidget {
                         ),
                         SizedBox(
                             width:
-                                10), // Adjust the spacing between NameText and FavoriteCount
+                                10),
                         FavoriteCount(
                           favoriteCount: favoriteCount,
                           fontSize: textSize,

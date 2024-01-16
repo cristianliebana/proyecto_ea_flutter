@@ -370,7 +370,7 @@ class TitleText extends StatelessWidget {
           'preguntaRating'.tr,
           style: TextStyle(
             color: Theme.of(context).primaryColor,
-            fontSize: screenHeight * 0.05, // Responsive font size
+            fontSize: screenHeight * 0.04, // Responsive font size
             fontWeight: FontWeight.bold,
           ),
           textAlign: TextAlign.left,

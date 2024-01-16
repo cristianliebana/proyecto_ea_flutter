@@ -60,28 +60,31 @@ class _SignUpScreenState extends State<SignUpPasswordScreen> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-      child: Scaffold(
-        appBar: _buildAppBar(),
-        body: Container(
-          margin: EdgeInsets.all(15),
-          width: gWidth,
-          height: gHeight,
+@override
+Widget build(BuildContext context) {
+  double screenWidth = MediaQuery.of(context).size.width;
+  double screenHeight = MediaQuery.of(context).size.height;
+
+  return GestureDetector(
+    onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+    child: Scaffold(
+      appBar: _buildAppBar(),
+      body: SingleChildScrollView(
+        child: Container(
+          margin: EdgeInsets.all(screenWidth * 0.03), // Responsive margin
           child: Column(
             children: [
               Animation(success: success),
-              SizedBox(height: 40),
+              SizedBox(height: screenHeight * 0.02), // Adjusted spacing
               PasswordText(),
               PasswordTextFiled(
-                  controller: controller,
-                  success: success,
-                  signUpController: signUpController),
-              SizedBox(height: 10),
+                controller: controller,
+                success: success,
+                signUpController: signUpController,
+              ),
+              SizedBox(height: screenHeight * 0.015), // Adjusted spacing
               ConfirmPasswordTextFiled(signUpController: signUpController),
-              SizedBox(height: 15),
+              SizedBox(height: screenHeight * 0.015), // Adjusted spacing
               FlutterPwValidator(
                 defaultColor: Colors.grey.shade300,
                 controller: controller,
@@ -93,8 +96,8 @@ class _SignUpScreenState extends State<SignUpPasswordScreen> {
                 specialCharCount: 1,
                 lowercaseCharCount: 3,
                 strings: SpanishStrings(),
-                width: 400,
-                height: 150,
+                width: screenWidth * 0.8, // Adjusted width
+                height: screenHeight * 0.15, // Adjusted height
                 onSuccess: () {
                   setState(() {
                     success = true;
@@ -106,17 +109,18 @@ class _SignUpScreenState extends State<SignUpPasswordScreen> {
                   });
                 },
               ),
-              SizedBox(height: 40),
+              SizedBox(height: screenHeight * 0.1), // Adjusted spacing
               ContinueButton(
-                signUpController: signUpController,
-                success: success,
+              signUpController: signUpController,
+              success: success,
               ),
             ],
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }
 
 class SignUpPasswordController extends GetxController {
@@ -184,15 +188,20 @@ class ContinueButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return FadeInDown(
       delay: Duration(milliseconds: 100),
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 100),
-        width: gWidth,
-        height: gHeight / 15,
+        margin: EdgeInsets.symmetric(
+            horizontal: screenWidth * 0.2), // Responsive horizontal margin
+        width: screenWidth * 0.6, // Responsive width, 60% of the screen width
+        height:
+            screenHeight * 0.06, // Responsive height, 6% of the screen height
         child: ElevatedButton(
           onPressed: () {
-            if (success == false) {
+            if (!success) {
               Get.snackbar('Error', 'requisitos'.tr,
                   snackPosition: SnackPosition.BOTTOM);
             } else {
@@ -202,7 +211,9 @@ class ContinueButton extends StatelessWidget {
           child: Text(
             'continuar'.tr,
             style: TextStyle(
-                fontSize: 25, color: Theme.of(context).colorScheme.primary),
+              fontSize: screenHeight * 0.03, // Responsive font size
+              color: Theme.of(context).colorScheme.primary,
+            ),
           ),
           style: ButtonStyle(
             shape: MaterialStateProperty.all(
@@ -245,16 +256,19 @@ class _ConfirmPasswordTextFiledState extends State<ConfirmPasswordTextFiled> {
     return FadeInDown(
       delay: Duration(milliseconds: 200),
       child: RepTextFiled(
-        controller: signUpController.passwordController,
-        icon: LineIcons.alternateUnlock,
-        text: 'confirmaContraseña'.tr,
-        suficon: Icon(obscureText ? LineIcons.eyeSlash : LineIcons.eye),
-        obscureText: obscureText,
-        onToggleVisibility: () {
-          setState(() {
-            obscureText = !obscureText;
-          });
-        },
+        controller: signUpController
+            .passwordController, // Controller for password confirmation
+        icon: LineIcons.alternateUnlock, // Icon for the password field
+        text: 'confirmaContraseña'.tr, // Localized text for 'Confirm Password'
+        suficon: IconButton(
+          icon: Icon(obscureText ? LineIcons.eyeSlash : LineIcons.eye),
+          onPressed: () {
+            setState(() {
+              obscureText = !obscureText; // Toggle password visibility
+            });
+          },
+        ),
+        obscureText: obscureText, // Controls visibility of the password
       ),
     );
   }
@@ -287,20 +301,20 @@ class _PasswordTextFiledState extends State<PasswordTextFiled> {
   Widget build(BuildContext context) {
     return FadeInDown(
       delay: Duration(milliseconds: 150),
-      child: Container(
-        child: RepTextFiled(
-          controller2: signUpController.password1Controller,
-          controller: widget.controller,
-          icon: LineIcons.alternateUnlock,
-          text: 'contraseña'.tr,
-          suficon: Icon(obscureText ? LineIcons.eyeSlash : LineIcons.eye),
-          obscureText: obscureText,
-          onToggleVisibility: () {
+      child: RepTextFiled(
+        controller2: signUpController.password1Controller,
+        controller: widget.controller,
+        icon: LineIcons.alternateUnlock,
+        text: 'contraseña'.tr,
+        suficon: IconButton(
+          icon: Icon(obscureText ? LineIcons.eyeSlash : LineIcons.eye),
+          onPressed: () {
             setState(() {
               obscureText = !obscureText;
             });
           },
         ),
+        obscureText: obscureText,
       ),
     );
   }
@@ -309,22 +323,32 @@ class _PasswordTextFiledState extends State<PasswordTextFiled> {
 class PasswordText extends StatelessWidget {
   const PasswordText({
     Key? key,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return FadeInDown(
       delay: Duration(milliseconds: 125),
       child: Container(
-          margin: EdgeInsets.only(top: 10, right: 270),
-          width: gWidth / 4,
-          height: gHeight / 18,
-          child: FittedBox(
-            child: Text('register'.tr,
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).primaryColor)),
-          )),
+        margin: EdgeInsets.only(
+            top: 10, right: screenWidth * 0.7), // Responsive margin
+        width: screenWidth / 4, // Responsive width
+        height: screenHeight / 18, // Responsive height
+        child: FittedBox(
+          fit:
+              BoxFit.scaleDown, // Ensures text scales down to fit the container
+          child: Text(
+            'register'.tr,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).primaryColor,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -339,18 +363,17 @@ class Animation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return FadeInDown(
       delay: Duration(milliseconds: 200),
-      child: Container(
-        child: SizedBox(
-          width: double.infinity,
-          height: 200,
-          child: success
-              ? Lottie.asset(
-                  "assets/json/animation.json",
-                )
-              : Lottie.asset("assets/json/animation_lnt9yuim.json"),
-        ),
+      child: SizedBox(
+        width: double.infinity,
+        height: screenHeight *
+            0.25, // 25% of screen height, adjust this value as needed
+        child: success
+            ? Lottie.asset("assets/json/animation.json")
+            : Lottie.asset("assets/json/animation_lnt9yuim.json"),
       ),
     );
   }
