@@ -30,7 +30,7 @@ class LocaleString extends Translations {
           'publicar': 'Publicar',
           'continuar': 'Continuar',
           'buscaKm0': 'Busca en Km0 Market',
-          'oferta': 'Productos en oferta',
+          'oferta': 'Productos que caducan pronto',
           'todosProductos': 'Todos los productos',
           'register': 'Regístrate',
           'sin_cuenta': '¿No tienes una cuenta?',
@@ -125,6 +125,9 @@ class LocaleString extends Translations {
           'Nombre': 'Nombre',
           'A: ': 'A ',
           'km': ' km',
+          'Expira': 'Caduca en ',
+          'Producto caducado': 'Producto caducado',
+          'Fecha no disponible': 'Fecha no disponible',
         },
         //K
         //ENGLISH LANGUAGE
@@ -153,7 +156,7 @@ class LocaleString extends Translations {
           'publicar': 'Publish',
           'continuar': 'Continue',
           'buscaKm0': 'Search in Km0 Market',
-          'oferta': 'Products on Sale',
+          'oferta': 'Products that expire soon',
           'todosProductos': 'All Products',
           'register': 'Sign Up',
           'sin_cuenta': 'Don\'t have an account?',
@@ -249,7 +252,10 @@ class LocaleString extends Translations {
           'Distancia': 'Distance',
           'Nombre': 'Name',
           'A: ': '',
-          'km': ' km away'
+          'km': ' km away',
+          'Expira': 'Expires in ',
+          'Producto caducado': 'Expired product',
+          'Fecha no disponible': 'Date not available',
         }
       };
 }
