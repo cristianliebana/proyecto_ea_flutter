@@ -82,7 +82,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> checkAuthAndNavigate() async {
     await TokenService.loggedIn();
-  }
+ }
 
   Future<void> fetchProducts() async {
     int page = 1;

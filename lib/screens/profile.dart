@@ -50,6 +50,7 @@ class _ProfilePageState extends State<ProfilePage> {
     ApiResponse response = await UserService.getUserById();
     setState(() {
       userData = response.data;
+      print('Aquí debería salir el usuario: $userData');
     });
   }
 

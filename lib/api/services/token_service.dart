@@ -6,16 +6,18 @@ class TokenService {
   static Future<String?> getToken() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      return prefs.getString('token');
+      String? token = prefs.getString('token');
+      print('Token obtenido: $token');
+      return token;
     } catch (error) {
       return null;
     }
   }
 
-  static Future<void> saveToken(String token) async {
+  static Future<void> saveToken(String? token) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString('token', token);
+      prefs.setString('token', token!);
     } catch (error) {
       print('Error al guardar el token: $error');
     }
