@@ -20,6 +20,7 @@ class UpdateScreen extends StatefulWidget {
 class _UpdateScreenState extends State<UpdateScreen> {
   Map<String, dynamic> userData = {};
   final UpdateController updateController = UpdateController();
+
   @override
   void initState() {
     super.initState();
@@ -68,31 +69,39 @@ class _UpdateScreenState extends State<UpdateScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Dynamic sizing based on screen size
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return GestureDetector(
-        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-        child: Scaffold(
-          appBar: _buildAppBar(),
-          body: Container(
-            margin: EdgeInsets.all(15),
-            width: gWidth,
-            height: gHeight,
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        appBar: _buildAppBar(),
+        body: Container(
+          margin: EdgeInsets.all(screenWidth * 0.03), // Responsive margin
+          width: screenWidth,
+          height: screenHeight,
+          child: SingleChildScrollView(
             child: Column(
               children: [
-                SizedBox(height: 50),
+                SizedBox(height: screenHeight * 0.06), // Responsive height
                 ProfileImage(
                   userData: userData,
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: screenHeight * 0.02), // Responsive height
                 UpdateText(),
+                SizedBox(height: screenHeight * 0.02),
                 FullnameTextFiled(updateController: updateController),
-                SizedBox(height: 10),
+                SizedBox(height: screenHeight * 0.01), // Responsive height
                 UsernameTextFiled(updateController: updateController),
-                SizedBox(height: 20),
+                SizedBox(height: screenHeight * 0.02), // Responsive height
                 UpdateButton(updateController: updateController)
               ],
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
 
@@ -114,8 +123,13 @@ class UpdateController extends GetxController {
       'email': email,
       'password': password,
     };
+    
     ApiResponse response = await UserService.updateUser(userData);
-    //print(userData);
+
+    // Calculate responsive dialog size
+    double width = MediaQuery.of(context).size.width;
+    double dialogWidth = width > 600 ? 500 : width * 0.8; // For larger screens, cap the width
+
     Get.defaultDialog(
       title: 'felicidades'.tr,
       titleStyle: TextStyle(color: Theme.of(context).primaryColor),
@@ -124,15 +138,15 @@ class UpdateController extends GetxController {
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 50.0, sigmaY: 50.0),
           child: Container(
+            width: dialogWidth, // Use the calculated width
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10.0),
               color: Theme.of(context).colorScheme.primary,
             ),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary,
-              ),
+            child: Padding(
+              padding: const EdgeInsets.all(20.0), // Consistent padding
               child: Column(
+                mainAxisSize: MainAxisSize.min, // Only take required space
                 children: [
                   Lottie.asset(
                     "assets/json/check3.json",
@@ -183,12 +197,21 @@ class UpdateButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Use MediaQuery to get the screen width and height
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
+    // Adjust the button size and margin based on the screen size
+    double buttonWidth = screenWidth * 0.8; // 80% of screen width
+    double buttonHeight = screenHeight * 0.06; // 6% of screen height
+    double horizontalMargin = screenWidth * 0.1; // 10% of screen width for both sides
+
     return FadeInDown(
       delay: Duration(milliseconds: 150),
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 100),
-        width: gWidth,
-        height: gHeight / 15,
+        margin: EdgeInsets.symmetric(horizontal: horizontalMargin),
+        width: buttonWidth,
+        height: buttonHeight,
         child: ElevatedButton(
           onPressed: () {
             updateController.updateUser(context);
@@ -196,21 +219,26 @@ class UpdateButton extends StatelessWidget {
           child: Text(
             'guardarCambios'.tr,
             style: TextStyle(
-                fontSize: 20, color: Theme.of(context).colorScheme.primary),
+              fontSize: 20, // Consider making font size responsive if needed
+              color: Theme.of(context).colorScheme.primary,
+            ),
           ),
           style: ButtonStyle(
-              shape: MaterialStateProperty.all(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(100),
-                ),
+            shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(100),
               ),
-              backgroundColor: MaterialStateProperty.all(
-                  Theme.of(context).colorScheme.onPrimary)),
+            ),
+            backgroundColor: MaterialStateProperty.all(
+              Theme.of(context).colorScheme.onPrimary,
+            ),
+          ),
         ),
       ),
     );
   }
 }
+
 
 class UsernameTextFiled extends StatelessWidget {
   final UpdateController updateController;
@@ -255,19 +283,21 @@ class UpdateText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return FadeInDown(
       delay: Duration(milliseconds: 125),
       child: Container(
-          margin: EdgeInsets.only(top: 10, left: 40),
-          width: gWidth,
-          height: gHeight / 25,
-          child: SizedBox(
-            child: Text('actualizarPerfil'.tr,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 30,
-                )),
-          )),
+        margin: EdgeInsets.only(top: 10, left: screenWidth * 0.1), // Responsive left margin
+        width: screenWidth,
+        height: screenHeight / 25,
+        child: Text('actualizarPerfil'.tr,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: screenHeight * 0.04, // Responsive font size
+            )),
+      ),
     );
   }
 }
@@ -283,21 +313,23 @@ class ProfileImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String profileImage = userData['profileImage'] ?? "";
+    double imageSize = MediaQuery.of(context).size.width * 0.4; // 40% of screen width
 
     return Container(
-      width: 175,
-      height: 175,
+      width: imageSize,
+      height: imageSize,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(100),
+        borderRadius: BorderRadius.circular(imageSize / 2), // Keep it circular
         child: CldImageWidget(
           publicId: profileImage.isNotEmpty
               ? profileImage
               : "https://res.cloudinary.com/dfwsx27vx/image/upload/v1701028188/profile_ju3yvo.png",
-          width: 175,
-          height: 175,
+          width: imageSize,
+          height: imageSize,
           fit: BoxFit.cover,
         ),
       ),
     );
   }
 }
+
