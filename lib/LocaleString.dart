@@ -125,6 +125,9 @@ class LocaleString extends Translations {
           'Nombre': 'Nombre',
           'A: ': 'A ',
           'km': ' km',
+          'vendido': 'Marcar el producto como vendido.',
+          'checkbox': 'Al marcar esta casilla el producto no aparecerá en la lista de productos.',
+          'sold': '¡Producto vendido!'
         },
         //K
         //ENGLISH LANGUAGE
@@ -249,7 +252,10 @@ class LocaleString extends Translations {
           'Distancia': 'Distance',
           'Nombre': 'Name',
           'A: ': '',
-          'km': ' km away'
+          'km': ' km away',
+          'vendido': 'Mark the product as sold.',
+          'checkbox': 'Checking this box will remove the product from the product list.',
+          'sold': 'Product sold!'
         }
       };
 }

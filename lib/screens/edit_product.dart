@@ -6,6 +6,7 @@ import 'package:proyecto_flutter/api/services/product_service.dart';
 import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
 import 'package:proyecto_flutter/screens/product_detail.dart';
+import 'package:proyecto_flutter/utils/constants.dart';
 import 'package:proyecto_flutter/widget/rep_textfiled.dart';
 
 class EditProductScreen extends StatefulWidget {
@@ -142,6 +143,60 @@ class _EditProductScreenState extends State<EditProductScreen> {
     );
   }
 
+  void _showSoldMessage(BuildContext context) {
+  Get.defaultDialog(
+    title: 'sold'.tr,
+    titleStyle: TextStyle(color: Theme.of(context).primaryColor),
+    backgroundColor: Theme.of(context).colorScheme.primary,
+    content: ClipRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 50.0, sigmaY: 50.0),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10.0),
+            color: Theme.of(context).colorScheme.primary,
+          ),
+          child: Column(
+            children: [
+              Lottie.asset(
+                "assets/json/check3.json",
+                width: 100,
+                height: 100,
+                repeat: false,
+              ),
+              SizedBox(height: 20),
+              Text(
+                'checkbox'.tr,
+                style: TextStyle(color: Theme.of(context).primaryColor),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+    radius: 10.0,
+    confirm: ElevatedButton(
+      onPressed: () {
+        Get.back();
+      },
+      child: Text(
+        'OK',
+        style: TextStyle(color: Theme.of(context).colorScheme.primary),
+      ),
+      style: ButtonStyle(
+        shape: MaterialStateProperty.all(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+        ),
+        backgroundColor: MaterialStateProperty.all(
+            Theme.of(context).colorScheme.onPrimary),
+      ),
+    ),
+  );
+}
+
+
   AppBar _buildAppBar() {
     return AppBar(
       elevation: 0,
@@ -214,11 +269,21 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         ),
                         SizedBox(height: 20),
                         CheckboxListTile(
-                        title: Text('Sold'),
+                        checkColor: Colors.white, 
+                        activeColor: Theme.of(context).primaryColor,
+                        title: Text('vendido'.tr,
+                        style: TextStyle(
+                          color: text1Color
+                          ),),
+                        
                         value: _isSold,
                         onChanged: (value) {
                           setState(() {
                             _isSold = value ?? false;
+                             if (_isSold!) {
+                            _showSoldMessage(context);
+                            _updateProductDetails;
+                            }
                           });
                         },
                       ),
