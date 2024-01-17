@@ -40,43 +40,49 @@ class ProfileTabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    // Calculate padding and icon size based on screen width
+    double horizontalPadding = screenWidth * 0.05; // 5% of screen width
+    double iconSize = screenWidth * 0.08; // 8% of screen width, adjust as needed
+
     return GetBuilder<ProfileTabBarController>(
       builder: (controller) {
         return SafeArea(
-            child: Column(mainAxisSize: MainAxisSize.min, children: [
-          Container(
-            height: 1,
-            color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.2),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 60, vertical: 8),
-            child: GNav(
-              rippleColor:
-                  Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
-              hoverColor:
-                  Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
-              gap: 4,
-              activeColor: Theme.of(context).colorScheme.primary,
-              iconSize: 35,
-              padding: EdgeInsets.symmetric(horizontal: 60, vertical: 8),
-              tabBackgroundColor: Theme.of(context).colorScheme.onPrimary,
-              color: Theme.of(context).colorScheme.onPrimary,
-              tabs: [
-                GButton(
-                  icon: LineIcons.fruitApple,
-                  text: 'productos'.tr,
-                ),
-                GButton(
-                  icon: LineIcons.star,
-                  text: "Reviews",
-                ),
-              ],
-              selectedIndex: currentIndex,
-              onTabChange: controller.updateIndex,
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+            Container(
+              height: 1,
+              color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.2),
             ),
-          ),
-        ]));
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 8),
+              child: GNav(
+                rippleColor: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
+                hoverColor: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
+                gap: 4,
+                activeColor: Theme.of(context).colorScheme.primary,
+                iconSize: iconSize,
+                padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 8),
+                tabBackgroundColor: Theme.of(context).colorScheme.onPrimary,
+                color: Theme.of(context).colorScheme.onPrimary,
+                tabs: [
+                  GButton(
+                    icon: LineIcons.fruitApple,
+                    text: 'productos'.tr,
+                  ),
+                  GButton(
+                    icon: LineIcons.star,
+                    text: "Reviews",
+                  ),
+                ],
+                selectedIndex: currentIndex,
+                onTabChange: controller.updateIndex,
+              ),
+            ),
+          ]),
+        );
       },
     );
   }
 }
+

@@ -267,6 +267,11 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
+    int gridCrossAxisCount = screenWidth > 600 ? 3 : 2; // 3 columns for wider screens, 2 for narrower
+
     return Scaffold(
       bottomNavigationBar: CustomBottomNavigationBar(currentIndex: 0),
       body: CustomScrollView(
@@ -274,54 +279,43 @@ class _HomePageState extends State<HomePage> {
         slivers: [
           SliverList(
             delegate: SliverChildListDelegate([
-              SizedBox(height: 30),
-              Container(
-                child: SearchBar(
-                  onSearch: _filterProducts,
-                  searchController: _searchController,
-                  selectedFilter: 'Nombre'.tr,
-                  onFilterChanged: _handleFilterChanged,
-                ),
+              SizedBox(height: screenHeight * 0.04), // Adjusted height
+              SearchBar(
+                onSearch: _filterProducts,
+                searchController: _searchController,
+                selectedFilter: 'Nombre'.tr,
+                onFilterChanged: _handleFilterChanged,
               ),
             ]),
           ),
           SliverList(
             delegate: SliverChildListDelegate([
-              Visibility(
-                visible: productListOferta.isNotEmpty,
-                child: Column(
-                  children: [
-                    SizedBox(height: 20),
-                    Container(child: TopText()),
-                    SizedBox(height: 10),
-                  ],
-                ),
-              ),
-              Visibility(
-                visible: productListOferta.isNotEmpty,
-                child: Container(
-                  child: ProductsHorizontal(
-                    productListOferta: productListOferta,
-                    userLocation: _currentLocation,
-                  ),
-                ),
-              ),
-              SizedBox(height: 10),
+              SizedBox(height: screenHeight * 0.025), // Adjusted height
+              TopText(),
+              SizedBox(height: screenHeight * 0.0125), // Adjusted height
             ]),
           ),
           SliverList(
             delegate: SliverChildListDelegate([
-              Container(child: MidText()),
-              SizedBox(height: 5),
+              ProductsHorizontal(
+                productListOferta: productListOferta,
+                userLocation: _currentLocation,
+              ),
+              SizedBox(height: screenHeight * 0.0125), // Adjusted height
+            ]),
+          ),
+          SliverList(
+            delegate: SliverChildListDelegate([
+              MidText(),
+              SizedBox(height: screenHeight * 0.00625), // Adjusted height
             ]),
           ),
           SliverGrid(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
+              crossAxisCount: gridCrossAxisCount, // Adjusted dynamically
               crossAxisSpacing: 10.0,
               mainAxisSpacing: 10.0,
-              childAspectRatio: 0.9,
-              // Adjust the margin values as needed
+              childAspectRatio: 0.9, // You can adjust this based on your content
             ),
             delegate: SliverChildBuilderDelegate(
               (context, index) {
@@ -336,11 +330,12 @@ class _HomePageState extends State<HomePage> {
               },
               childCount: filteredList.length + 1,
             ),
-          )
+          ),
         ],
       ),
     );
   }
+
 }
 
 class SearchBar extends StatelessWidget {
@@ -359,26 +354,26 @@ class SearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05), // Adjusted padding
       child: Row(
         children: [
           Expanded(
             child: TextField(
               controller: searchController,
               style: TextStyle(
-                fontSize: 14,
+                fontSize: screenWidth * 0.035, // Adjusted font size
                 fontWeight: FontWeight.w400,
                 color: Theme.of(context).colorScheme.primary,
               ),
               decoration: InputDecoration(
-                contentPadding:
-                    const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+                contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: screenWidth * 0.04), // Adjusted padding
                 filled: true,
                 fillColor: Theme.of(context).colorScheme.onPrimary,
                 hintText: 'buscaKm0'.tr,
-                hintStyle:
-                    TextStyle(color: Theme.of(context).colorScheme.primary),
+                hintStyle: TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: screenWidth * 0.035), // Adjusted font size
                 border: OutlineInputBorder(
                   borderSide: BorderSide.none,
                   borderRadius: BorderRadius.circular(100),
@@ -387,27 +382,37 @@ class SearchBar extends StatelessWidget {
               onChanged: onSearch,
             ),
           ),
-          SizedBox(width: 10),
-          PopupMenuButton<String>(
-            initialValue: selectedFilter,
-            onSelected: (String value) {
-              onFilterChanged(value);
-            },
-            itemBuilder: (BuildContext context) {
-              return ['Nombre'.tr, 'Precio'.tr, 'Distancia'.tr]
-                  .map((String choice) {
-                return PopupMenuItem<String>(
-                  value: choice,
-                  child: Text(
-                    choice,
-                    style:
-                        TextStyle(color: Theme.of(context).colorScheme.primary),
-                  ),
-                );
-              }).toList();
-            },
-            icon: Icon(Icons.filter_alt,
-                color: Theme.of(context).colorScheme.onPrimary),
+          SizedBox(width: screenWidth * 0.02), // Adjusted width
+          Theme(
+            data: Theme.of(context).copyWith(
+              popupMenuTheme: PopupMenuThemeData(
+                color: Theme.of(context).colorScheme.onPrimary, // Background color
+                textStyle: TextStyle(
+                  color: Theme.of(context).colorScheme.primary, // Text color
+                  fontSize: screenWidth * 0.035, // Adjusted font size
+                ),
+              ),
+            ),
+            child: PopupMenuButton<String>(
+              initialValue: selectedFilter,
+              onSelected: (String value) {
+                onFilterChanged(value);
+              },
+              itemBuilder: (BuildContext context) {
+                return ['Nombre'.tr, 'Precio'.tr, 'Distancia'.tr]
+                    .map((String choice) {
+                  return PopupMenuItem<String>(
+                    value: choice,
+                    child: Text(
+                      choice,
+                      style: TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: screenWidth * 0.035), // Adjusted font size
+                    ),
+                  );
+                }).toList();
+              },
+              icon: Icon(Icons.filter_alt,
+                  color: Theme.of(context).colorScheme.onPrimary),
+            ),
           ),
         ],
       ),
@@ -425,27 +430,28 @@ class ProductsVerticalItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
     DateTime now = DateTime.now();
     Duration? difference;
     if (product.date != null) {
       difference = product.date!.difference(now);
     }
 
-    // Verificar si la diferencia es negativa y mostrar el mensaje correspondiente
     String formattedDifference = difference != null
         ? difference.isNegative
             ? 'Producto caducado'.tr
             : 'Expira'.tr +
                 '${difference.inHours}h ${difference.inMinutes.remainder(60)}m'
         : 'Fecha no disponible'.tr;
+
     return GestureDetector(
       onTap: () {
-        Get.to(
-          ProductDetailScreen(productId: product.id ?? ''),
-        );
+        Get.to(ProductDetailScreen(productId: product.id ?? ''));
       },
       child: Container(
-        margin: EdgeInsets.only(left: 5, top: 5, right: 5),
+        margin: EdgeInsets.all(screenWidth * 0.01), // Adjusted margin
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.primary,
           borderRadius: BorderRadius.circular(30),
@@ -477,7 +483,7 @@ class ProductsVerticalItem extends StatelessWidget {
               top: 10,
               left: 20,
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.03, vertical: screenHeight * 0.01),
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.onPrimary,
                   borderRadius: BorderRadius.circular(30),
@@ -486,7 +492,7 @@ class ProductsVerticalItem extends StatelessWidget {
                   product.name ?? '',
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.primary,
-                    fontSize: 18.0,
+                    fontSize: screenWidth * 0.020, // Adjusted font size
                   ),
                 ),
               ),
@@ -495,7 +501,7 @@ class ProductsVerticalItem extends StatelessWidget {
               bottom: 10,
               left: 20,
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.03, vertical: screenHeight * 0.01),
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.inversePrimary,
                   borderRadius: BorderRadius.circular(30),
@@ -504,12 +510,11 @@ class ProductsVerticalItem extends StatelessWidget {
                   formattedDifference,
                   style: TextStyle(
                     color: Color(0xFFFFFCEA),
-                    fontSize: 14.0,
+                    fontSize: screenWidth * 0.020, // Adjusted font size
                   ),
                 ),
               ),
             ),
-            SizedBox(width: 10),
             Positioned(
               bottom: 10,
               right: 10,
@@ -517,8 +522,7 @@ class ProductsVerticalItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.03, vertical: screenHeight * 0.01),
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.onPrimary,
                       borderRadius: BorderRadius.circular(30),
@@ -527,7 +531,7 @@ class ProductsVerticalItem extends StatelessWidget {
                       '${product.price} €/Kg',
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.primary,
-                        fontSize: 14.0,
+                        fontSize: screenWidth * 0.020, // Adjusted font size
                       ),
                     ),
                   ),
@@ -538,18 +542,16 @@ class ProductsVerticalItem extends StatelessWidget {
               top: 10,
               right: 10,
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.03, vertical: screenHeight * 0.01),
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.onPrimary,
                   borderRadius: BorderRadius.circular(30),
                 ),
                 child: Text(
-                  'A: '.tr +
-                      '${_calculateDistance().toStringAsFixed(2)}' +
-                      'km'.tr,
+                  'A: '.tr + '${_calculateDistance().toStringAsFixed(2)}' + 'km'.tr,
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.primary,
-                    fontSize: 14.0,
+                    fontSize: screenWidth * 0.020, // Adjusted font size
                   ),
                 ),
               ),
@@ -592,26 +594,26 @@ class ProductsVerticalItem extends StatelessWidget {
 class MidText extends StatelessWidget {
   const MidText({
     Key? key,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Container(
-      child: Container(
-          margin: EdgeInsets.only(top: 10, left: 20),
-          width: gWidth,
-          height: gHeight / 25,
-          child: SizedBox(
-            child: Text('todosProductos'.tr,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 30,
-                  color: Theme.of(context).primaryColor,
-                )),
-          )),
+      margin: EdgeInsets.only(top: screenWidth * 0.01, left: screenWidth * 0.05, right: screenWidth * 0.05),
+      child: Text(
+        'todosProductos'.tr,
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: screenWidth * 0.05, // Adjust font size
+          color: Theme.of(context).primaryColor,
+        ),
+      ),
     );
   }
 }
+
 
 class ProductsHorizontal extends StatelessWidget {
   final List<Product> productListOferta;
@@ -625,13 +627,15 @@ class ProductsHorizontal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Get screen dimensions
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return Row(
       children: [
         Expanded(
           child: Container(
-            margin: EdgeInsets.only(left: 0.25),
-            width: 1,
-            height: gHeight / 4.5,
+            height: screenHeight / 4.5, // Height scaled relative to screen height
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: productListOferta.length,
@@ -642,31 +646,33 @@ class ProductsHorizontal extends StatelessWidget {
                 if (productListOferta[index].date != null) {
                   difference = productListOferta[index].date!.difference(now);
                 }
-                // Verificar si la diferencia es negativa y mostrar el mensaje correspondiente
+
                 String formattedDifference = difference != null
                     ? difference.isNegative
                         ? 'Producto caducado'
                         : 'Expira'.tr +
                             '${difference.inHours}h ${difference.inMinutes.remainder(60)}m'
                     : 'Fecha no disponible';
+
                 double distance = calculateDistance(
                   userLocation.latitude,
                   userLocation.longitude,
                   productListOferta[index].location?.latitude ?? 0.0,
                   productListOferta[index].location?.longitude ?? 0.0,
                 );
+
                 return GestureDetector(
                   onTap: () {
                     Get.to(ProductDetailScreen(
                         productId: productListOferta[index].id ?? ''));
                   },
                   child: Container(
-                    margin: EdgeInsets.all(gHeight * 0.01),
-                    width: gWidth / 1.5,
+                    margin: EdgeInsets.all(screenWidth * 0.02), // Adjusted margin
+                    width: screenWidth * 0.6, // Adjust width to 60% of screen width
                     child: Stack(
                       children: [
                         Container(
-                          width: gWidth / 1,
+                          width: screenWidth * 0.55, // Adjusted width
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(30),
                             image: DecorationImage(
@@ -689,7 +695,7 @@ class ProductsHorizontal extends StatelessWidget {
                           left: 20,
                           child: Container(
                             padding: EdgeInsets.symmetric(
-                                horizontal: 16.0, vertical: 8.0),
+                                horizontal: 10.0, vertical: 5.0),
                             decoration: BoxDecoration(
                               color: Theme.of(context).colorScheme.onPrimary,
                               borderRadius: BorderRadius.circular(30),
@@ -698,7 +704,7 @@ class ProductsHorizontal extends StatelessWidget {
                               productListOferta[index].name ?? '',
                               style: TextStyle(
                                 color: Theme.of(context).colorScheme.primary,
-                                fontSize: 18.0,
+                                fontSize: screenWidth * 0.02, // Adjusted font size
                               ),
                             ),
                           ),
@@ -708,59 +714,57 @@ class ProductsHorizontal extends StatelessWidget {
                           left: 20,
                           child: Container(
                             padding: EdgeInsets.symmetric(
-                                horizontal: 16.0, vertical: 8.0),
+                                horizontal: 10.0, vertical: 5.0),
                             decoration: BoxDecoration(
-                              color:
-                                  Theme.of(context).colorScheme.inversePrimary,
+                              color: Theme.of(context).colorScheme.inversePrimary,
                               borderRadius: BorderRadius.circular(30),
                             ),
                             child: Text(
                               formattedDifference,
                               style: TextStyle(
                                 color: Color(0xFFFFFCEA),
-                                fontSize: 14.0,
+                                fontSize: screenWidth * 0.02, // Adjusted font size
                               ),
                             ),
                           ),
                         ),
                         Positioned(
                           bottom: 10,
-                          right: 10,
+                          right: 40,
                           child: Container(
                             padding: EdgeInsets.symmetric(
-                                horizontal: 16.0, vertical: 8.0),
+                                horizontal: 10.0, vertical: 5.0),
                             decoration: BoxDecoration(
                               color: Theme.of(context).colorScheme.onPrimary,
                               borderRadius: BorderRadius.circular(30),
                             ),
                             child: Text(
-                              '${productListOferta[index].price} €/Kg', // Agrega el precio del producto
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.primary,
-                                fontSize: 18.0,
-                              ),
-                            ),
+                              '${productListOferta[index].price} €/Kg',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary,
+                            fontSize: screenWidth * 0.02, // Adjusted font size
                           ),
                         ),
-                        Positioned(
-                          top: 10,
-                          right: 10,
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 16.0, vertical: 8.0),
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.onPrimary,
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            child: Text(
-                              'A: '.tr +
-                                  '${distance.toStringAsFixed(2)}' +
-                                  'km'.tr, // Muestra la distancia
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.primary,
-                                fontSize:
-                                    14.0, // Ajusta el tamaño según tus necesidades
-                              ),
+                      ),
+                    ),
+                    Positioned(
+                      top: 10,
+                      right: 40,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 10.0, vertical: 5.0),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: Text(
+                          'A: '.tr +
+                              '${distance.toStringAsFixed(2)}' +
+                              'km'.tr, // Display the distance
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary,
+                            fontSize: screenWidth * 0.02, // Adjusted font size
+                          ),
                             ),
                           ),
                         )
@@ -801,23 +805,24 @@ class ProductsHorizontal extends StatelessWidget {
 class TopText extends StatelessWidget {
   const TopText({
     Key? key,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Container(
-      child: Container(
-          margin: EdgeInsets.only(top: 10, left: 20),
-          width: gWidth,
-          height: gHeight / 25,
-          child: SizedBox(
-            child: Text('oferta'.tr,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 30,
-                  color: Theme.of(context).primaryColor,
-                )),
-          )),
+      margin: EdgeInsets.only(top: screenWidth * 0.01, left: screenWidth * 0.05),
+      child: Text(
+        'oferta'.tr,
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: screenWidth * 0.05, // Adjust font size
+          color: Theme.of(context).primaryColor,
+        ),
+      ),
     );
   }
 }
+
+

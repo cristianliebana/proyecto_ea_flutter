@@ -165,75 +165,76 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    double verticalSpace = MediaQuery.of(context).size.height * 0.02;
+    double dividerThickness = MediaQuery.of(context).size.height * 0.002;
+
     return Scaffold(
       appBar: _buildAppBar(),
       bottomNavigationBar: CustomBottomNavigationBar(currentIndex: 5),
       body: SingleChildScrollView(
         child: Container(
-            child: Column(
-          children: [
-            SizedBox(height: 50),
-            ProfileImage(
-              userData: userData,
-            ),
-            const SizedBox(height: 10),
-            if (userData.isNotEmpty) UsernameText(userData: userData),
-            const SizedBox(height: 10),
-            if (userData.isNotEmpty) EmailText(userData: userData),
-            if (userData.isEmpty) CircularProgressIndicator(),
-            const SizedBox(height: 20),
-            EditProfileButton(),
-            const SizedBox(height: 30),
-            Divider(
-              thickness: 0.2,
-              color: Theme.of(context).shadowColor,
-            ),
-            ProfileMenuWidget(
-                title: 'ajustes'.tr,
-                icon: LineAwesomeIcons.cog,
-                onPress: () {}),
-            ProfileMenuWidget(
-                title: 'perfil'.tr,
-                icon: LineAwesomeIcons.user,
-                onPress: () {
-                  userController.setUserId(userData['_id'] ?? '');
-                  Get.to(UserProfileScreen(
-                    userId: userController.userId.value,
-                  ));
-                }),
-            ProfileMenuWidget(
-                title: 'misProductos'.tr,
-                icon: LineAwesomeIcons.fruit_apple,
-                onPress: () {
-                  Get.to(UserProductsScreen());
-                }),
-            ProfileMenuWidget(
-                title: 'Mis Recetas'.tr,
-                icon: LineAwesomeIcons.receipt,
-                onPress: () {
-                  Get.to(RecipeScreen());
-                }),
-            Divider(
-              thickness: 0.2,
-              color: Theme.of(context).shadowColor,
-            ),
-            ProfileMenuWidget(
-                title: 'informacion'.tr,
-                icon: LineAwesomeIcons.info,
-                onPress: () {
-                  Get.to(ConcentricTransitionPage());
-                }),
-            ProfileMenuWidget(
-                title: 'logout'.tr,
-                icon: LineAwesomeIcons.alternate_sign_out,
-                onPress: () {
-                  _onRemoveTokenPressed();
-                },
-                // text1Color: Theme.of(context).shadowColor,
-                customColor: Theme.of(context).shadowColor,
-                endIcon: false),
-          ],
-        )),
+          child: Column(
+            children: [
+              SizedBox(height: verticalSpace * 2.5),
+              ProfileImage(
+                userData: userData,
+              ),
+              SizedBox(height: verticalSpace),
+              if (userData.isNotEmpty) UsernameText(userData: userData),
+              SizedBox(height: verticalSpace),
+              if (userData.isNotEmpty) EmailText(userData: userData),
+              if (userData.isEmpty) CircularProgressIndicator(),
+              SizedBox(height: verticalSpace * 2),
+              EditProfileButton(),
+              SizedBox(height: verticalSpace * 3),
+              Divider(
+                thickness: dividerThickness,
+                color: Theme.of(context).shadowColor,
+              ),
+              ProfileMenuWidget(
+                  title: 'ajustes'.tr,
+                  icon: LineAwesomeIcons.cog,
+                  onPress: () {}),
+              ProfileMenuWidget(
+                  title: 'perfil'.tr,
+                  icon: LineAwesomeIcons.user,
+                  onPress: () {
+                    userController.setUserId(userData['_id'] ?? '');
+                    Get.to(UserProfileScreen(userId: userController.userId.value));
+                  }),
+              ProfileMenuWidget(
+                  title: 'misProductos'.tr,
+                  icon: LineAwesomeIcons.fruit_apple,
+                  onPress: () {
+                    Get.to(UserProductsScreen());
+                  }),
+              ProfileMenuWidget(
+                  title: 'Mis Recetas'.tr,
+                  icon: LineAwesomeIcons.receipt,
+                  onPress: () {
+                    Get.to(RecipeScreen());
+                  }),
+              Divider(
+                thickness: dividerThickness,
+                color: Theme.of(context).shadowColor,
+              ),
+              ProfileMenuWidget(
+                  title: 'informacion'.tr,
+                  icon: LineAwesomeIcons.info,
+                  onPress: () {
+                    Get.to(ConcentricTransitionPage());
+                  }),
+              ProfileMenuWidget(
+                  title: 'logout'.tr,
+                  icon: LineAwesomeIcons.alternate_sign_out,
+                  onPress: () {
+                    _onRemoveTokenPressed();
+                  },
+                  customColor: Theme.of(context).shadowColor,
+                  endIcon: false),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -243,45 +244,51 @@ class EmailText extends StatelessWidget {
   const EmailText({
     Key? key,
     required this.userData,
-  });
+  }) : super(key: key);
 
   final Map<String, dynamic> userData;
 
   @override
   Widget build(BuildContext context) {
     String email = userData['email'] ?? "N/A";
+    double fontSize = MediaQuery.of(context).size.width * 0.04; // Adjust the font size based on the screen width
 
     return Text(
       email != "N/A" ? "$email" : "",
       style: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.w200,
-          color: Theme.of(context).primaryColor),
+        fontSize: fontSize, // Responsive font size
+        fontWeight: FontWeight.w200,
+        color: Theme.of(context).primaryColor,
+      ),
     );
   }
 }
+
 
 class UsernameText extends StatelessWidget {
   const UsernameText({
     Key? key,
     required this.userData,
-  });
+  }) : super(key: key);
 
   final Map<String, dynamic> userData;
 
   @override
   Widget build(BuildContext context) {
     String username = userData['username'] ?? "N/A";
+    double fontSize = MediaQuery.of(context).size.width * 0.05; // Adjust the font size based on the screen width
 
     return Text(
       username != "N/A" ? "$username" : "",
       style: TextStyle(
-          fontSize: 30,
-          fontWeight: FontWeight.bold,
-          color: Theme.of(context).primaryColor),
+        fontSize: fontSize, // Responsive font size
+        fontWeight: FontWeight.bold,
+        color: Theme.of(context).primaryColor,
+      ),
     );
   }
 }
+
 
 class ProfileImage extends StatelessWidget {
   const ProfileImage({
@@ -294,18 +301,19 @@ class ProfileImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String profileImage = userData['profileImage'] ?? "";
+    double imageSize = MediaQuery.of(context).size.width * 0.4; // Adjust the size based on the screen width
 
     return Container(
-      width: 175,
-      height: 175,
+      width: imageSize,
+      height: imageSize,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(100),
+        borderRadius: BorderRadius.circular(imageSize / 2), // Make borderRadius responsive
         child: CldImageWidget(
           publicId: profileImage.isNotEmpty
               ? profileImage
               : "https://res.cloudinary.com/dfwsx27vx/image/upload/v1701028188/profile_ju3yvo.png",
-          width: 175,
-          height: 175,
+          width: imageSize,
+          height: imageSize,
           fit: BoxFit.cover,
         ),
       ),
@@ -313,7 +321,6 @@ class ProfileImage extends StatelessWidget {
   }
 }
 
-// "assets/images/profile.png"
 class EditProfileButton extends StatelessWidget {
   const EditProfileButton({
     super.key,
@@ -321,10 +328,13 @@ class EditProfileButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double buttonWidth = MediaQuery.of(context).size.width * 0.6; // Adjust the width based on the screen width
+    double buttonHeight = MediaQuery.of(context).size.height * 0.07; // Adjust the height based on the screen height
+
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 100),
-      width: gWidth,
-      height: gHeight / 15,
+      margin: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.2), // Responsive horizontal margin
+      width: buttonWidth,
+      height: buttonHeight,
       child: ElevatedButton(
         onPressed: () async {
           Get.to(UpdateScreen());
@@ -332,12 +342,14 @@ class EditProfileButton extends StatelessWidget {
         child: Text(
           'editarPerfil'.tr,
           style: TextStyle(
-              fontSize: 25, color: Theme.of(context).colorScheme.primary),
+            fontSize: MediaQuery.of(context).size.width * 0.05, // Responsive font size
+            color: Theme.of(context).colorScheme.primary,
+          ),
         ),
         style: ButtonStyle(
             shape: MaterialStateProperty.all(
               RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(100),
+                borderRadius: BorderRadius.circular(buttonHeight / 2), // Responsive borderRadius
               ),
             ),
             backgroundColor: MaterialStateProperty.all(
@@ -346,6 +358,7 @@ class EditProfileButton extends StatelessWidget {
     );
   }
 }
+
 
 class ProfileMenuWidget extends StatelessWidget {
   const ProfileMenuWidget({
@@ -367,6 +380,10 @@ class ProfileMenuWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Using MediaQuery for responsive layout
+    double iconSize = MediaQuery.of(context).size.width * 0.1; // Dynamic icon size based on screen width
+    double fontSize = MediaQuery.of(context).size.width * 0.045; // Dynamic font size based on screen width
+
     return ListTile(
       onTap: onPress,
       title: Center(
@@ -374,37 +391,35 @@ class ProfileMenuWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
-              width: 40,
-              height: 40,
+              width: iconSize, // Responsive width
+              height: iconSize, // Responsive height
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(200),
+                borderRadius: BorderRadius.circular(iconSize / 2), // Responsive borderRadius
                 color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.9),
               ),
               child: Icon(icon,
-                  color: Theme.of(context).colorScheme.primary, size: 25),
+                  color: Theme.of(context).colorScheme.primary, size: iconSize * 0.6), // Responsive icon size
             ),
-            SizedBox(width: 20),
+            SizedBox(width: MediaQuery.of(context).size.width * 0.05), // Responsive spacing
             Expanded(
               child: Text(
                 title,
                 style: TextStyle(
-                  color: customColor != null
-                      ? Theme.of(context).dividerColor
-                      : Theme.of(context).primaryColor,
-                  fontSize: 18,
+                  color: customColor ?? Theme.of(context).primaryColor, // Custom or default color
+                  fontSize: fontSize, // Responsive font size
                 ),
               ),
             ),
             if (endIcon)
               Container(
-                width: 25,
-                height: 25,
+                width: iconSize * 0.6, // Responsive width
+                height: iconSize * 0.6, // Responsive height
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(100),
                   color: Theme.of(context).colorScheme.primary.withOpacity(0.9),
                 ),
                 child: Icon(LineAwesomeIcons.angle_right,
-                    color: Theme.of(context).colorScheme.onPrimary, size: 25),
+                    color: Theme.of(context).colorScheme.onPrimary, size: iconSize * 0.6), // Responsive icon size
               ),
           ],
         ),

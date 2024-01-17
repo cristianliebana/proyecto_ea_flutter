@@ -349,25 +349,26 @@ class FullnameTextFiled extends StatelessWidget {
 class UpdateText extends StatelessWidget {
   const UpdateText({
     Key? key,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
     return FadeInDown(
       delay: Duration(milliseconds: 125),
       child: Container(
-        margin: EdgeInsets.only(
-            top: 10, left: screenWidth * 0.1), // Responsive left margin
-        width: screenWidth,
-        height: screenHeight / 25,
-        child: Text('actualizarPerfil'.tr,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: screenHeight * 0.04, // Responsive font size
-            )),
+        margin: EdgeInsets.only(top: 10), // Top margin for spacing
+        padding: EdgeInsets.symmetric(horizontal: 20), // Horizontal padding for better text fit
+        alignment: Alignment.center, // Center the text vertically and horizontally
+        child: Text(
+          'actualizarPerfil'.tr,
+          textAlign: TextAlign.center, // Center the text horizontally
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: screenHeight * 0.025, // Slightly increased font size for better readability
+          ),
+        ),
       ),
     );
   }
