@@ -113,35 +113,54 @@ class _ProfilePageState extends State<ProfilePage> {
 
   buildLanguageDialog(BuildContext context) {
     showDialog(
-        context: context,
-        builder: (builder) {
-          return AlertDialog(
-            title: Text('Choose Your Language'),
-            content: Container(
-              width: double.maxFinite,
-              child: ListView.separated(
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: GestureDetector(
-                        child: Text(locale[index]['name']),
-                        onTap: () {
-                          print(locale[index]['name']);
-                          updateLanguage(locale[index]['locale']);
-                        },
-                      ),
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    return Divider(
-                      color: Colors.blue,
-                    );
-                  },
-                  itemCount: locale.length),
+      context: context,
+      builder: (builder) {
+        return AlertDialog(
+          backgroundColor: Theme.of(context)
+              .colorScheme
+              .onPrimary, // Cambia el color de fondo aquí
+          title: Text(
+            'Choose Your Language'.tr,
+            style: TextStyle(
+              color: Theme.of(context)
+                  .colorScheme
+                  .primary, // Cambia el color del texto aquí
             ),
-          );
-        });
+          ),
+          content: Container(
+            width: double.maxFinite,
+            child: ListView.separated(
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GestureDetector(
+                    child: Text(
+                      locale[index]['name'],
+                      style: TextStyle(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .primary, // Cambia el color del texto aquí
+                      ),
+                    ),
+                    onTap: () {
+                      print(locale[index]['name']);
+                      updateLanguage(locale[index]['locale']);
+                    },
+                  ),
+                );
+              },
+              separatorBuilder: (context, index) {
+                return Divider(
+                  color: Theme.of(context).colorScheme.primary,
+                );
+              },
+              itemCount: locale.length,
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -178,7 +197,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 icon: LineAwesomeIcons.user,
                 onPress: () {
                   userController.setUserId(userData['_id'] ?? '');
-                  Get.to(UserProfileScreen(userId: userController.userId.value,));
+                  Get.to(UserProfileScreen(
+                    userId: userController.userId.value,
+                  ));
                 }),
             ProfileMenuWidget(
                 title: 'misProductos'.tr,

@@ -82,32 +82,32 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> checkAuthAndNavigate() async {
     await TokenService.loggedIn();
- }
+  }
 
   Future<void> fetchProducts() async {
-  int page = 1;
-  List<Product> products = await ProductService.getProducts(page);
+    int page = 1;
+    List<Product> products = await ProductService.getProducts(page);
 
-  // Filtrar solo productos no vendidos
-  products = products.where((product) => product.sold == false).toList();
+    // Filtrar solo productos no vendidos
+    products = products.where((product) => product.sold == false).toList();
 
-  setState(() {
-    productList = products;
-    filteredList = products; // Inicializa la lista filtrada con todos los productos
-  });
-}
+    setState(() {
+      productList = products;
+      filteredList =
+          products; // Inicializa la lista filtrada con todos los productos
+    });
+  }
 
   Future<void> fetchProductsOferta() async {
-  List<Product> products = await ProductService.getProductsOferta();
+    List<Product> products = await ProductService.getProductsOferta();
 
-  // Filtrar solo productos no vendidos
-  products = products.where((product) => product.sold == false).toList();
+    // Filtrar solo productos no vendidos
+    products = products.where((product) => product.sold == false).toList();
 
-  setState(() {
-    productListOferta = products;
-  });
-}
-
+    setState(() {
+      productListOferta = products;
+    });
+  }
 
   void _scrollListener() {
     if (_scrollController.position.pixels ==
@@ -117,26 +117,26 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _loadMoreProducts() async {
-  if (!_loading) {
-    setState(() {
-      _loading = true;
-    });
+    if (!_loading) {
+      setState(() {
+        _loading = true;
+      });
 
-    int nextPage = (productList.length / 50).ceil() + 1;
-    List<Product> nextPageProducts =
-        await ProductService.getProducts(nextPage);
+      int nextPage = (productList.length / 50).ceil() + 1;
+      List<Product> nextPageProducts =
+          await ProductService.getProducts(nextPage);
 
-    // Filtrar solo productos no vendidos
-    nextPageProducts = nextPageProducts.where((product) => product.sold == false).toList();
+      // Filtrar solo productos no vendidos
+      nextPageProducts =
+          nextPageProducts.where((product) => product.sold == false).toList();
 
-    setState(() {
-      productList.addAll(nextPageProducts);
-      _applyFilter(); // Aplicar el filtro actual
-      _loading = false;
-    });
+      setState(() {
+        productList.addAll(nextPageProducts);
+        _applyFilter(); // Aplicar el filtro actual
+        _loading = false;
+      });
+    }
   }
-}
-
 
   void _applyFilter() {
     setState(() {
@@ -287,18 +287,25 @@ class _HomePageState extends State<HomePage> {
           ),
           SliverList(
             delegate: SliverChildListDelegate([
-              SizedBox(height: 20),
-              Container(child: TopText()),
-              SizedBox(height: 10),
-            ]),
-          ),
-          SliverList(
-            delegate: SliverChildListDelegate([
-              Container(
+              Visibility(
+                visible: productListOferta.isNotEmpty,
+                child: Column(
+                  children: [
+                    SizedBox(height: 20),
+                    Container(child: TopText()),
+                    SizedBox(height: 10),
+                  ],
+                ),
+              ),
+              Visibility(
+                visible: productListOferta.isNotEmpty,
+                child: Container(
                   child: ProductsHorizontal(
-                productListOferta: productListOferta,
-                userLocation: _currentLocation,
-              )),
+                    productListOferta: productListOferta,
+                    userLocation: _currentLocation,
+                  ),
+                ),
+              ),
               SizedBox(height: 10),
             ]),
           ),
