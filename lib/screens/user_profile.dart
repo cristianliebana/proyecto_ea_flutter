@@ -53,18 +53,23 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     });
   }
 
-  Future<void> loadUserProducts(String? userId) async {
-    if (userId != null) {
-      final List<Product> userproducts =
-          await ProductService.getUserProducts(userId);
-      setState(() {
-        products = userproducts;
-        print(products);
-      });
-    } else {
-      print('UserId is null.');
-    }
+Future<void> loadUserProducts(String? userId) async {
+  if (userId != null) {
+    List<Product> userproducts =
+        await ProductService.getUserProducts(userId);
+
+    // Filtrar solo productos no vendidos
+    userproducts = userproducts.where((product) => product.sold == false).toList();
+
+    setState(() {
+      products = userproducts;
+      print(products);
+    });
+  } else {
+    print('UserId is null.');
   }
+}
+
 
 /*  void _scrollListener() {
     if (_scrollController.position.pixels ==

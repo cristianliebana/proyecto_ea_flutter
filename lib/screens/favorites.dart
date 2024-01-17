@@ -35,19 +35,23 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     });
   }
 
-  Future<void> loadUserFavorites(String? userId) async {
-    if (userId != null) {
-      final FavoriteService favoriteService = FavoriteService();
-      final List<Product> favorites =
-          await favoriteService.getFavorites(userId);
-      setState(() {
-        products = favorites;
-        print(products);
-      });
-    } else {
-      print('UserId is null.');
-    }
+Future<void> loadUserFavorites(String? userId) async {
+  if (userId != null) {
+    final FavoriteService favoriteService = FavoriteService();
+    List<Product> favorites = await favoriteService.getFavorites(userId);
+
+    // Filtrar solo productos no vendidos
+    favorites = favorites.where((product) => product.sold == false).toList();
+
+    setState(() {
+      products = favorites;
+      print(products);
+    });
+  } else {
+    print('UserId is null.');
   }
+}
+
 
   @override
   void dispose() {

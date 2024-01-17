@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
     authDomain: 'km0-market.firebaseapp.com',
     storageBucket: 'km0-market.appspot.com',
   );
-  
+
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBoeKpQC8HotoeQtwUlYWL2gK6T2WCftgI',
     appId: '1:237252769614:android:0d7658a974010729e8501f',
@@ -62,13 +62,13 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyBJyfIDrFfspAPVCYypMCdJZ4-g42CS4yQ',
-    appId: '1:237252769614:ios:1a7f715c7279602de8501f',
+    appId: '1:237252769614:ios:7b8c6ed4c19cf3dfe8501f',
     messagingSenderId: '237252769614',
     projectId: 'km0-market',
     storageBucket: 'km0-market.appspot.com',
     androidClientId: '237252769614-mb4sj911ohdrn6nr15ho68vgpr05fdqp.apps.googleusercontent.com',
-    iosClientId: '237252769614-g8dffjjruc6tuqmsj6jiii296s61mv91.apps.googleusercontent.com',
-    iosBundleId: 'com.example.proyectoFlutter',
+    iosClientId: '237252769614-7v6fnve95jof50cn1aaoqa9aih4140ek.apps.googleusercontent.com',
+    iosBundleId: 'com.example.km0market',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(

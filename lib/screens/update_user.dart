@@ -3,8 +3,10 @@ import 'package:animate_do/animate_do.dart';
 import 'package:cloudinary_flutter/image/cld_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:lottie/lottie.dart';
+import 'package:proyecto_flutter/api/services/cloudinary_service.dart';
 import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
 import 'package:proyecto_flutter/screens/profile.dart';
@@ -19,12 +21,61 @@ class UpdateScreen extends StatefulWidget {
 
 class _UpdateScreenState extends State<UpdateScreen> {
   Map<String, dynamic> userData = {};
-  final UpdateController updateController = UpdateController();
+  late UpdateController updateController;
+  String? _selectedImagePath;
 
   @override
   void initState() {
     super.initState();
     obtenerDatosUsuario();
+    updateController = UpdateController(
+      state: this,
+    );
+  }
+
+  XFile? _imageFile;
+  String? _imageUrl = '';
+  String? getImageUrl() {
+    if (_imageUrl != null && _imageUrl!.isNotEmpty) {
+      return _imageUrl;
+    } else {
+      return null; // O cualquier otro valor que desees devolver en este caso
+    }
+  }
+
+  Future<void> _pickImage(ImageSource source) async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? pickedFile = await picker.pickImage(source: source);
+    setState(() {
+      _imageFile = pickedFile;
+      _selectedImagePath = pickedFile?.path;
+    });
+  }
+
+  Future<void> _uploadImage() async {
+    try {
+      if (_imageFile == null && _selectedImagePath == null) {
+        print('Error: No se seleccionó ninguna imagen.');
+        return;
+      }
+
+      final cloudinaryServices = CloudinaryServices();
+      final uploadedUrl = await cloudinaryServices.uploadImage(
+        _imageFile ?? XFile(_selectedImagePath!),
+      );
+
+      print("URL de Cloudinary: $uploadedUrl");
+
+      if (uploadedUrl != null) {
+        setState(() {
+          _imageUrl = uploadedUrl;
+        });
+      } else {
+        print('Error: La URL de Cloudinary es nula.');
+      }
+    } catch (error) {
+      print('Error en la carga de la imagen: $error');
+    }
   }
 
   Future<void> obtenerDatosUsuario() async {
@@ -36,6 +87,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
       updateController.fullnameController.text = userData['fullname'];
       updateController.emailController.text = userData['email'];
       updateController.passwordController.text = userData['password'];
+      updateController.profileImageController.text = userData['profileImage'];
     });
   }
 
@@ -87,6 +139,8 @@ class _UpdateScreenState extends State<UpdateScreen> {
                 SizedBox(height: screenHeight * 0.06), // Responsive height
                 ProfileImage(
                   userData: userData,
+                  pickImageFunction: _pickImage,
+                  selectedImagePath: _selectedImagePath,
                 ),
                 SizedBox(height: screenHeight * 0.02), // Responsive height
                 UpdateText(),
@@ -110,25 +164,41 @@ class UpdateController extends GetxController {
   final TextEditingController fullnameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController profileImageController = TextEditingController();
+  final _UpdateScreenState _state;
+
+  UpdateController({
+    required _UpdateScreenState state,
+  }) : _state = state;
+
+  Future<void> _uploadImageAndUpdate(BuildContext context) async {
+    if (_state._imageFile != null) {
+      await _state._uploadImage(); // Llama a la función de subir imagen
+    }
+    updateUser(context); // Llama a la función signUp después de subir la imagen
+  }
 
   void updateUser(BuildContext context) async {
     String? username = usernameController.text;
     String? fullname = fullnameController.text;
     String? email = emailController.text;
     String? password = passwordController.text;
+    String? profileImage = _state.getImageUrl() ?? profileImageController.text;
 
-    Map<String, dynamic> userData = {
+    Map<String, dynamic> userData2 = {
       'username': username,
       'fullname': fullname,
       'email': email,
       'password': password,
+      'profileImage': profileImage,
     };
-    
-    ApiResponse response = await UserService.updateUser(userData);
+
+    ApiResponse response = await UserService.updateUser(userData2);
 
     // Calculate responsive dialog size
     double width = MediaQuery.of(context).size.width;
-    double dialogWidth = width > 600 ? 500 : width * 0.8; // For larger screens, cap the width
+    double dialogWidth =
+        width > 600 ? 500 : width * 0.8; // For larger screens, cap the width
 
     Get.defaultDialog(
       title: 'felicidades'.tr,
@@ -204,7 +274,8 @@ class UpdateButton extends StatelessWidget {
     // Adjust the button size and margin based on the screen size
     double buttonWidth = screenWidth * 0.8; // 80% of screen width
     double buttonHeight = screenHeight * 0.06; // 6% of screen height
-    double horizontalMargin = screenWidth * 0.1; // 10% of screen width for both sides
+    double horizontalMargin =
+        screenWidth * 0.1; // 10% of screen width for both sides
 
     return FadeInDown(
       delay: Duration(milliseconds: 150),
@@ -214,7 +285,7 @@ class UpdateButton extends StatelessWidget {
         height: buttonHeight,
         child: ElevatedButton(
           onPressed: () {
-            updateController.updateUser(context);
+            updateController._uploadImageAndUpdate(context);
           },
           child: Text(
             'guardarCambios'.tr,
@@ -238,7 +309,6 @@ class UpdateButton extends StatelessWidget {
     );
   }
 }
-
 
 class UsernameTextFiled extends StatelessWidget {
   final UpdateController updateController;
@@ -308,30 +378,61 @@ class ProfileImage extends StatelessWidget {
   const ProfileImage({
     Key? key,
     required this.userData,
+    required this.pickImageFunction,
+    required this.selectedImagePath,
   }) : super(key: key);
 
   final Map<String, dynamic> userData;
+  final Function(ImageSource) pickImageFunction;
+  final String? selectedImagePath;
 
   @override
   Widget build(BuildContext context) {
-    String profileImage = userData['profileImage'] ?? "";
-    double imageSize = MediaQuery.of(context).size.width * 0.4; // 40% of screen width
+    String profileImage = selectedImagePath ?? userData['profileImage'] ?? "";
+    double imageSize =
+        MediaQuery.of(context).size.width * 0.4; // 40% of screen width
 
-    return Container(
-      width: imageSize,
-      height: imageSize,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(imageSize / 2), // Keep it circular
-        child: CldImageWidget(
-          publicId: profileImage.isNotEmpty
-              ? profileImage
-              : "https://res.cloudinary.com/dfwsx27vx/image/upload/v1701028188/profile_ju3yvo.png",
+    return Stack(
+      children: [
+        Container(
           width: imageSize,
           height: imageSize,
-          fit: BoxFit.cover,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(imageSize / 2),
+            child: Image(
+              image: profileImage.isNotEmpty
+                  ? Image.network(profileImage).image
+                  : AssetImage("assets/images/profile.png"),
+              width: imageSize,
+              height: imageSize,
+              fit: BoxFit.cover,
+            ),
+          ),
         ),
-      ),
+        Positioned(
+          top: 12,
+          right: 10,
+          child: Ink(
+            decoration: ShapeDecoration(
+              color: Theme.of(context)
+                  .colorScheme
+                  .onPrimary, // Cambia este color al color del fondo deseado
+              shape: CircleBorder(),
+            ),
+            child: IconButton(
+              icon: Icon(
+                Icons.edit,
+                color: Theme.of(context)
+                    .colorScheme
+                    .primary, // Cambia este color al color del icono deseado
+              ),
+              onPressed: () {
+                pickImageFunction(ImageSource.gallery);
+              },
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
-

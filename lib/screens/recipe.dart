@@ -141,7 +141,34 @@ class RecipesVerticalItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        // Muestra un diálogo al hacer clic en la foto de la receta
+        Get.defaultDialog(
+          title: "Detalles de la Receta",
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          titleStyle: TextStyle(
+            color: Theme.of(context)
+                .primaryColor, // Establece el color del título en negro
+          ), // Establece el color crema como fondo
+          content: Column(
+            children: [
+              Image.network(
+                recipe.recipeURL ?? '',
+                height: 200,
+                width: 200,
+                fit: BoxFit.cover,
+              ),
+              Text(
+                "${recipe.recipe}",
+                style: TextStyle(
+                  color: Theme.of(context)
+                      .primaryColor, // Establece el color del texto en negro
+                ),
+              ),
+            ],
+          ),
+        );
+      },
       child: Container(
         margin: EdgeInsets.only(
             left: gWidth * 0.04, top: gHeight * 0.02, right: gWidth * 0.04),

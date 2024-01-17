@@ -97,7 +97,7 @@ class LocaleString extends Translations {
           'de 8': ' de 8',
           'Mis productos publicados': 'Mis productos publicados',
           'Busca en tus productos': 'Busca en tus productos',
-          'Mis recetas publicadas': 'Mis recetas publicadas',
+          'Mis recetas publicadas': 'Mis recetas',
           'Busca en tus recetas': 'Busca en tus recetas',
           'Mis Recetas': 'Mis Recetas',
           'Saltar': 'Saltar',
@@ -125,11 +125,20 @@ class LocaleString extends Translations {
           'Nombre': 'Nombre',
           'A: ': 'A ',
           'km': ' km',
+          'vendido': 'Marcar el producto como vendido',
+          'checkbox':
+              'Al marcar esta casilla el producto no aparecerá en la lista de productos',
+          'sold': '¡Producto vendido!',
           'Expira': 'Caduca en ',
           'Producto caducado': 'Producto caducado',
           'Fecha no disponible': 'Fecha no disponible',
           'nombreProducto': 'Nombre del producto',
-          'updateProduct': 'Actualizar producto'
+          'updateProduct': 'Actualizar producto',
+          'Product Updated Successfully': 'Producto actualizado correctamente',
+          'Choose Your Language': 'Escoge tu idioma',
+          'Aquí va el texto completo de los términos y condiciones.':
+              '¡Lo único y más importante es pasarselo bien!',
+          'Términos y Condiciones': 'Términos y Condiciones',
         },
         //K
         //ENGLISH LANGUAGE
@@ -227,7 +236,7 @@ class LocaleString extends Translations {
           'de 8': '/8',
           'Mis productos publicados': 'My published products',
           'Busca en tus productos': 'Search your products',
-          'Mis recetas publicadas': 'My published recipes',
+          'Mis recetas publicadas': 'My recipes',
           'Busca en tus recetas': 'Search your recipes',
           'Mis Recetas': 'My Recipes',
           'Saltar': 'Skip',
@@ -255,11 +264,20 @@ class LocaleString extends Translations {
           'Nombre': 'Name',
           'A: ': '',
           'km': ' km away',
+          'vendido': 'Mark the product as sold',
+          'checkbox':
+              'Checking this box will remove the product from the product list',
+          'sold': 'Product sold!',
           'Expira': 'Expires in ',
           'Producto caducado': 'Expired product',
           'Fecha no disponible': 'Date not available',
           'nombreProducto': 'Product Name',
-          'updateProduct': 'Update product'
+          'updateProduct': 'Update product',
+          'Product Updated Successfully': 'Product Updated Successfully',
+          'Choose Your Language': 'Choose Your Language',
+          'Aquí va el texto completo de los términos y condiciones.':
+              'The only and most important thing is to have fun!',
+          'Términos y Condiciones': 'Terms and Conditions',
         }
       };
 }

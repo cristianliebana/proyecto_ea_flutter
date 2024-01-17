@@ -29,35 +29,56 @@ class LoginScreen extends StatelessWidget {
     Get.updateLocale(locale);
   }
 
-  void buildLanguageDialog(BuildContext context) {
+  buildLanguageDialog(BuildContext context) {
     showDialog(
-        context: context,
-        builder: (builder) {
-          return AlertDialog(
-            title: Text('Choose Your Language'),
-            content: Container(
-              width: double.maxFinite,
-              child: ListView.separated(
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: GestureDetector(
-                        child: Text(locale[index]['name']),
-                        onTap: () {
-                          print(locale[index]['name']);
-                          updateLanguage(locale[index]['locale']);
-                        },
-                      ),
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    return Divider(color: Colors.blue);
-                  },
-                  itemCount: locale.length),
+      context: context,
+      builder: (builder) {
+        return AlertDialog(
+          backgroundColor: Theme.of(context)
+              .colorScheme
+              .onPrimary, // Cambia el color de fondo aquí
+          title: Text(
+            'Choose Your Language'.tr,
+            style: TextStyle(
+              color: Theme.of(context)
+                  .colorScheme
+                  .primary, // Cambia el color del texto aquí
             ),
-          );
-        });
+          ),
+          content: Container(
+            width: double.maxFinite,
+            child: ListView.separated(
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GestureDetector(
+                    child: Text(
+                      locale[index]['name'],
+                      style: TextStyle(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .primary, // Cambia el color del texto aquí
+                      ),
+                    ),
+                    onTap: () {
+                      print(locale[index]['name']);
+                      updateLanguage(locale[index]['locale']);
+                    },
+                  ),
+                );
+              },
+              separatorBuilder: (context, index) {
+                return Divider(
+                  color: Theme.of(context).colorScheme.primary,
+                );
+              },
+              itemCount: locale.length,
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -66,8 +87,10 @@ class LoginScreen extends StatelessWidget {
     double screenHeight = MediaQuery.of(context).size.height;
 
     // Use proportions of screen width/height for margins and spacings
-    double verticalSpacing = screenHeight * 0.02; // 2% of screen height for vertical spacing
-    EdgeInsets screenMargin = EdgeInsets.all(screenWidth * 0.04); // 4% of screen width for margin
+    double verticalSpacing =
+        screenHeight * 0.02; // 2% of screen height for vertical spacing
+    EdgeInsets screenMargin =
+        EdgeInsets.all(screenWidth * 0.04); // 4% of screen width for margin
 
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -76,7 +99,8 @@ class LoginScreen extends StatelessWidget {
           margin: screenMargin,
           width: screenWidth,
           height: screenHeight,
-          child: SingleChildScrollView( // Added to make the screen scrollable
+          child: SingleChildScrollView(
+            // Added to make the screen scrollable
             child: Column(
               children: [
                 TopImage(),
@@ -107,7 +131,6 @@ class LoginScreen extends StatelessWidget {
     );
   }
 }
-
 
 class LoginController extends GetxController {
   final TextEditingController emailController = TextEditingController();
@@ -149,8 +172,10 @@ class RegisterText extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
 
     // Adjusted scale for text sizes
-    double primaryTextSize = screenWidth / 480 * 18; // Smaller scale for primary text
-    double linkTextSize = screenWidth / 480 * 20; // Slightly larger scale for link text
+    double primaryTextSize =
+        screenWidth / 480 * 18; // Smaller scale for primary text
+    double linkTextSize =
+        screenWidth / 480 * 20; // Slightly larger scale for link text
 
     return FadeInDown(
       child: Padding(
@@ -235,7 +260,6 @@ class GoogleLoginButton extends StatelessWidget {
   }
 }
 
-
 class OrText extends StatelessWidget {
   const OrText({super.key});
 
@@ -243,7 +267,8 @@ class OrText extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double textSize = screenWidth / 480 * 20; // Adjusted scale for text size
-    double lineLength = screenWidth * 0.15; // Line length as a percentage of screen width
+    double lineLength =
+        screenWidth * 0.15; // Line length as a percentage of screen width
 
     return FadeInDown(
       delay: Duration(milliseconds: 125),
@@ -253,15 +278,21 @@ class OrText extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(width: lineLength, height: 0.5, color: Theme.of(context).canvasColor),
+              Container(
+                  width: lineLength,
+                  height: 0.5,
+                  color: Theme.of(context).canvasColor),
               Text(
                 'authMethods'.tr,
                 style: TextStyle(
-                  color: Theme.of(context).canvasColor,
-                  fontSize: textSize, // Adjusted text size
-                  fontWeight: FontWeight.bold),
+                    color: Theme.of(context).canvasColor,
+                    fontSize: textSize, // Adjusted text size
+                    fontWeight: FontWeight.bold),
               ),
-              Container(width: lineLength, height: 0.5, color: Theme.of(context).canvasColor),
+              Container(
+                  width: lineLength,
+                  height: 0.5,
+                  color: Theme.of(context).canvasColor),
             ],
           ),
         ),
@@ -269,7 +300,6 @@ class OrText extends StatelessWidget {
     );
   }
 }
-
 
 class LoginButton extends StatelessWidget {
   final LoginController loginController;
@@ -286,7 +316,8 @@ class LoginButton extends StatelessWidget {
 
     // Scale down the button width and text size
     double buttonWidthScale = screenWidth * 0.6; // 60% of screen width
-    double buttonTextScale = screenWidth / 480; // Smaller base for text size scaling
+    double buttonTextScale =
+        screenWidth / 480; // Smaller base for text size scaling
 
     // Adjust the button height if necessary
     double buttonHeight = screenHeight / 20; // Smaller height proportion
@@ -294,7 +325,8 @@ class LoginButton extends StatelessWidget {
     return FadeInDown(
       delay: Duration(milliseconds: 150),
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.1), // 10% of screen width for margin
+        margin: EdgeInsets.symmetric(
+            horizontal: screenWidth * 0.1), // 10% of screen width for margin
         width: buttonWidthScale,
         height: buttonHeight,
         child: ElevatedButton(
@@ -332,14 +364,16 @@ class ForgotText extends StatelessWidget {
     double textSize = screenWidth / 480 * 15; // Adjusted scale for text size
 
     // Adjust margins to be proportional to screen width
-    double horizontalMargin = screenWidth * 0.2; // 20% of screen width for margin
+    double horizontalMargin =
+        screenWidth * 0.2; // 20% of screen width for margin
 
     return FadeInDown(
       delay: Duration(milliseconds: 175),
       child: GestureDetector(
         onTap: () {},
         child: Container(
-          margin: EdgeInsets.symmetric(horizontal: horizontalMargin), // Adjusted margin
+          margin: EdgeInsets.symmetric(
+              horizontal: horizontalMargin), // Adjusted margin
           width: screenWidth, // Use the full width of the screen
           height: screenWidth / 20, // Height proportional to screen width
           child: Center(
@@ -356,7 +390,6 @@ class ForgotText extends StatelessWidget {
     );
   }
 }
-
 
 class PasswordTextFiled extends StatefulWidget {
   final LoginController loginController;

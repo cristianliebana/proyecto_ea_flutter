@@ -28,6 +28,7 @@ class CreateProductDetail extends StatefulWidget {
 class _CreateProductDetailState extends State<CreateProductDetail> {
   late Future<CreateProductController?> _controllerFuture;
   DateTime selectedDate = DateTime.now();
+  bool sold = false;
 
   @override
   void initState() {
@@ -206,13 +207,14 @@ class CreateProductController extends GetxController {
   Map<String, dynamic> userData;
   CreateProductController({required this.userData});
 
-  void addProduct(BuildContext context) async {
+  void addProduct(BuildContext context, bool sold) async {
     String? name = nameController.text;
     String? description = descriptionController.text;
     int? units = int.tryParse(unitsController.text);
     double? price = double.tryParse(priceController.text);
     String? userId = userData['_id'] ?? '';
     DateTime date = selectedDate.value;
+    bool sold = false;
 
     if (name.isEmpty || units == null || price == null) {
       Get.snackbar(
@@ -230,6 +232,7 @@ class CreateProductController extends GetxController {
       'units': units,
       'user': userId,
       'date': date,
+      'sold': sold,
     };
 
     try {
@@ -407,8 +410,9 @@ class UnitsTextField extends StatelessWidget {
 
 class SaveButton extends StatelessWidget {
   final CreateProductController createProductController;
+  final bool sold;
 
-  SaveButton({required this.createProductController});
+  SaveButton({required this.createProductController, required this.sold});
 
   @override
   Widget build(BuildContext context) {
@@ -423,7 +427,7 @@ class SaveButton extends StatelessWidget {
         height: screenHeight * 0.07, // Responsive height
         child: ElevatedButton(
           onPressed: () {
-            createProductController.addProduct(context);
+            createProductController.addProduct(context, sold);
           },
           child: Text(
             'continuar'.tr,

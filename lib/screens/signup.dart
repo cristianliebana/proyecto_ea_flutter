@@ -152,33 +152,113 @@ class ContinueButton extends StatelessWidget {
 
 class BottomText extends StatelessWidget {
   const BottomText({
-    super.key,
-  });
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return FadeInDown(
-      delay: Duration(milliseconds: 50),
-      child: Container(
+    return GestureDetector(
+      onTap: () {
+        _showTermsDialog(context);
+      },
+      child: FadeInDown(
+        delay: Duration(milliseconds: 50),
+        child: Container(
           width: gWidth,
           height: gHeight / 21,
           child: Center(
             child: RichText(
               text: TextSpan(
-                  text: 'aceptarTerms'.tr,
-                  style: TextStyle(
-                    color: Theme.of(context).canvasColor,
+                text: 'aceptarTerms'.tr,
+                style: TextStyle(
+                  color: Theme.of(context).canvasColor,
+                ),
+                children: [
+                  TextSpan(
+                    text: 'terms'.tr,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    ),
                   ),
-                  children: [
-                    TextSpan(
-                      text: 'terms'.tr,
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onPrimary,
-                      ),
-                    )
-                  ]),
+                ],
+              ),
             ),
-          )),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showTermsDialog(BuildContext context) {
+    Get.dialog(
+      AlertDialog(
+        title: Text('Términos y Condiciones'.tr),
+        content: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Bienvenido a la aplicación KM-0 MARKET. Antes de comenzar a utilizar nuestros servicios, te solicitamos que leas detenidamente estos Términos y Condiciones. Al registrarte y utilizar nuestra aplicación, aceptas cumplir con estos términos y todas las leyes y regulaciones aplicables. Si no estás de acuerdo con alguna parte de estos términos, te rogamos que no utilices nuestra aplicación.',
+            ),
+            SizedBox(height: 10),
+            Text(
+              '1. Registro de la Cuenta:',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 5),
+            Text(
+              '1.1 Para utilizar nuestra aplicación, debes registrarte proporcionando información precisa y actualizada.',
+            ),
+            Text(
+              '1.2 Eres responsable de mantener la confidencialidad de tu información de inicio de sesión y de todas las actividades que ocurran bajo tu cuenta.',
+            ),
+            SizedBox(height: 10),
+            Text(
+              '2. Uso del Servicio:',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 5),
+            Text(
+              '2.1 Otorgamos a los usuarios el derecho no exclusivo, no transferible y limitado para utilizar la aplicación de acuerdo con estos términos.',
+            ),
+            Text(
+              '2.2 No se permite realizar actividades ilegales, difamatorias, acosadoras o que violen los derechos de propiedad intelectual de terceros.',
+            ),
+            SizedBox(height: 10),
+            Text(
+              '3. Privacidad:',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 5),
+            Text(
+              '3.1 La información recopilada por nuestra aplicación se rige por nuestra Política de Privacidad, que puedes revisar en [enlace a la política de privacidad].',
+            ),
+            Text(
+              '3.2 Utilizamos cookies y tecnologías similares para mejorar la experiencia del usuario. Consulta nuestra Política de Cookies para obtener más información.',
+            ),
+            SizedBox(height: 10),
+            Text(
+              '4. Propiedad Intelectual:',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 5),
+            Text(
+              '4.1 Todos los derechos de propiedad intelectual sobre la aplicación y su contenido pertenecen a KM-0 MARKET.',
+            ),
+            Text(
+              '4.2 No tienes permiso para reproducir, distribuir o modificar el contenido de la aplicación sin nuestro consentimiento expreso.',
+            ),
+            SizedBox(height: 10),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Get.back(); // Cerrar el diálogo
+            },
+            child: Text('Aceptar'),
+          ),
+        ],
+      ),
     );
   }
 }

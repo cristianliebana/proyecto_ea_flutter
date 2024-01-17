@@ -21,26 +21,6 @@ class UserService {
       return response;
     }
   }
-    /*static Future<User?> loginWithGoogle() async {
-    final googleAccount = await GoogleSignIn().signIn();
-
-    final googleAuth = await googleAccount?.authentication;
-
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
-
-    final userCredential = await FirebaseAuth.instance.signInWithCredential(
-      credential,
-    );
-    return userCredential.user;
-  }
-
-  static Future<void> signOut() async {
-    await FirebaseAuth.instance.signOut();
-    await GoogleSignIn().signOut();
-  } */
 
   static Future<ApiResponse> loginUser(Map<String, dynamic> user) async {
     ApiResponse response = ApiResponse(data: {}, statusCode: 404);
@@ -61,7 +41,7 @@ class UserService {
       bool isLoggedIn = await TokenService.loggedIn();
       if (isLoggedIn) {
         String? token = await TokenService.getToken();
-        if (token != null) {
+       if (token != null) {
           Map<String, dynamic> payload = JwtDecoder.decode(token);
           String userId = payload['id'];
           response = await Api().getWithoutToken('/users/readuser/$userId');
@@ -71,9 +51,9 @@ class UserService {
           return ApiResponse(data: {});
         }
       } else {
-        return ApiResponse(data: {});
+       return ApiResponse(data: {});
       }
-    } catch (error) {
+   } catch (error) {
       return response;
     }
   }

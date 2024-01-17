@@ -50,6 +50,7 @@ class _ProfilePageState extends State<ProfilePage> {
     ApiResponse response = await UserService.getUserById();
     setState(() {
       userData = response.data;
+      print('Aquí debería salir el usuario: $userData');
     });
   }
 
@@ -112,35 +113,54 @@ class _ProfilePageState extends State<ProfilePage> {
 
   buildLanguageDialog(BuildContext context) {
     showDialog(
-        context: context,
-        builder: (builder) {
-          return AlertDialog(
-            title: Text('Choose Your Language'),
-            content: Container(
-              width: double.maxFinite,
-              child: ListView.separated(
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: GestureDetector(
-                        child: Text(locale[index]['name']),
-                        onTap: () {
-                          print(locale[index]['name']);
-                          updateLanguage(locale[index]['locale']);
-                        },
-                      ),
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    return Divider(
-                      color: Colors.blue,
-                    );
-                  },
-                  itemCount: locale.length),
+      context: context,
+      builder: (builder) {
+        return AlertDialog(
+          backgroundColor: Theme.of(context)
+              .colorScheme
+              .onPrimary, // Cambia el color de fondo aquí
+          title: Text(
+            'Choose Your Language'.tr,
+            style: TextStyle(
+              color: Theme.of(context)
+                  .colorScheme
+                  .primary, // Cambia el color del texto aquí
             ),
-          );
-        });
+          ),
+          content: Container(
+            width: double.maxFinite,
+            child: ListView.separated(
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GestureDetector(
+                    child: Text(
+                      locale[index]['name'],
+                      style: TextStyle(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .primary, // Cambia el color del texto aquí
+                      ),
+                    ),
+                    onTap: () {
+                      print(locale[index]['name']);
+                      updateLanguage(locale[index]['locale']);
+                    },
+                  ),
+                );
+              },
+              separatorBuilder: (context, index) {
+                return Divider(
+                  color: Theme.of(context).colorScheme.primary,
+                );
+              },
+              itemCount: locale.length,
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override

@@ -5,7 +5,6 @@ import 'package:proyecto_flutter/api/services/rating_service.dart';
 import 'package:proyecto_flutter/screens/user_profile.dart';
 import 'package:proyecto_flutter/widget/userId_controller.dart';
 import 'package:share_plus/share_plus.dart';
-//import 'dart:html' as html;
 import 'package:proyecto_flutter/api/services/product_service.dart';
 import 'package:proyecto_flutter/api/services/room_service.dart';
 import 'package:proyecto_flutter/api/services/token_service.dart';

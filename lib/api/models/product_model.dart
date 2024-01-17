@@ -1,3 +1,5 @@
+//import 'dart:ffi';
+
 class Product {
   String? id;
   String? name;
@@ -7,6 +9,7 @@ class Product {
   List<String>? productImage;
   Location? location;
   DateTime? date;
+  bool? sold;
 
   Product({
     this.id,
@@ -17,6 +20,7 @@ class Product {
     this.productImage,
     this.location,
     this.date,
+    this.sold,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
@@ -30,6 +34,7 @@ class Product {
       location:
           json['location'] != null ? Location.fromJson(json['location']) : null,
       date: json['date'] != null ? DateTime.parse(json['date']) : null,
+      sold: json['sold'] ?? '',
     );
   }
 
@@ -43,6 +48,7 @@ class Product {
       'productImage': productImage,
       'location': location?.toJson(),
       'date': date,
+      'sold': sold,
     };
   }
 }

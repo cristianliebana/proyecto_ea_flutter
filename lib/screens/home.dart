@@ -87,6 +87,10 @@ class _HomePageState extends State<HomePage> {
   Future<void> fetchProducts() async {
     int page = 1;
     List<Product> products = await ProductService.getProducts(page);
+
+    // Filtrar solo productos no vendidos
+    products = products.where((product) => product.sold == false).toList();
+
     setState(() {
       productList = products;
       filteredList =
@@ -96,6 +100,10 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> fetchProductsOferta() async {
     List<Product> products = await ProductService.getProductsOferta();
+
+    // Filtrar solo productos no vendidos
+    products = products.where((product) => product.sold == false).toList();
+
     setState(() {
       productListOferta = products;
     });
@@ -117,6 +125,10 @@ class _HomePageState extends State<HomePage> {
       int nextPage = (productList.length / 50).ceil() + 1;
       List<Product> nextPageProducts =
           await ProductService.getProducts(nextPage);
+
+      // Filtrar solo productos no vendidos
+      nextPageProducts =
+          nextPageProducts.where((product) => product.sold == false).toList();
 
       setState(() {
         productList.addAll(nextPageProducts);
