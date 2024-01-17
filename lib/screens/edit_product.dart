@@ -6,6 +6,7 @@ import 'package:proyecto_flutter/api/services/product_service.dart';
 import 'package:proyecto_flutter/api/services/user_service.dart';
 import 'package:proyecto_flutter/api/utils/http_api.dart';
 import 'package:proyecto_flutter/screens/product_detail.dart';
+import 'package:proyecto_flutter/utils/constants.dart';
 import 'package:proyecto_flutter/widget/rep_textfiled.dart';
 
 class EditProductScreen extends StatefulWidget {
@@ -20,6 +21,7 @@ class EditProductScreen extends StatefulWidget {
 class _EditProductScreenState extends State<EditProductScreen> {
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
+  bool? _isSold;
   TextEditingController _nameController = TextEditingController();
   TextEditingController _descriptionController = TextEditingController();
   TextEditingController _priceController = TextEditingController();
@@ -41,7 +43,17 @@ class _EditProductScreenState extends State<EditProductScreen> {
       _descriptionController.text = productData['description'] ?? '';
       _priceController.text = productData['price'].toString();
       _unitsController.text = productData['units'].toString();
+       if (productData.containsKey('sold')) {
+      setState(() {
+        _isSold = productData['sold'];
+      });
     } else {
+      // Si 'sold' no está presente, deja _isSold como null
+      setState(() {
+        _isSold = null;
+      });
+    }
+  }  else {
       Get.snackbar('Error', 'Failed to fetch product details');
     }
     setState(() => _isLoading = false);
@@ -62,7 +74,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
         'description': _descriptionController.text,
         'price': double.parse(_priceController.text),
         'units': int.parse(_unitsController.text),
-        'user': userId,
+        'sold': _isSold,
+        'user': userId,     
       };
 
       ApiResponse response =
@@ -129,6 +142,60 @@ class _EditProductScreenState extends State<EditProductScreen> {
       ),
     );
   }
+
+  void _showSoldMessage(BuildContext context) {
+  Get.defaultDialog(
+    title: 'sold'.tr,
+    titleStyle: TextStyle(color: Theme.of(context).primaryColor),
+    backgroundColor: Theme.of(context).colorScheme.primary,
+    content: ClipRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 50.0, sigmaY: 50.0),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10.0),
+            color: Theme.of(context).colorScheme.primary,
+          ),
+          child: Column(
+            children: [
+              Lottie.asset(
+                "assets/json/check3.json",
+                width: 100,
+                height: 100,
+                repeat: false,
+              ),
+              SizedBox(height: 20),
+              Text(
+                'checkbox'.tr,
+                style: TextStyle(color: Theme.of(context).primaryColor),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+    radius: 10.0,
+    confirm: ElevatedButton(
+      onPressed: () {
+        Get.back();
+      },
+      child: Text(
+        'OK',
+        style: TextStyle(color: Theme.of(context).colorScheme.primary),
+      ),
+      style: ButtonStyle(
+        shape: MaterialStateProperty.all(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+        ),
+        backgroundColor: MaterialStateProperty.all(
+            Theme.of(context).colorScheme.onPrimary),
+      ),
+    ),
+  );
+}
+
 
   AppBar _buildAppBar() {
     return AppBar(
@@ -202,6 +269,25 @@ class _EditProductScreenState extends State<EditProductScreen> {
                           obscureText: false,
                         ),
                         SizedBox(height: 20),
+                        CheckboxListTile(
+                        checkColor: Colors.white, 
+                        activeColor: Theme.of(context).primaryColor,
+                        title: Text('vendido'.tr,
+                        style: TextStyle(
+                          color: text1Color
+                          ),),
+                        
+                        value: _isSold,
+                        onChanged: (value) {
+                          setState(() {
+                            _isSold = value ?? false;
+                             if (_isSold!) {
+                            _showSoldMessage(context);
+                            _updateProductDetails;
+                            }
+                          });
+                        },
+                      ),
                         ElevatedButton(
                           onPressed: _updateProductDetails,
                           child: Text('updateProduct'.tr),

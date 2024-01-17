@@ -85,21 +85,29 @@ class _HomePageState extends State<HomePage> {
  }
 
   Future<void> fetchProducts() async {
-    int page = 1;
-    List<Product> products = await ProductService.getProducts(page);
-    setState(() {
-      productList = products;
-      filteredList =
-          products; // Inicializa la lista filtrada con todos los productos
-    });
-  }
+  int page = 1;
+  List<Product> products = await ProductService.getProducts(page);
+
+  // Filtrar solo productos no vendidos
+  products = products.where((product) => product.sold == false).toList();
+
+  setState(() {
+    productList = products;
+    filteredList = products; // Inicializa la lista filtrada con todos los productos
+  });
+}
 
   Future<void> fetchProductsOferta() async {
-    List<Product> products = await ProductService.getProductsOferta();
-    setState(() {
-      productListOferta = products;
-    });
-  }
+  List<Product> products = await ProductService.getProductsOferta();
+
+  // Filtrar solo productos no vendidos
+  products = products.where((product) => product.sold == false).toList();
+
+  setState(() {
+    productListOferta = products;
+  });
+}
+
 
   void _scrollListener() {
     if (_scrollController.position.pixels ==
@@ -109,22 +117,26 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _loadMoreProducts() async {
-    if (!_loading) {
-      setState(() {
-        _loading = true;
-      });
+  if (!_loading) {
+    setState(() {
+      _loading = true;
+    });
 
-      int nextPage = (productList.length / 50).ceil() + 1;
-      List<Product> nextPageProducts =
-          await ProductService.getProducts(nextPage);
+    int nextPage = (productList.length / 50).ceil() + 1;
+    List<Product> nextPageProducts =
+        await ProductService.getProducts(nextPage);
 
-      setState(() {
-        productList.addAll(nextPageProducts);
-        _applyFilter(); // Aplicar el filtro actual
-        _loading = false;
-      });
-    }
+    // Filtrar solo productos no vendidos
+    nextPageProducts = nextPageProducts.where((product) => product.sold == false).toList();
+
+    setState(() {
+      productList.addAll(nextPageProducts);
+      _applyFilter(); // Aplicar el filtro actual
+      _loading = false;
+    });
   }
+}
+
 
   void _applyFilter() {
     setState(() {
