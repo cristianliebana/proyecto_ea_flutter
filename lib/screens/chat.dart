@@ -1,6 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 //import 'package:proyecto_flutter/api/models/room_model.dart';
 import 'package:proyecto_flutter/api/services/room_service.dart';
 import 'package:proyecto_flutter/api/services/user_service.dart';
@@ -20,11 +21,28 @@ class _ChatPageState extends State<ChatPage> {
   List<Map<String, dynamic>> usersWithRoomIds = [];
   List<Map<String, dynamic>> usersDataList =
       []; // List to store userData2 for each user
+  String _errorMessage = '';
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    obtenerDatosUsuario();
+    // obtenerDatosUsuario();
+    _initializeScreen();
+  }
+
+  Future<void> _initializeScreen() async {
+    try {
+      await obtenerDatosUsuario();
+    } catch (error) {
+      setState(() {
+        _errorMessage = error.toString();
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   Future<void> obtenerDatosUsuario() async {
@@ -103,62 +121,83 @@ class _ChatPageState extends State<ChatPage> {
             ChatText(),
             SizedBox(height: 10.0),
             Divider(color: Theme.of(context).colorScheme.onPrimary),
-            Expanded(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: usersWithRoomIds.length,
-                itemBuilder: (BuildContext context, int index) {
-                  // Verificar si el índice es válido
-                  if (index >= 0 && index < usersDataList.length) {
-                    return Column(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            Get.to(
-                              IndividualChat(
-                                roomId: usersWithRoomIds[index]['roomId'],
-                                userId2: usersWithRoomIds[index]['userId'],
-                              ),
-                            );
-                          },
-                          child: ListTile(
-                            leading: CircleAvatar(
-                              backgroundImage:
-                                  usersDataList[index]['profileImage'] != null
-                                      ? NetworkImage(
-                                          usersDataList[index]['profileImage']!)
-                                      : AssetImage('assets/images/profile.png')
-                                          as ImageProvider<Object>,
-                              maxRadius: 28,
+            _isLoading
+                ? CircularProgressIndicator() // Muestra un indicador de carga mientras se inicializa
+                : usersWithRoomIds.isEmpty
+                    ? Expanded(
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Lottie.asset(
+                              'assets/json/desierto3.json',
+                              width: 400,
+                              height: 400,
                             ),
-                            title: Text(
-                              '${usersDataList[index]['username']}',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                  color: Theme.of(context).primaryColor),
-                            ),
-                            subtitle: Text(
-                              'Sala ID: ${usersWithRoomIds[index]['roomId']}',
-                              style: TextStyle(
-                                  color: Theme.of(context).shadowColor),
-                            ),
-                          ),
+                          ],
                         ),
-                        Divider(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onPrimary), // Divisor entre usuarios
-                      ],
-                    );
-                  } else {
-                    // Manejar el caso donde el índice está fuera de rango
-                    return SizedBox
-                        .shrink(); // o cualquier otro widget que desees mostrar
-                  }
-                },
-              ),
-            ),
+                      )
+                    : Expanded(
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: usersWithRoomIds.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            // Verificar si el índice es válido
+                            if (index >= 0 && index < usersDataList.length) {
+                              return Column(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      Get.to(
+                                        IndividualChat(
+                                          roomId: usersWithRoomIds[index]
+                                              ['roomId'],
+                                          userId2: usersWithRoomIds[index]
+                                              ['userId'],
+                                        ),
+                                      );
+                                    },
+                                    child: ListTile(
+                                      leading: CircleAvatar(
+                                        backgroundImage: usersDataList[index]
+                                                    ['profileImage'] !=
+                                                null
+                                            ? NetworkImage(usersDataList[index]
+                                                ['profileImage']!)
+                                            : AssetImage(
+                                                    'assets/images/profile.png')
+                                                as ImageProvider<Object>,
+                                        maxRadius: 28,
+                                      ),
+                                      title: Text(
+                                        '${usersDataList[index]['username']}',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                            color:
+                                                Theme.of(context).primaryColor),
+                                      ),
+                                      subtitle: Text(
+                                        'Sala ID: ${usersWithRoomIds[index]['roomId']}',
+                                        style: TextStyle(
+                                            color:
+                                                Theme.of(context).shadowColor),
+                                      ),
+                                    ),
+                                  ),
+                                  Divider(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary), // Divisor entre usuarios
+                                ],
+                              );
+                            } else {
+                              // Manejar el caso donde el índice está fuera de rango
+                              return SizedBox
+                                  .shrink(); // o cualquier otro widget que desees mostrar
+                            }
+                          },
+                        ),
+                      ),
           ],
         ),
       ),

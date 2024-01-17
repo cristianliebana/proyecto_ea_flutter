@@ -43,8 +43,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     obtenerDatosUsuario(userId);
   }
 
-
-    Future<void> obtenerDatosUsuario(String userId) async {
+  Future<void> obtenerDatosUsuario(String userId) async {
     ApiResponse response = await UserService.getCreadorById(userId);
     setState(() {
       userData = response.data;
@@ -209,6 +208,19 @@ class ProductsVerticalItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    DateTime now = DateTime.now();
+    Duration? difference;
+    if (product.date != null) {
+      difference = product.date!.difference(now);
+    }
+
+    // Verificar si la diferencia es negativa y mostrar el mensaje correspondiente
+    String formattedDifference = difference != null
+        ? difference.isNegative
+            ? 'Producto caducado'.tr
+            : 'Expira'.tr +
+                '${difference.inHours}h ${difference.inMinutes.remainder(60)}m'
+        : 'Fecha no disponible'.tr;
     return GestureDetector(
       onTap: () {
         Get.to(ProductDetailScreen(productId: product.id ?? ''));
@@ -258,6 +270,24 @@ class ProductsVerticalItem extends StatelessWidget {
             ),
             Positioned(
               bottom: 10,
+              left: 20,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.inversePrimary,
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: Text(
+                  formattedDifference,
+                  style: TextStyle(
+                    color: Color(0xFFFFFCEA),
+                    fontSize: 14.0,
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: 10,
               right: 10,
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -269,7 +299,7 @@ class ProductsVerticalItem extends StatelessWidget {
                   '${product.price} €/Kg', // Agrega el precio del producto
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.primary,
-                    fontSize: 18.0,
+                    fontSize: 14.0,
                   ),
                 ),
               ),
