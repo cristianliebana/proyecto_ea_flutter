@@ -75,7 +75,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
         'price': double.parse(_priceController.text),
         'units': int.parse(_unitsController.text),
         'sold': _isSold,
-        'user': userId,      
+        'user': userId,     
       };
 
       ApiResponse response =
@@ -106,7 +106,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
             child: Column(
               children: [
                 Lottie.asset(
-                  "assets/json/check3.json", 
+                  "assets/json/check3.json",
                   width: 100,
                   height: 100,
                   repeat: false,
@@ -240,30 +240,31 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     key: _formKey,
                     child: Column(
                       children: <Widget>[
+                        AnimationEdit(),
                         RepTextFiled(
-                          icon: Icons.edit, 
-                          text: 'Product Name',
+                          icon: Icons.edit,
+                          text: 'nombreProducto'.tr,
                           controller: _nameController,
                           obscureText: false,
                         ),
                         SizedBox(height: 20),
                         RepTextFiled(
                           icon: Icons.description,
-                          text: 'Description',
+                          text: 'descripcion'.tr,
                           controller: _descriptionController,
                           obscureText: false,
                         ),
                         SizedBox(height: 20),
                         RepTextFiled(
                           icon: Icons.euro_symbol,
-                          text: 'Price (€)',
+                          text: 'precio'.tr,
                           controller: _priceController,
                           obscureText: false,
                         ),
                         SizedBox(height: 20),
                         RepTextFiled(
                           icon: Icons.storage,
-                          text: 'Units',
+                          text: 'unidades'.tr,
                           controller: _unitsController,
                           obscureText: false,
                         ),
@@ -289,7 +290,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       ),
                         ElevatedButton(
                           onPressed: _updateProductDetails,
-                          child: Text('Update Product'),
+                          child: Text('updateProduct'.tr),
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(
                                 Theme.of(context).colorScheme.onPrimary),
@@ -302,6 +303,23 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   ),
                 ),
               ),
+      ),
+    );
+  }
+}
+
+class AnimationEdit extends StatelessWidget {
+  const AnimationEdit({
+    Key? key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      height: 200,
+      child: Lottie.asset(
+        "assets/json/edit.json",
       ),
     );
   }

@@ -82,7 +82,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> checkAuthAndNavigate() async {
     await TokenService.loggedIn();
-  }
+ }
 
   Future<void> fetchProducts() async {
   int page = 1;
@@ -418,6 +418,19 @@ class ProductsVerticalItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    DateTime now = DateTime.now();
+    Duration? difference;
+    if (product.date != null) {
+      difference = product.date!.difference(now);
+    }
+
+    // Verificar si la diferencia es negativa y mostrar el mensaje correspondiente
+    String formattedDifference = difference != null
+        ? difference.isNegative
+            ? 'Producto caducado'.tr
+            : 'Expira'.tr +
+                '${difference.inHours}h ${difference.inMinutes.remainder(60)}m'
+        : 'Fecha no disponible'.tr;
     return GestureDetector(
       onTap: () {
         Get.to(
@@ -442,8 +455,14 @@ class ProductsVerticalItem extends StatelessWidget {
                           product.productImage!.isNotEmpty
                       ? NetworkImage(product.productImage!.first)
                       : AssetImage('assets/images/profile.png')
-                          as ImageProvider, // Use the image URL
+                          as ImageProvider,
                   fit: BoxFit.cover,
+                  colorFilter: difference != null && difference.isNegative
+                      ? ColorFilter.mode(
+                          Colors.grey.withOpacity(0.8),
+                          BlendMode.saturation,
+                        )
+                      : null,
                 ),
               ),
             ),
@@ -467,6 +486,25 @@ class ProductsVerticalItem extends StatelessWidget {
             ),
             Positioned(
               bottom: 10,
+              left: 20,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.inversePrimary,
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: Text(
+                  formattedDifference,
+                  style: TextStyle(
+                    color: Color(0xFFFFFCEA),
+                    fontSize: 14.0,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(width: 10),
+            Positioned(
+              bottom: 10,
               right: 10,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -482,17 +520,16 @@ class ProductsVerticalItem extends StatelessWidget {
                       '${product.price} €/Kg',
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.primary,
-                        fontSize: 18.0,
+                        fontSize: 14.0,
                       ),
                     ),
                   ),
-                  SizedBox(height: 5), // Espacio entre el precio y la distancia
                 ],
               ),
             ),
             Positioned(
-              bottom: 10,
-              left: 20,
+              top: 10,
+              right: 10,
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                 decoration: BoxDecoration(
@@ -558,7 +595,7 @@ class MidText extends StatelessWidget {
           width: gWidth,
           height: gHeight / 25,
           child: SizedBox(
-            child: Text("Todos los productos",
+            child: Text('todosProductos'.tr,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 30,
@@ -593,6 +630,18 @@ class ProductsHorizontal extends StatelessWidget {
               itemCount: productListOferta.length,
               physics: const BouncingScrollPhysics(),
               itemBuilder: (context, index) {
+                DateTime now = DateTime.now();
+                Duration? difference;
+                if (productListOferta[index].date != null) {
+                  difference = productListOferta[index].date!.difference(now);
+                }
+                // Verificar si la diferencia es negativa y mostrar el mensaje correspondiente
+                String formattedDifference = difference != null
+                    ? difference.isNegative
+                        ? 'Producto caducado'
+                        : 'Expira'.tr +
+                            '${difference.inHours}h ${difference.inMinutes.remainder(60)}m'
+                    : 'Fecha no disponible';
                 double distance = calculateDistance(
                   userLocation.latitude,
                   userLocation.longitude,
@@ -649,6 +698,26 @@ class ProductsHorizontal extends StatelessWidget {
                         ),
                         Positioned(
                           bottom: 10,
+                          left: 20,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 8.0),
+                            decoration: BoxDecoration(
+                              color:
+                                  Theme.of(context).colorScheme.inversePrimary,
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: Text(
+                              formattedDifference,
+                              style: TextStyle(
+                                color: Color(0xFFFFFCEA),
+                                fontSize: 14.0,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 10,
                           right: 10,
                           child: Container(
                             padding: EdgeInsets.symmetric(
@@ -667,8 +736,8 @@ class ProductsHorizontal extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          bottom: 10,
-                          left: 20,
+                          top: 10,
+                          right: 10,
                           child: Container(
                             padding: EdgeInsets.symmetric(
                                 horizontal: 16.0, vertical: 8.0),

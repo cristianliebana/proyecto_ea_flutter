@@ -147,29 +147,31 @@ class _ReviewScreenState extends State<ReviewScreen> {
     );
   }
 
-  @override
+ @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppBar(),
-      body: Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            ReviewFarmer(),
-            TitleText(),
-            UserInfo(userData2: userData2),
-            Rating(
-              ratingValue: ratingValue,
-              onRatingUpdate: (rating) {
-                setState(() {
-                  ratingValue = rating;
-                });
-              },
-            ),
-            CommentText(),
-            CommentBox(commentController: commentController),
-            SendButton(onPressed: enviarValoracion),
-          ],
+      body: SingleChildScrollView( // Make the page scrollable
+        child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              ReviewFarmer(),
+              TitleText(),
+              UserInfo(userData2: userData2),
+              Rating(
+                ratingValue: ratingValue,
+                onRatingUpdate: (rating) {
+                  setState(() {
+                    ratingValue = rating;
+                  });
+                },
+              ),
+              CommentText(),
+              CommentBox(commentController: commentController),
+              SendButton(onPressed: enviarValoracion),
+            ],
+          ),
         ),
       ),
     );
@@ -183,20 +185,17 @@ class SendButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double buttonWidth = screenWidth * 0.8; // 80% of screen width
     return Container(
-      width: 300, // Ocupar todo el ancho disponible
-      margin: EdgeInsets.symmetric(
-          horizontal: 30,
-          vertical: 10), // Ajusta el margen horizontal y vertical
+      width: buttonWidth,
+      margin: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
       child: ElevatedButton(
         onPressed: onPressed,
         style: ButtonStyle(
-          padding: MaterialStateProperty.all(
-              EdgeInsets.all(20)), // Ajusta el relleno del botón
+          padding: MaterialStateProperty.all(EdgeInsets.all(20)),
           shape: MaterialStateProperty.all(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(100),
-            ),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
           ),
           backgroundColor: MaterialStateProperty.all(
               Theme.of(context).colorScheme.onPrimary),
@@ -211,6 +210,7 @@ class SendButton extends StatelessWidget {
   }
 }
 
+
 class CommentBox extends StatelessWidget {
   const CommentBox({
     super.key,
@@ -222,31 +222,25 @@ class CommentBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: SizedBox(
-        width: double.infinity,
-        child: TextField(
-          controller: commentController,
-          maxLines: 8,
-          decoration: InputDecoration(
-            labelText: 'comentario'.tr,
-            labelStyle:
-                TextStyle(color: Color(0xFF486D28)), // Color del labelText
-            border: OutlineInputBorder(
-              borderSide:
-                  BorderSide(color: Color(0xFF486D28)), // Color del borde
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                  color: Color(
-                      0xFF486D28)), // Color del borde cuando está enfocado
-            ),
+      padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.04), // Responsive padding
+      child: TextField(
+        controller: commentController,
+        maxLines: 8,
+        decoration: InputDecoration(
+          labelText: 'comentario'.tr,
+          labelStyle: TextStyle(color: Color(0xFF486D28)), // Color del labelText
+          border: OutlineInputBorder(
+            borderSide: BorderSide(color: Color(0xFF486D28)), // Color del borde
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Color(0xFF486D28)), // Color del borde cuando está enfocado
           ),
         ),
       ),
     );
   }
 }
+
 
 class Rating extends StatelessWidget {
   const Rating({
@@ -325,19 +319,21 @@ class UserInfo extends StatelessWidget {
   const UserInfo({
     Key? key,
     required this.userData2,
-  });
+  }) : super(key: key);
 
   final Map<String, dynamic>? userData2;
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           CircleAvatar(
-            radius: 35,
+            radius: screenWidth * 0.1, // Responsive avatar size
             backgroundImage: userData2?['profileImage'] != null
                 ? NetworkImage(userData2!['profileImage']!)
                 : AssetImage('assets/images/profile.png')
@@ -347,7 +343,7 @@ class UserInfo extends StatelessWidget {
           Text(
             userData2 != null ? userData2!['username'] : 'Nombre del Usuario',
             style: TextStyle(
-              fontSize: 30,
+              fontSize: screenWidth * 0.05, // Responsive font size
               fontWeight: FontWeight.normal,
               color: Theme.of(context).primaryColor,
             ),
@@ -358,20 +354,23 @@ class UserInfo extends StatelessWidget {
   }
 }
 
+
 class TitleText extends StatelessWidget {
   const TitleText({
     Key? key,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return Container(
       child: Center(
         child: Text(
           'preguntaRating'.tr,
           style: TextStyle(
             color: Theme.of(context).primaryColor,
-            fontSize: 35,
+            fontSize: screenHeight * 0.05, // Responsive font size
             fontWeight: FontWeight.bold,
           ),
           textAlign: TextAlign.left,
@@ -381,19 +380,23 @@ class TitleText extends StatelessWidget {
   }
 }
 
+
 class ReviewFarmer extends StatelessWidget {
   const ReviewFarmer({
     Key? key,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return SizedBox(
       width: double.infinity,
-      height: 250,
+      height: screenHeight * 0.3, // Responsive height
       child: Lottie.asset(
         "assets/json/review.json",
       ),
     );
   }
 }
+

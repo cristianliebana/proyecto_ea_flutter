@@ -27,6 +27,7 @@ class ThemeProvider extends GetxController {
     colorScheme: const ColorScheme.light(
       primary: Color(0xFFFFFCEA),
       onPrimary: Color(0xFF486D28),
+      inversePrimary: const Color.fromARGB(255, 185, 34, 24),
     ),
     primaryColor: Colors.black,
     secondaryHeaderColor: Colors.grey,
@@ -43,6 +44,7 @@ class ThemeProvider extends GetxController {
     colorScheme: const ColorScheme.dark(
       primary: Color(0xFF486D28),
       onPrimary: Color(0xFFFFFCEA),
+      inversePrimary: const Color.fromARGB(255, 85, 13, 8),
     ),
     primaryColor: const Color(0xFFFFFCEA),
     secondaryHeaderColor: Colors.grey[300],

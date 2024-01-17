@@ -30,7 +30,7 @@ class LocaleString extends Translations {
           'publicar': 'Publicar',
           'continuar': 'Continuar',
           'buscaKm0': 'Busca en Km0 Market',
-          'oferta': 'Productos en oferta',
+          'oferta': 'Productos que caducan pronto',
           'todosProductos': 'Todos los productos',
           'register': 'Regístrate',
           'sin_cuenta': '¿No tienes una cuenta?',
@@ -128,6 +128,12 @@ class LocaleString extends Translations {
           'vendido': 'Marcar el producto como vendido.',
           'checkbox': 'Al marcar esta casilla el producto no aparecerá en la lista de productos.',
           'sold': '¡Producto vendido!'
+          'Expira': 'Caduca en ',
+          'Producto caducado': 'Producto caducado',
+          'Fecha no disponible': 'Fecha no disponible',
+          'nombreProducto': 'Nombre del producto',
+          'updateProduct': 'Actualizar producto'
+
         },
         //K
         //ENGLISH LANGUAGE
@@ -156,7 +162,7 @@ class LocaleString extends Translations {
           'publicar': 'Publish',
           'continuar': 'Continue',
           'buscaKm0': 'Search in Km0 Market',
-          'oferta': 'Products on Sale',
+          'oferta': 'Products that expire soon',
           'todosProductos': 'All Products',
           'register': 'Sign Up',
           'sin_cuenta': 'Don\'t have an account?',
@@ -256,6 +262,11 @@ class LocaleString extends Translations {
           'vendido': 'Mark the product as sold.',
           'checkbox': 'Checking this box will remove the product from the product list.',
           'sold': 'Product sold!'
+          'Expira': 'Expires in ',
+          'Producto caducado': 'Expired product',
+          'Fecha no disponible': 'Date not available',
+          'nombreProducto': 'Product Name',
+          'updateProduct': 'Update product'
         }
       };
 }

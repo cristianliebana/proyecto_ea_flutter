@@ -90,4 +90,25 @@ class FavoriteService {
       return {'exists': false, 'favoriteId': ''};
     }
   }
+
+  static Future<String> getProductFavoritesCount(String productId) async {
+    ApiResponse response = ApiResponse(data: {}, statusCode: 404);
+    try {
+      response = await Api().get(
+        '/favorites/countfavorites/$productId',
+      );
+
+      if (response.statusCode == 200) {
+        String favoritesCount =
+            response.data['favoritesCount'].toString() ?? '0';
+        return favoritesCount;
+      } else {
+        // Handle error cases, you may want to throw an exception or return a default value
+        return '0';
+      }
+    } catch (error) {
+      // Handle error cases, you may want to throw an exception or return a default value
+      return '0';
+    }
+  }
 }

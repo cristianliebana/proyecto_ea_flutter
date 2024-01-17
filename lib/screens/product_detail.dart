@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
+import 'package:proyecto_flutter/api/services/rating_service.dart';
 import 'package:proyecto_flutter/screens/user_profile.dart';
 import 'package:proyecto_flutter/widget/userId_controller.dart';
 import 'package:share_plus/share_plus.dart';
@@ -32,6 +33,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   Map<String, dynamic> userData = {};
   bool _isFavoriteExists = false;
   Map<String, dynamic> favoriteData = {};
+  late String favoriteCount = "";
+  late String userRatingCount = "";
   late String userId;
   late String favoriteId;
   bool _isLoading = true; // New variable to track loading state
@@ -40,7 +43,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   void initState() {
     super.initState();
-    _initializeScreen();
+    checkAuthAndNavigate();
+    obtenerDatosProducto();
+    obtenerDatosUsuario();
+    countFavorito(widget.productId);
+    // _initializeScreen();
   }
 
   Future<void> _initializeScreen() async {
@@ -75,6 +82,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     setState(() {
       creadorData = response.data;
     });
+    await countRating(creadorData['_id']);
   }
 
   Future<void> obtenerDatosUsuario() async {
@@ -90,6 +98,24 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
     setState(() {
       favoriteData = response.data;
+    });
+  }
+
+  Future<void> countFavorito(String productId) async {
+    String favoritesCount =
+        await FavoriteService.getProductFavoritesCount(productId);
+
+    setState(() {
+      favoriteCount = favoritesCount;
+    });
+  }
+
+  Future<void> countRating(String userId) async {
+    String usersCount =
+        await RatingService.getUserRatingsCount(creadorData['_id']);
+
+    setState(() {
+      userRatingCount = usersCount;
     });
   }
 
@@ -109,6 +135,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           await crearFavorito(userData['_id'], widget.productId);
           Get.snackbar('success'.tr, 'favoritoAgregado'.tr);
         }
+
+        await countFavorito(widget.productId);
 
         setState(() {
           _isFavoriteExists = !_isFavoriteExists;
@@ -164,17 +192,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
-      return Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
-    }
-
-    if (_errorMessage.isNotEmpty) {
-      return Scaffold(
-        body: Center(child: Text('Error: $_errorMessage')),
-      );
-    }
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: _buildAppBar(),
@@ -185,11 +202,42 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             productData: productData,
             creadorData: creadorData,
             userData: userData,
+            favoriteCount: favoriteCount,
+            userRatingCount: userRatingCount,
           ),
         ],
       ),
     );
   }
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   if (_isLoading) {
+  //     return Scaffold(
+  //       body: Center(child: CircularProgressIndicator()),
+  //     );
+  //   }
+
+  //   if (_errorMessage.isNotEmpty) {
+  //     return Scaffold(
+  //       body: Center(child: Text('Error: $_errorMessage')),
+  //     );
+  //   }
+  //   return Scaffold(
+  //     extendBodyBehindAppBar: true,
+  //     appBar: _buildAppBar(),
+  //     body: Stack(
+  //       children: [
+  //         ImagesCarousel(productData: productData, buildAppBar: _buildAppBar),
+  //         InformationWidget(
+  //           productData: productData,
+  //           creadorData: creadorData,
+  //           userData: userData,
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   AppBar _buildAppBar() {
     return AppBar(
@@ -312,11 +360,15 @@ class InformationWidget extends StatelessWidget {
     required this.productData,
     required this.creadorData,
     required this.userData,
+    required this.favoriteCount,
+    required this.userRatingCount,
   }) : super(key: key);
 
   final Map<String, dynamic> productData;
   final Map<String, dynamic> userData;
   final Map<String, dynamic> creadorData;
+  final String favoriteCount;
+  final String userRatingCount;
 
   @override
   Widget build(BuildContext context) {
@@ -362,12 +414,27 @@ class InformationWidget extends StatelessWidget {
                         ],
                       ),
                     ),
-                    NameText(productData: productData, fontSize: textSize),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: NameText(
+                              productData: productData, fontSize: textSize),
+                        ),
+                        SizedBox(
+                            width:
+                                10), // Adjust the spacing between NameText and FavoriteCount
+                        FavoriteCount(
+                          favoriteCount: favoriteCount,
+                          fontSize: textSize,
+                        ),
+                      ],
+                    ),
                     SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                         CircleAvatar(
+                        CircleAvatar(
                           radius: 35,
                           backgroundImage:
                               creadorData['profileImage'] != null &&
@@ -378,14 +445,16 @@ class InformationWidget extends StatelessWidget {
                           backgroundColor: Colors.transparent,
                           child: GestureDetector(
                             onTap: () {
-                              print(creadorData['_id'] );
-                              userController.setUserId(creadorData['_id'] ?? '');
+                              print(creadorData['_id']);
+                              userController
+                                  .setUserId(creadorData['_id'] ?? '');
                               // Navegar a la pantalla de perfil del creador con el ID del creador
-                              Get.to(UserProfileScreen( userId: userController.userId.value));
+                              Get.to(UserProfileScreen(
+                                  userId: userController.userId.value));
                             },
                           ),
                         ),
-                        SizedBox(width: 10), 
+                        SizedBox(width: 10),
                         Expanded(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -396,26 +465,35 @@ class InformationWidget extends StatelessWidget {
                               Transform.scale(
                                 alignment: Alignment.centerLeft,
                                 scale: screenWidth / 700,
-                                child: RatingBar(
-                                  ignoreGestures: true,
-                                  initialRating: creadorData['rating'] ?? 3.5,
-                                  direction: Axis.horizontal,
-                                  allowHalfRating: true,
-                                  itemCount: 5,
-                                  ratingWidget: RatingWidget(
-                                    full: Image(
-                                        image: AssetImage(
-                                            'assets/ratingimages/zanahoriaentera.png')),
-                                    half: Image(
-                                        image: AssetImage(
-                                            'assets/ratingimages/mediazanahoria.png')),
-                                    empty: Image(
-                                        image: AssetImage(
-                                            'assets/ratingimages/zanahoriavacia.png')),
-                                  ),
-                                  itemPadding:
-                                      EdgeInsets.symmetric(horizontal: 4.0),
-                                  onRatingUpdate: (rating) {},
+                                child: Row(
+                                  children: [
+                                    RatingBar(
+                                      ignoreGestures: true,
+                                      initialRating:
+                                          creadorData['rating'] ?? 3.5,
+                                      direction: Axis.horizontal,
+                                      allowHalfRating: true,
+                                      itemCount: 5,
+                                      ratingWidget: RatingWidget(
+                                        full: Image(
+                                            image: AssetImage(
+                                                'assets/ratingimages/zanahoriaentera.png')),
+                                        half: Image(
+                                            image: AssetImage(
+                                                'assets/ratingimages/mediazanahoria.png')),
+                                        empty: Image(
+                                            image: AssetImage(
+                                                'assets/ratingimages/zanahoriavacia.png')),
+                                      ),
+                                      itemPadding:
+                                          EdgeInsets.symmetric(horizontal: 4.0),
+                                      onRatingUpdate: (rating) {},
+                                    ),
+                                    UserRating(
+                                      userRatingCount: userRatingCount,
+                                      fontSize: textSize,
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
@@ -570,6 +648,29 @@ class PriceText extends StatelessWidget {
   }
 }
 
+class UserRating extends StatelessWidget {
+  final String userRatingCount;
+  final double fontSize;
+
+  const UserRating(
+      {Key? key, required this.userRatingCount, required this.fontSize})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    String name = userRatingCount ?? "N/A";
+
+    return Text(
+      name != "N/A" ? " ($name)" : "",
+      style: TextStyle(
+        color: Theme.of(context).shadowColor.withOpacity(0.7),
+        fontSize: fontSize - 9,
+        fontWeight: FontWeight.bold,
+      ),
+    );
+  }
+}
+
 class UserText extends StatelessWidget {
   final Map<String, dynamic> creadorData;
   final double fontSize;
@@ -607,6 +708,38 @@ class DescriptionText extends StatelessWidget {
         color: Theme.of(context).shadowColor,
         fontSize: fontSize,
       ),
+    );
+  }
+}
+
+class FavoriteCount extends StatelessWidget {
+  final String favoriteCount;
+  final double fontSize;
+
+  const FavoriteCount(
+      {Key? key, required this.favoriteCount, required this.fontSize})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    String name = favoriteCount ?? "N/A";
+
+    return Row(
+      children: [
+        Icon(
+          Icons.favorite_border, // Puedes cambiar este icono por el que desees
+          color: Theme.of(context).shadowColor,
+          size: fontSize,
+        ),
+        Text(
+          name != "N/A" ? " $name" : "",
+          style: TextStyle(
+            color: Theme.of(context).shadowColor,
+            fontSize: fontSize,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
     );
   }
 }
