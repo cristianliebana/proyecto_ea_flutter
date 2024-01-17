@@ -127,7 +127,7 @@ class LocaleString extends Translations {
           'km': ' km',
           'vendido': 'Marcar el producto como vendido.',
           'checkbox': 'Al marcar esta casilla el producto no aparecerá en la lista de productos.',
-          'sold': '¡Producto vendido!'
+          'sold': '¡Producto vendido!',
           'Expira': 'Caduca en ',
           'Producto caducado': 'Producto caducado',
           'Fecha no disponible': 'Fecha no disponible',
@@ -261,7 +261,7 @@ class LocaleString extends Translations {
           'km': ' km away',
           'vendido': 'Mark the product as sold.',
           'checkbox': 'Checking this box will remove the product from the product list.',
-          'sold': 'Product sold!'
+          'sold': 'Product sold!',
           'Expira': 'Expires in ',
           'Producto caducado': 'Expired product',
           'Fecha no disponible': 'Date not available',
