@@ -276,6 +276,9 @@ class _ChatBotPageState extends State<ChatBotPage> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primary,
       extendBodyBehindAppBar: true,
@@ -286,89 +289,77 @@ class _ChatBotPageState extends State<ChatBotPage> {
         title: Text(
           'Producto: ${widget.productName}',
           style: TextStyle(
-            fontSize: 18,
+            fontSize: screenWidth * 0.045, // Responsive font size
             color: Theme.of(context).colorScheme.onPrimary,
           ),
         ),
         actions: [_buildAppBarReloadButton()],
       ),
-      body: Container(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(
-                height: 60,
-              ),
-              if (imageBytes != null && !loading)
-                Center(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(
-                        10.0), // Ajusta el radio según tus necesidades
-                    child: Image.memory(
-                      imageBytes!,
-                      width:
-                          400, // Puedes ajustar el ancho según tus necesidades
-                      height:
-                          400, // Puedes ajustar la altura según tus necesidades
-                      fit: BoxFit.cover,
-                    ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(height: screenHeight * 0.08),
+            if (imageBytes != null && !loading)
+              Center(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10.0),
+                  child: Image.memory(
+                    imageBytes!,
+                    width: screenWidth * 0.8, // 80% of screen width
+                    height: screenWidth * 0.8, // Maintain aspect ratio
+                    fit: BoxFit.cover,
                   ),
                 ),
-              SizedBox(
-                height: 30,
               ),
-              if (loading)
-                Center(
-                  child: CircularProgressIndicator(
-                    color: Theme.of(context).colorScheme.onPrimary,
-                  ),
-                ) // Mostrar el indicador de carga mientras se está generando la imagen
-              else if (imageBytes != null)
-                Column(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(
-                          left: 20), // Márgenes a la izquierda y derecha
-                      child: Text(
-                        "${title}",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 30,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    Container(
-                      child: Text(
-                        "${ingredients}",
-                        style: TextStyle(
-                          fontSize: 24,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    Container(
-                      margin: EdgeInsets.only(
-                          left: 20), // Márgenes a la izquierda y derecha
-                      child: Text(
-                        "${steps}",
-                        style: TextStyle(
-                          fontSize: 22,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                      ),
-                    ),
-                  ],
+            SizedBox(height: screenHeight * 0.04),
+            if (loading)
+              Center(
+                child: CircularProgressIndicator(
+                  color: Theme.of(context).colorScheme.onPrimary,
                 ),
-              SizedBox(
-                height: 20,
+              )
+            else if (imageBytes != null)
+              Column(
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(left: screenWidth * 0.05),
+                    child: Text(
+                      "${title}",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: screenWidth * 0.08, // Responsive font size
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: screenHeight * 0.02),
+                  Container(
+                    child: Text(
+                      "${ingredients}",
+                      style: TextStyle(
+                        fontSize: screenWidth * 0.06, // Responsive font size
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: screenHeight * 0.02),
+                  Container(
+                    margin: EdgeInsets.only(left: screenWidth * 0.05),
+                    child: Text(
+                      "${steps}",
+                      style: TextStyle(
+                        fontSize: screenWidth * 0.055, // Responsive font size
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            SizedBox(height: screenHeight * 0.02),
+          ],
         ),
       ),
     );
   }
+
 }

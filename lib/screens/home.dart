@@ -290,26 +290,32 @@ class _HomePageState extends State<HomePage> {
           ),
           SliverList(
             delegate: SliverChildListDelegate([
-              SizedBox(height: screenHeight * 0.025), // Adjusted height
-              TopText(),
-              SizedBox(height: screenHeight * 0.0125), // Adjusted height
-            ]),
-          ),
-          SliverList(
-            delegate: SliverChildListDelegate([
-              ProductsHorizontal(
-                productListOferta: productListOferta,
-                userLocation: _currentLocation,
+              Visibility(
+                visible: productListOferta.isNotEmpty,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start, // Ensuring alignment
+                  children: [
+                    SizedBox(height: screenHeight * 0.02), // Adjusted height based on screen size
+                    TopText(),
+                    SizedBox(height: screenHeight * 0.01), // Adjusted height based on screen size
+                  ],
+                ),
               ),
-              SizedBox(height: screenHeight * 0.0125), // Adjusted height
+              Visibility(
+                visible: productListOferta.isNotEmpty,
+                child: Container(
+                  width: screenWidth, // Adjusted width based on screen size
+                  child: ProductsHorizontal(
+                    productListOferta: productListOferta,
+                    userLocation: _currentLocation,
+                  ),
+                ),
+              ),
+              SizedBox(height: screenHeight * 0.01), // Adjusted height based on screen size
+              MidText(), // Ensure MidText is aligned similarly to TopText
+              SizedBox(height: screenHeight * 0.00625),
             ]),
-          ),
-          SliverList(
-            delegate: SliverChildListDelegate([
-              MidText(),
-              SizedBox(height: screenHeight * 0.00625), // Adjusted height
-            ]),
-          ),
+          ), 
           SliverGrid(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: gridCrossAxisCount, // Adjusted dynamically

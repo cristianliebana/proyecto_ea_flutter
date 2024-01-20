@@ -74,7 +74,6 @@ class _CreateProductDetailState extends State<CreateProductDetail> {
 
   @override
   Widget build(BuildContext context) {
-    // Get screen dimensions
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
@@ -125,7 +124,7 @@ class _CreateProductDetailState extends State<CreateProductDetail> {
                     SizedBox(height: 20),
                     _buildDatePicker(createProductController),
                     SizedBox(height: 20),
-                    SaveButton(createProductController: createProductController),
+                    SaveButton(createProductController: createProductController, sold: sold),
                   ],
                 ),
               ),
